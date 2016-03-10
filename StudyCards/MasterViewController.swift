@@ -12,22 +12,25 @@ import CoreData
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     var detailViewController: DetailViewController? = nil
-    var managedObjectContext: NSManagedObjectContext? = nil
-
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        self.fetchedResultsController.delegate = self
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
 
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
-        self.navigationItem.rightBarButtonItem = addButton
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
     }
-
+    
+    override func setEditing(editing: Bool, animated: Bool)
+    {
+        super.setEditing(editing, animated: animated)
+        navigationItem.rightBarButtonItem?.enabled = !editing
+    }
+    
     override func viewWillAppear(animated: Bool) {
         self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
@@ -38,30 +41,10 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         // Dispose of any resources that can be recreated.
     }
 
-    func insertNewObject(sender: AnyObject) {
-        let context = self.fetchedResultsController.managedObjectContext
-        let entity = self.fetchedResultsController.fetchRequest.entity!
-        let newManagedObject = NSEntityDescription.insertNewObjectForEntityForName(entity.name!, inManagedObjectContext: context)
-             
-        // If appropriate, configure the new managed object.
-        // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-        newManagedObject.setValue(NSDate(), forKey: "timeStamp")
-             
-        // Save the context.
-        do {
-            try context.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            //print("Unresolved error \(error), \(error.userInfo)")
-            abort()
-        }
-    }
-
     // MARK: - Segues
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showDetail" {
+        if segue.identifier == "ShowDeck" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
             let object = self.fetchedResultsController.objectAtIndexPath(indexPath)
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
@@ -70,7 +53,27 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
+        else if segue.identifier == "AddNewDeck" {
+            let controller = segue.destinationViewController as! AddDeckViewController
+            controller.mode = .AddDeck
+        }
+        else if segue.identifier == "EditDeck" {
+            let controller = segue.destinationViewController as! AddDeckViewController
+            controller.mode = .EditDeck
+            controller.deck = sender as? Deck
+        }
     }
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool
+    {
+        if identifier == "ShowDeck" {
+            if tableView.editing {
+                return false
+            }
+        }
+        return true
+    }
+
 
     // MARK: - Table View
 
@@ -102,57 +105,76 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             do {
                 try context.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                //print("Unresolved error \(error), \(error.userInfo)")
-                abort()
+               abort()
             }
+        }
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
+        if tableView.editing {
+            self.performSegueWithIdentifier("EditDeck", sender: deck)
         }
     }
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-        let object = self.fetchedResultsController.objectAtIndexPath(indexPath)
-        cell.textLabel!.text = object.valueForKey("timeStamp")!.description
+        let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
+        cell.textLabel!.text = deck?.title
     }
 
     // MARK: - Fetched results controller
-
-    var fetchedResultsController: NSFetchedResultsController {
-        if _fetchedResultsController != nil {
-            return _fetchedResultsController!
+    
+    lazy var fetchedResultsController: NSFetchedResultsController = {
+        let sortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "title", ascending: true)]
+        guard let frc = StudyCardsDataStack.sharedInstance.fetchedResultsController("Deck", sortDescriptors: sortDescriptors, predicate: nil) else {
+            abort()
         }
-        
-        let fetchRequest = NSFetchRequest()
-        // Edit the entity name as appropriate.
-        let entity = NSEntityDescription.entityForName("Event", inManagedObjectContext: self.managedObjectContext!)
-        fetchRequest.entity = entity
-        
-        // Set the batch size to a suitable number.
-        fetchRequest.fetchBatchSize = 20
-        
-        // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
-        
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        // Edit the section name key path and cache name if appropriate.
-        // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
-        aFetchedResultsController.delegate = self
-        _fetchedResultsController = aFetchedResultsController
         
         do {
-            try _fetchedResultsController!.performFetch()
+            try frc.performFetch()
         } catch {
-             // Replace this implementation with code to handle the error appropriately.
-             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-             //print("Unresolved error \(error), \(error.userInfo)")
-             abort()
+            abort()
         }
         
-        return _fetchedResultsController!
-    }    
-    var _fetchedResultsController: NSFetchedResultsController? = nil
+        return frc
+    }()
+
+//    var fetchedResultsController: NSFetchedResultsController {
+//        if _fetchedResultsController != nil {
+//            return _fetchedResultsController!
+//        }
+//        
+//        let fetchRequest = NSFetchRequest()
+//        // Edit the entity name as appropriate.
+//        let entity = NSEntityDescription.entityForName("Deck", inManagedObjectContext: self.managedObjectContext!)
+//        fetchRequest.entity = entity
+//        
+//        // Set the batch size to a suitable number.
+//        fetchRequest.fetchBatchSize = 20
+//        
+//        // Edit the sort key as appropriate.
+//        let sortDescriptor = NSSortDescriptor(key: "title", ascending: false)
+//        
+//        fetchRequest.sortDescriptors = [sortDescriptor]
+//        
+//        // Edit the section name key path and cache name if appropriate.
+//        // nil for section name key path means "no sections".
+//        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
+//        aFetchedResultsController.delegate = self
+//        _fetchedResultsController = aFetchedResultsController
+//        
+//        do {
+//            try _fetchedResultsController!.performFetch()
+//        } catch {
+//            abort()
+//        }
+//        
+//        return _fetchedResultsController!
+//    }
+    
+//    var _fetchedResultsController: NSFetchedResultsController? = nil
+    
+    // MARK: - NSFetchedResultsControllerDelegate calls
 
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         self.tableView.beginUpdates()
