@@ -46,9 +46,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "ShowDeck" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-            let object = self.fetchedResultsController.objectAtIndexPath(indexPath)
+                let object = self.fetchedResultsController.objectAtIndexPath(indexPath)
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = object
+                controller.detailItem = object as? Deck
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
@@ -138,41 +138,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         return frc
     }()
-
-//    var fetchedResultsController: NSFetchedResultsController {
-//        if _fetchedResultsController != nil {
-//            return _fetchedResultsController!
-//        }
-//        
-//        let fetchRequest = NSFetchRequest()
-//        // Edit the entity name as appropriate.
-//        let entity = NSEntityDescription.entityForName("Deck", inManagedObjectContext: self.managedObjectContext!)
-//        fetchRequest.entity = entity
-//        
-//        // Set the batch size to a suitable number.
-//        fetchRequest.fetchBatchSize = 20
-//        
-//        // Edit the sort key as appropriate.
-//        let sortDescriptor = NSSortDescriptor(key: "title", ascending: false)
-//        
-//        fetchRequest.sortDescriptors = [sortDescriptor]
-//        
-//        // Edit the section name key path and cache name if appropriate.
-//        // nil for section name key path means "no sections".
-//        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
-//        aFetchedResultsController.delegate = self
-//        _fetchedResultsController = aFetchedResultsController
-//        
-//        do {
-//            try _fetchedResultsController!.performFetch()
-//        } catch {
-//            abort()
-//        }
-//        
-//        return _fetchedResultsController!
-//    }
-    
-//    var _fetchedResultsController: NSFetchedResultsController? = nil
     
     // MARK: - NSFetchedResultsControllerDelegate calls
 
@@ -198,7 +163,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             case .Delete:
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
             case .Update:
-                self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, atIndexPath: indexPath!)
+                tableView.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: .Automatic)
             case .Move:
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
                 tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)

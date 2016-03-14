@@ -15,6 +15,5 @@ import CoreData
 extension Category {
 
     @NSManaged var name: String?
-    @NSManaged var decks: NSSet?
 
 }

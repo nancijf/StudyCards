@@ -22,6 +22,7 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
     weak var delegate: CategoryTableViewControllerDelegate?
     var actionBarButton: UIBarButtonItem?
     var doneBarButton: UIBarButtonItem?
+    var didMakeChanges: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,11 +35,31 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         actionBarButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "addTapped:")
         doneBarButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "editTapped:")
         self.navigationItem.rightBarButtonItem = actionBarButton
+        
+        self.navigationItem.setHidesBackButton(true, animated: false)
+        let newBackButton = UIBarButtonItem(title: "Back", style: .Plain, target: self, action: "backButtonTapped:")
+        self.navigationItem.leftBarButtonItem = newBackButton
+        self.navigationController?.interactivePopGestureRecognizer!.enabled = false
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func backButtonTapped(sender: UIBarButtonItem) {
+        if didMakeChanges {
+            let alert = UIAlertController(title: "Caution", message: "Changes were made to your selected categories. Are you sure you want to cancel?", preferredStyle: .Alert)
+            let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in
+            }
+            let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+                self.navigationController?.popViewControllerAnimated(true)
+            })
+            
+            alert.addAction(saveAction)
+            alert.addAction(cancelAction)
+            presentViewController(alert, animated: true, completion: nil)
+        }
     }
 
     func addTapped(sender: UIBarButtonItem) {
@@ -87,7 +108,7 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         let alertController = UIAlertController(title: "Add New Category", message: nil, preferredStyle: .Alert)
         let addCat = UIAlertAction(title: "Add", style: .Default, handler: { (action) -> Void in
             if let tempTextHolder = inputTextField?.text where tempTextHolder.characters.count > 0 {
-                let newCategory = CategoryStruct(name: tempTextHolder, decks: nil)
+                let newCategory = CategoryStruct(name: tempTextHolder)
                 StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(newCategory)
             }
         })
@@ -101,6 +122,32 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         } 
         
         presentViewController(alertController, animated: true, completion: nil)
+        
+    }
+    
+    func editCategory(selectedCategory: Category) {
+        var inputTextField: UITextField?
+        
+        let editAlertController = UIAlertController(title: "Edit Category", message: nil, preferredStyle: .Alert)
+        let editCat = UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+            if let tempTextHolder = inputTextField?.text where tempTextHolder.characters.count > 0 {
+                var categoryStruct = selectedCategory.asStruct()
+                categoryStruct.name = tempTextHolder
+                StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(categoryStruct, categoryObj: selectedCategory)
+                self.tableView.reloadData()
+            }
+        })
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
+        
+        editAlertController.addAction(editCat)
+        editAlertController.addAction(cancel)
+        
+        editAlertController.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            textField.text = selectedCategory.name
+            inputTextField = textField
+        }
+        
+        presentViewController(editAlertController, animated: true, completion: nil)
         
     }
     
@@ -134,7 +181,6 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            print("in commitEditingStyle for delete")
             let context = self.fetchedResultsController.managedObjectContext
             context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject)
             
@@ -148,15 +194,25 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
-        let selectedCategory = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Category
-        if cell?.accessoryType == .Checkmark {
-            cell?.accessoryType = .None
-            selectedCategories?.removeObject(selectedCategory!)
+        let selectedCategory = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Category
+        if tableView.editing {
+            editCategory(selectedCategory)
         } else {
-            cell?.accessoryType = UITableViewCellAccessoryType.Checkmark
-            selectedCategories?.addObject(selectedCategory!)
+            self.didMakeChanges = true
+            if cell?.accessoryType == .Checkmark {
+                cell?.accessoryType = .None
+                selectedCategories?.removeObject(selectedCategory)
+            } else {
+                cell?.accessoryType = UITableViewCellAccessoryType.Checkmark
+                selectedCategories?.addObject(selectedCategory)
+            }
+            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
-        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        return true
     }
     
     // MARK: - Fetched results controller
@@ -198,7 +254,7 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         case .Insert:
             tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
         case .Delete:
-            print("deleting category")
+            self.selectedCategories?.removeObject(anObject)
             tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
         case .Update:
             self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, atIndexPath: indexPath!)

@@ -25,6 +25,7 @@
 		B872BBC41C78B1B00019DED3 /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B872BBBC1C78B1B00019DED3 /* Deck.swift */; };
 		B872BBC71C7924D50019DED3 /* AddDeckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B872BBC61C7924D50019DED3 /* AddDeckViewController.swift */; };
 		B872BBCA1C7A3BB40019DED3 /* DeckEditorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B872BBC91C7A3BB40019DED3 /* DeckEditorTableViewCell.swift */; };
+		B87A88781C971D4E009A3202 /* AddCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87A88771C971D4E009A3202 /* AddCardsViewController.swift */; };
 		B8ECC7451C81F95D00503727 /* StudyCardsDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ECC7441C81F95D00503727 /* StudyCardsDataStack.swift */; };
 		B8ECC7471C820A8B00503727 /* ViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ECC7461C820A8B00503727 /* ViewModels.swift */; };
 		B8ECC7491C8265B900503727 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8ECC7481C8265B900503727 /* CategoryTableViewController.swift */; };
@@ -63,6 +64,7 @@
 		B872BBBC1C78B1B00019DED3 /* Deck.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
 		B872BBC61C7924D50019DED3 /* AddDeckViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddDeckViewController.swift; sourceTree = "<group>"; };
 		B872BBC91C7A3BB40019DED3 /* DeckEditorTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeckEditorTableViewCell.swift; sourceTree = "<group>"; };
+		B87A88771C971D4E009A3202 /* AddCardsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCardsViewController.swift; sourceTree = "<group>"; };
 		B8ECC7441C81F95D00503727 /* StudyCardsDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudyCardsDataStack.swift; sourceTree = SOURCE_ROOT; };
 		B8ECC7461C820A8B00503727 /* ViewModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModels.swift; sourceTree = "<group>"; };
 		B8ECC7481C8265B900503727 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
@@ -109,12 +111,13 @@
 			children = (
 				B872BB7E1C78A98C0019DED3 /* AppDelegate.swift */,
 				B8ECC7441C81F95D00503727 /* StudyCardsDataStack.swift */,
+				B872BBC61C7924D50019DED3 /* AddDeckViewController.swift */,
+				B87A88771C971D4E009A3202 /* AddCardsViewController.swift */,
+				B872BBC91C7A3BB40019DED3 /* DeckEditorTableViewCell.swift */,
 				B872BB831C78A98C0019DED3 /* MasterViewController.swift */,
 				B8ECC7481C8265B900503727 /* CategoryTableViewController.swift */,
 				B872BB851C78A98C0019DED3 /* DetailViewController.swift */,
 				B872BB871C78A98C0019DED3 /* Main.storyboard */,
-				B872BBC91C7A3BB40019DED3 /* DeckEditorTableViewCell.swift */,
-				B872BBC61C7924D50019DED3 /* AddDeckViewController.swift */,
 				B872BB8A1C78A98C0019DED3 /* Assets.xcassets */,
 				B872BB8C1C78A98C0019DED3 /* LaunchScreen.storyboard */,
 				B872BB8F1C78A98C0019DED3 /* Info.plist */,
@@ -260,6 +263,7 @@
 			files = (
 				B8ECC7491C8265B900503727 /* CategoryTableViewController.swift in Sources */,
 				B872BBC41C78B1B00019DED3 /* Deck.swift in Sources */,
+				B87A88781C971D4E009A3202 /* AddCardsViewController.swift in Sources */,
 				B872BBCA1C7A3BB40019DED3 /* DeckEditorTableViewCell.swift in Sources */,
 				B872BB7F1C78A98C0019DED3 /* AppDelegate.swift in Sources */,
 				B872BBC21C78B1B00019DED3 /* Category.swift in Sources */,

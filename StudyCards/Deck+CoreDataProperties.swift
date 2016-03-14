@@ -18,6 +18,6 @@ extension Deck {
     @NSManaged var desc: String?
     @NSManaged var testscore: Float
     @NSManaged var categories: NSOrderedSet?
-    @NSManaged var cards: NSSet?
+    @NSManaged var cards: NSOrderedSet?
 
 }

@@ -9,11 +9,10 @@
 import UIKit
 
 class DetailViewController: UIViewController {
-
+    
     @IBOutlet weak var detailDescriptionLabel: UILabel!
 
-
-    var detailItem: AnyObject? {
+    var detailItem: Deck? {
         didSet {
             // Update the view.
             self.configureView()
@@ -33,6 +32,7 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.configureView()
+        self.navigationItem.title = detailItem?.title
     }
 
     override func didReceiveMemoryWarning() {

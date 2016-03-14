@@ -13,11 +13,21 @@ struct DeckStruct {
     var desc: String?
     var testscore: Float
     var categories: NSOrderedSet?
-    var cards: NSSet?
+    var cards: NSOrderedSet?
 }
 
 struct CategoryStruct {
     var name: String?
+}
+
+struct CardStruct {
+    var question: String?
+    var answer: String?
+    var hidden: Bool
+    var correctanswers: Int32
+    var wronganswers: Int32
+    var ordinal: Int32
+    var images: NSSet?
     var decks: NSSet?
 }
 

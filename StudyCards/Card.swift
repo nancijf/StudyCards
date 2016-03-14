@@ -11,7 +11,13 @@ import CoreData
 
 
 class Card: NSManagedObject {
-
+    
 // Insert code here to add functionality to your managed object subclass
 
+}
+
+extension Card {
+    func asStruct() -> CardStruct {
+        return CardStruct(question: self.question, answer: self.answer, hidden: self.hidden, correctanswers: self.correctanswers, wronganswers: self.wronganswers, ordinal: self.ordinal, images: self.images, decks: self.decks)
+    }
 }
