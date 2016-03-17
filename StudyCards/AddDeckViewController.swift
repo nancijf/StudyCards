@@ -16,7 +16,7 @@ enum DeckViewControllerMode: Int {
     case EditDeck
 }
 
-class AddDeckViewController: UITableViewController, CategoryTableViewControllerDelegate {
+class AddDeckViewController: UITableViewController, CategoryTableViewControllerDelegate, AddCardsViewControllerDelegate {
     
     var tempCategories: NSOrderedSet?
     var tempCards: NSOrderedSet?
@@ -78,15 +78,12 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
                 StudyCardsDataStack.sharedInstance.addOrEditDeckObject(updateDeck, deckObj: self.deck)
             }
         }
-        
         self.navigationController?.popViewControllerAnimated(true)
-
     }
 
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 4
     }
 
@@ -234,17 +231,11 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
                     self.navigationController?.pushViewController(categoryViewController, animated: true)
                 }
             case AddButtonType.Card.rawValue:
-//                print("Add card button was tapped")
                 if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {
                     
-//                    if mode == .EditDeck {
-//                        let existingCards = deck?.cards
-//                        categoryViewController.selectedCategories = existingCategories?.mutableCopy() as? NSMutableOrderedSet
-//                    }
-//                    addCardsViewController.delegate = self
                     addCardsViewController.deckName = deck?.title
                     let existingCards = deck?.cards
-                    addCardsViewController.addedCards = existingCards?.mutableCopy() as? NSMutableSet
+                    addCardsViewController.addedCards = existingCards?.mutableCopy() as? NSMutableOrderedSet
                     self.navigationController?.pushViewController(addCardsViewController, animated: true)
                 }
             default:
@@ -256,9 +247,13 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
     // MARK: - CategoryTableViewControllerDelegate
     
     func categoryTableViewControllerDidFinishSelectingCategory(viewController: CategoryTableViewController, selectedCategories: NSMutableOrderedSet?) {
-//        self.deck?.categories = selectedCategories
         tempCategories = selectedCategories
         tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)
+    }
+    
+    func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?) {
+        print("added some cards")
+        tempCards = addedCards
     }
 
     /*
@@ -296,14 +291,5 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
     }
     */
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

@@ -74,6 +74,15 @@
                                     <action selector="counterView:" destination="9BG-A8-ggU" eventType="touchUpInside" id="18o-fz-xZy"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B5D-hj-87x">
+                                <rect key="frame" x="180" y="81" width="34" height="30"/>
+                                <state key="normal" title="Save">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="saveButton:" destination="9BG-A8-ggU" eventType="touchUpInside" id="ftF-pJ-ONm"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>

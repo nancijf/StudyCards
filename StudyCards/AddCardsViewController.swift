@@ -9,16 +9,15 @@
 import UIKit
 
 protocol AddCardsViewControllerDelegate: class {
-    func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableSet?)
+    func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?)
 }
-
 
 class AddCardsViewController: UIViewController {
     
     var isQuestionShowing: Bool = true
     var deckName: String?
     var delegate: AddCardsViewControllerDelegate?
-    var addedCards: NSMutableSet?
+    var addedCards: NSMutableOrderedSet?
     
     @IBOutlet weak var answerTextView: UITextView!
     @IBOutlet weak var questionTextView: UITextView!
@@ -28,8 +27,9 @@ class AddCardsViewController: UIViewController {
         
         answerTextView.hidden = true
         self.navigationItem.title = deckName
+        let addBarButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addTapped:")
+        self.navigationItem.rightBarButtonItem = addBarButton
 
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,6 +37,10 @@ class AddCardsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    @IBAction func saveButton(sender: AnyObject) {
+        print("save button was tapped")
+    }
+    
     @IBAction func counterView(sender: AnyObject) {
         if (isQuestionShowing) {
 
@@ -48,10 +52,7 @@ class AddCardsViewController: UIViewController {
                 completion:nil)
         } else {
 
-            //show Graph
-
-//            setupGraphDisplay()
-
+            //hide Answer - show Question
             UIView.transitionFromView(answerTextView,
                 toView: questionTextView,
                 duration: 1.0,
@@ -62,42 +63,11 @@ class AddCardsViewController: UIViewController {
         
     }
     
-//      Code used to transition between question and answer
-    
-    
-//    @IBAction func counterViewTap(gesture:UITapGestureRecognizer?) {
-//        if (isQuestionShowing) {
-//            
-//            //hide Question - show Answer
-//            UIView.transitionFromView(graphView,
-//                toView: counterView,
-//                duration: 1.0,
-//                options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
-//                completion:nil)
-//        } else {
-//            
-//            //show Graph
-//            
-//            setupGraphDisplay()
-//            
-//            UIView.transitionFromView(counterView,
-//                toView: graphView,
-//                duration: 1.0,
-//                options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
-//                completion: nil)
-//        }
-//        isGraphViewShowing = !isGraphViewShowing
-//    }
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func addTapped(sender: UIBarButtonItem) {
+        print("Add button was tapped")
     }
-    */
+    
+
+
 
 }
