@@ -21,6 +21,6 @@ extension Card {
     @NSManaged var wronganswers: Int32
     @NSManaged var ordinal: Int32
     @NSManaged var images: NSSet?
-    @NSManaged var decks: NSSet?
+    @NSManaged var deck: Deck?
 
 }

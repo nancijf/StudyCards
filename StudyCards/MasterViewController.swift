@@ -74,7 +74,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         return true
     }
 
-
     // MARK: - Table View
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

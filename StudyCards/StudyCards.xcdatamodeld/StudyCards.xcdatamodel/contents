@@ -7,7 +7,7 @@
         <attribute name="ordinal" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wronganswers" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <relationship name="decks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Deck" inverseName="cards" inverseEntity="Deck" syncable="YES"/>
+        <relationship name="deck" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Deck" inverseName="cards" inverseEntity="Deck" syncable="YES"/>
         <relationship name="images" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Image" inverseName="cards" inverseEntity="Image" syncable="YES"/>
     </entity>
     <entity name="Category" representedClassName=".Category" syncable="YES">
@@ -17,7 +17,7 @@
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="testscore" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="cards" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Card" inverseName="decks" inverseEntity="Card" syncable="YES"/>
+        <relationship name="cards" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Card" inverseName="deck" inverseEntity="Card" syncable="YES"/>
         <relationship name="categories" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Category" syncable="YES"/>
     </entity>
     <entity name="Image" representedClassName=".Image" syncable="YES">

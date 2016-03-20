@@ -19,7 +19,6 @@ enum DeckViewControllerMode: Int {
 class AddDeckViewController: UITableViewController, CategoryTableViewControllerDelegate, AddCardsViewControllerDelegate {
     
     var tempCategories: NSOrderedSet?
-    var tempCards: NSOrderedSet?
     var deck: Deck?
     var mode: DeckViewControllerMode?
     
@@ -44,14 +43,13 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
         }
         
         tempCategories = deck?.categories
-        tempCards = deck?.cards
         let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: "saveData")
         navigationItem.rightBarButtonItem = saveButton
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)        
+//        tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)        
     }
 
     override func didReceiveMemoryWarning() {
@@ -80,7 +78,7 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
         }
         self.navigationController?.popViewControllerAnimated(true)
     }
-
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -99,7 +97,7 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
                 }
                 return categoryCount
             case TableViewSections.Cards.rawValue:
-                guard let cardCount = tempCards?.count else {
+                guard let cardCount = deck?.cards?.count else {
                     return 0
                 }
                 return cardCount
@@ -128,8 +126,10 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
             case TableViewSections.Cards.rawValue:
                 cell.descTextView.hidden = true
                 cell.titleTextField.enabled = false
-                if let card = tempCards![indexPath.item] as? Card {
-                    cell.titleTextField.text = card.question
+                if deck?.cards?.count > 0 {
+                    if let card = deck?.cards?[indexPath.item] as? Card {
+                        cell.titleTextField.text = card.question
+                    }
                 }
             default:
                 break
@@ -139,7 +139,11 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
     }
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 44.0
+        if mode == .AddDeck && section == TableViewSections.Cards.rawValue {
+            return 0
+        } else {
+            return 44.0
+        }
     }
      
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -184,9 +188,14 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
                     rightAccessoryView.hidden = false
                     rightAccessoryView.tag = AddButtonType.Category.rawValue
                 case TableViewSections.Cards.rawValue:
-                    titleLabel.text = "Cards"
-                    rightAccessoryView.hidden = false
-                    rightAccessoryView.tag = AddButtonType.Card.rawValue
+                    if mode == .EditDeck {
+                        titleLabel.text = "Cards"
+                        rightAccessoryView.hidden = false
+                        rightAccessoryView.tag = AddButtonType.Card.rawValue
+                    } else {
+                        titleLabel.hidden = true
+                        rightAccessoryView.hidden = true
+                    }
                 default:
                     titleLabel.text = ""
                     rightAccessoryView.hidden = true
@@ -219,6 +228,20 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
         return nil
     }
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.section == TableViewSections.Cards.rawValue {
+            let card = self.deck?.cards?.objectAtIndex(indexPath.row) as? Card
+            if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {
+                addCardsViewController.deck = deck
+                addCardsViewController.card = card
+                addCardsViewController.mode = .EditCard
+                addCardsViewController.delegate = self
+
+                self.navigationController?.pushViewController(addCardsViewController, animated: true)
+            }
+        }
+    }
+    
     func tappedAddButton(sender: UIBarButtonItem) {
         switch sender.tag {
             case AddButtonType.Category.rawValue:
@@ -232,10 +255,9 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
                 }
             case AddButtonType.Card.rawValue:
                 if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {
-                    
-                    addCardsViewController.deckName = deck?.title
-                    let existingCards = deck?.cards
-                    addCardsViewController.addedCards = existingCards?.mutableCopy() as? NSMutableOrderedSet
+                    addCardsViewController.deck = deck as Deck?
+                    addCardsViewController.mode = .AddCard
+                    addCardsViewController.delegate = self
                     self.navigationController?.pushViewController(addCardsViewController, animated: true)
                 }
             default:
@@ -252,8 +274,7 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
     }
     
     func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?) {
-        print("added some cards")
-        tempCards = addedCards
+        tableView.reloadSections(NSIndexSet(index: 3), withRowAnimation: .None)
     }
 
     /*

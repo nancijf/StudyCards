@@ -28,6 +28,6 @@ struct CardStruct {
     var wronganswers: Int32
     var ordinal: Int32
     var images: NSSet?
-    var decks: NSSet?
+    var deck: Deck?
 }
 

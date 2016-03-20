@@ -30,15 +30,6 @@ class StudyCardsDataStack {
         deckEntity?.categories = deck.categories
         deckEntity?.cards = deck.cards
         
-//        if let categories = deckEntity?.categories {
-//            for obj in categories {
-//                let cat = obj as! Category
-//                let decks = cat.decks?.mutableCopy() ?? NSMutableSet()
-//                decks.addObject(deckEntity!)
-//                cat.decks = decks as? NSSet
-//            }
-//        }
-        
         // Save the context.
         do {
             try self.managedObjectContext?.save()
@@ -61,6 +52,36 @@ class StudyCardsDataStack {
         } catch {
             abort()
         }
+    }
+    
+    func addOrEditCardObject(card: CardStruct, cardObj: Card? = nil) -> Card? {
+        var cardEntity = cardObj
+        
+        if cardEntity == nil {
+            cardEntity = NSEntityDescription.insertNewObjectForEntityForName("Card", inManagedObjectContext: self.managedObjectContext!) as? Card
+        }
+        
+        cardEntity?.question = card.question
+        cardEntity?.answer = card.answer
+        cardEntity?.deck = card.deck
+        cardEntity?.ordinal = card.ordinal
+        cardEntity?.hidden = card.hidden
+        cardEntity?.correctanswers = card.correctanswers
+        cardEntity?.wronganswers = card.wronganswers
+        cardEntity?.images = nil
+        cardEntity?.deck = card.deck
+        
+        
+        // Save the context.
+        do {
+            try self.managedObjectContext?.save()
+
+        } catch {
+            abort()
+        }
+        
+        return cardEntity
+
     }
     
     func fetchedResultsController(entityName: String, sortDescriptors: [NSSortDescriptor]? = nil, predicate: NSPredicate? = nil) -> NSFetchedResultsController? {
