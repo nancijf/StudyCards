@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -44,7 +44,7 @@
         <!--Add Cards View Controller-->
         <scene sceneID="t81-93-I1g">
             <objects>
-                <viewController storyboardIdentifier="AddCards" id="9BG-A8-ggU" customClass="AddCardsViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddCards" automaticallyAdjustsScrollViewInsets="NO" id="9BG-A8-ggU" customClass="AddCardsViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="k9c-bW-sfQ"/>
                         <viewControllerLayoutGuide type="bottom" id="mxC-6e-UrO"/>
@@ -53,27 +53,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="67F-PJ-Lyh" customClass="NFTextView" customModule="StudyCards" customModuleProvider="target">
-                                <rect key="frame" x="30" y="159" width="540" height="283"/>
-                                <color key="backgroundColor" red="1" green="0.84781780782347416" blue="0.64630446431788635" alpha="1" colorSpace="calibratedRGB"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="pYG-3c-hGU" customClass="NFTextView" customModule="StudyCards" customModuleProvider="target">
+                                <rect key="frame" x="20" y="85" width="566" height="471"/>
+                                <color key="backgroundColor" red="0.85006707293194672" green="0.93442687562390314" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="pYG-3c-hGU" customClass="NFTextView" customModule="StudyCards" customModuleProvider="target">
-                                <rect key="frame" x="10" y="30" width="580" height="412"/>
-                                <color key="backgroundColor" red="0.85006707293194672" green="0.93442687562390314" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="67F-PJ-Lyh" customClass="NFTextView" customModule="StudyCards" customModuleProvider="target">
+                                <rect key="frame" x="20" y="85" width="566" height="471"/>
+                                <color key="backgroundColor" red="1" green="0.84781780782347416" blue="0.64630446431788635" alpha="1" colorSpace="calibratedRGB"/>
+                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e5d-vO-9Yp">
-                                <rect key="frame" x="0.0" y="452" width="600" height="148"/>
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="yGT-2K-tEl"/>
                                 </constraints>
                                 <items>
                                     <barButtonItem style="plain" id="La1-0q-sUZ">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Fej-Uy-DYL">
-                                            <rect key="frame" x="20" y="59" width="37" height="30"/>
+                                            <rect key="frame" x="20" y="7" width="37" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Done">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -85,7 +87,7 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" id="c4e-bm-CsZ">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="B5D-hj-87x">
-                                            <rect key="frame" x="67" y="59" width="34" height="30"/>
+                                            <rect key="frame" x="67" y="7" width="34" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Save">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -95,10 +97,22 @@
                                             </connections>
                                         </button>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" id="L20-vm-YHV">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bzv-8V-IEz">
+                                            <rect key="frame" x="111" y="7" width="53" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Delete">
+                                                <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="deleteButton:" destination="9BG-A8-ggU" eventType="touchUpInside" id="HJH-FE-A0b"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="ckn-nW-6c1"/>
                                     <barButtonItem style="plain" id="Esj-04-Dxk">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="k7B-lZ-ddk">
-                                            <rect key="frame" x="367" y="59" width="213" height="30"/>
+                                            <rect key="frame" x="367" y="7" width="213" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Switch">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -113,21 +127,17 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="e5d-vO-9Yp" firstAttribute="bottom" secondItem="mxC-6e-UrO" secondAttribute="top" id="4EM-TF-cZz"/>
+                            <constraint firstItem="pYG-3c-hGU" firstAttribute="top" secondItem="k9c-bW-sfQ" secondAttribute="bottom" constant="65" id="AoA-Kp-VZ4"/>
                             <constraint firstItem="e5d-vO-9Yp" firstAttribute="leading" secondItem="xL1-Or-P50" secondAttribute="leading" id="IDG-02-XK6"/>
-                            <constraint firstItem="mxC-6e-UrO" firstAttribute="top" secondItem="e5d-vO-9Yp" secondAttribute="bottom" id="KwH-J6-2C2"/>
-                            <constraint firstItem="pYG-3c-hGU" firstAttribute="leading" secondItem="xL1-Or-P50" secondAttribute="leading" constant="10" id="NNR-qJ-j61"/>
-                            <constraint firstItem="67F-PJ-Lyh" firstAttribute="top" secondItem="k9c-bW-sfQ" secondAttribute="bottom" constant="139" id="Qe3-QT-xzw"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="pYG-3c-hGU" secondAttribute="leading" constant="-10" id="Vb7-0v-H6r"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="pYG-3c-hGU" secondAttribute="trailing" constant="10" id="Wc7-XQ-eUw"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="67F-PJ-Lyh" secondAttribute="leading" constant="-10" id="XG6-vl-jCp"/>
-                            <constraint firstItem="mxC-6e-UrO" firstAttribute="top" secondItem="67F-PJ-Lyh" secondAttribute="bottom" constant="158" id="Ydx-BT-wyw"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="67F-PJ-Lyh" secondAttribute="trailing" constant="10" id="ayx-xo-DDl"/>
-                            <constraint firstItem="pYG-3c-hGU" firstAttribute="top" secondItem="k9c-bW-sfQ" secondAttribute="bottom" constant="139" id="ceg-qC-CnF"/>
-                            <constraint firstItem="mxC-6e-UrO" firstAttribute="top" secondItem="pYG-3c-hGU" secondAttribute="bottom" constant="158" id="gLp-KS-18V"/>
-                            <constraint firstAttribute="trailing" secondItem="pYG-3c-hGU" secondAttribute="trailing" constant="10" id="gOr-3g-b9p"/>
-                            <constraint firstItem="e5d-vO-9Yp" firstAttribute="top" secondItem="pYG-3c-hGU" secondAttribute="bottom" constant="10" id="j1Y-ca-8h1"/>
-                            <constraint firstItem="e5d-vO-9Yp" firstAttribute="centerX" secondItem="pYG-3c-hGU" secondAttribute="centerX" id="pTF-BZ-Azb"/>
-                            <constraint firstItem="pYG-3c-hGU" firstAttribute="top" secondItem="k9c-bW-sfQ" secondAttribute="bottom" constant="10" id="qyH-J2-13E"/>
+                            <constraint firstItem="67F-PJ-Lyh" firstAttribute="leading" secondItem="xL1-Or-P50" secondAttribute="leadingMargin" id="fzC-cF-EHu"/>
+                            <constraint firstItem="67F-PJ-Lyh" firstAttribute="top" secondItem="pYG-3c-hGU" secondAttribute="top" id="jsb-Mw-U4u"/>
+                            <constraint firstItem="pYG-3c-hGU" firstAttribute="leading" secondItem="67F-PJ-Lyh" secondAttribute="leading" id="kNt-ov-rXa"/>
+                            <constraint firstItem="e5d-vO-9Yp" firstAttribute="top" secondItem="pYG-3c-hGU" secondAttribute="bottom" id="t0G-xE-0PU"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="67F-PJ-Lyh" secondAttribute="trailing" constant="-6" id="udx-wI-RGK"/>
+                            <constraint firstAttribute="trailing" secondItem="e5d-vO-9Yp" secondAttribute="trailing" id="wVD-07-dOR"/>
+                            <constraint firstItem="pYG-3c-hGU" firstAttribute="trailing" secondItem="67F-PJ-Lyh" secondAttribute="trailing" id="y2l-3R-OXD"/>
+                            <constraint firstItem="e5d-vO-9Yp" firstAttribute="top" secondItem="67F-PJ-Lyh" secondAttribute="bottom" id="yjz-c4-chm"/>
                         </constraints>
                     </view>
                     <connections>

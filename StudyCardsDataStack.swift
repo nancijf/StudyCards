@@ -84,6 +84,22 @@ class StudyCardsDataStack {
 
     }
     
+    func deleteCardObject(cardObj: Card? = nil, deckObj: Deck?) {
+        if let cardEntity = cardObj, let cards = deckObj?.cards?.mutableCopy() {
+            cards.removeObject(cardEntity)
+            deckObj?.cards = cards as? NSOrderedSet
+            self.managedObjectContext?.deleteObject(cardEntity)
+            
+            // Save the context.
+            do {
+                try self.managedObjectContext?.save()
+                
+            } catch {
+                abort()
+            }
+        }
+    }
+    
     func fetchedResultsController(entityName: String, sortDescriptors: [NSSortDescriptor]? = nil, predicate: NSPredicate? = nil) -> NSFetchedResultsController? {
         
         var fetchedResultsController: NSFetchedResultsController?

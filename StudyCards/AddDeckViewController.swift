@@ -43,7 +43,7 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
         }
         
         tempCategories = deck?.categories
-        let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: "saveData")
+        let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(saveData))
         navigationItem.rightBarButtonItem = saveButton
     }
     
@@ -174,7 +174,7 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
             
             let rightAccessoryView = UIButton(type: .ContactAdd)
             rightAccessoryView.translatesAutoresizingMaskIntoConstraints = false
-            rightAccessoryView.addTarget(self, action: "tappedAddButton:", forControlEvents: .TouchUpInside)
+            rightAccessoryView.addTarget(self, action: #selector(tappedAddButton), forControlEvents: .TouchUpInside)
             
             switch section {
                 case TableViewSections.Title.rawValue:

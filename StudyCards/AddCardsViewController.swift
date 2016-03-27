@@ -20,6 +20,11 @@ enum AddCardViewControllerMode: Int {
 class AddCardsViewController: UIViewController, UITextViewDelegate {
     
     var isQuestionShowing: Bool = true
+    var doesCardContainText: Bool {
+        get {
+            return !questionTextView.text.isEmpty || !answerTextView.text.isEmpty
+        }
+    }
     var deck: Deck?
     var card: Card?
     var delegate: AddCardsViewControllerDelegate?
@@ -36,9 +41,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        answerTextView.hidden = true
         self.navigationItem.title = deck?.title
-        let addBarButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addTapped:")
+        let addBarButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addTapped))
         self.navigationItem.rightBarButtonItem = addBarButton
         
         questionTextView.placeholderText = "Enter question here..."
@@ -54,6 +58,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         }
         
         switchButton.setTitle("Switch to Answer", forState: .Normal)
+        answerTextView.hidden = true
+        questionTextView.becomeFirstResponder()
     }
     
     func textViewDidChange(textView: UITextView) {
@@ -67,6 +73,20 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         // Dispose of any resources that can be recreated.
     }
 
+    @IBAction func deleteButton(sender: UIButton) {
+        let alert = UIAlertController(title: "Alert", message: "Do you want to delete this card?", preferredStyle: UIAlertControllerStyle.Alert)
+        let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in }
+        let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+            let delCard = self.card
+            StudyCardsDataStack.sharedInstance.deleteCardObject(delCard, deckObj: self.deck)
+            self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
+            self.navigationController?.popViewControllerAnimated(true)
+        })
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
     @IBAction func saveButton(sender: AnyObject) {
         var alertMessage = ""
         if mode == .AddCard {
@@ -94,8 +114,38 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func doneWasPressed(sender: AnyObject) {
-        self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
-        self.navigationController?.popViewControllerAnimated(true)
+        if doesCardContainText {
+            let alert = UIAlertController(title: "Alert", message: "Do you want to save this card?", preferredStyle: UIAlertControllerStyle.Alert)
+            let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in
+                self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
+                self.navigationController?.popViewControllerAnimated(true)
+            }
+            let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+                if self.mode == .AddCard {
+                    let newCard = CardStruct(question: self.questionTextView.text, answer: self.answerTextView.text, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: self.ordinal, images: nil, deck: self.deck)
+                    self.card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
+//                    self.mode = .EditCard
+//                    var alertMessage = "Your new card has been saved."
+                } else if self.mode == .EditCard {
+                    if var updateCard = self.card?.asStruct() {
+                        updateCard.question = self.questionTextView.text
+                        updateCard.answer = self.answerTextView.text
+                        self.card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(updateCard, cardObj: self.card)
+//                        var alertMessage = "Changes to your card have been saved."
+                    }
+                }
+                self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
+                self.navigationController?.popViewControllerAnimated(true)
+            })
+            alert.addAction(saveAction)
+            alert.addAction(cancelAction)
+            presentViewController(alert, animated: true, completion: nil)
+//            self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
+//            self.navigationController?.popViewControllerAnimated(true)
+        } else {
+            self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
+            self.navigationController?.popViewControllerAnimated(true)
+        }
     }
     
     @IBAction func counterView(sender: AnyObject) {
@@ -108,6 +158,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
                 completion:nil)
             switchButton.setTitle("Switch to Question", forState: .Normal)
+            answerTextView.becomeFirstResponder()
+
         } else {
 
             // hide Answer - show Question
@@ -117,18 +169,25 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
                 completion: nil)
             switchButton.setTitle("Switch to Answer", forState: .Normal)
+            questionTextView.becomeFirstResponder()
         }
         isQuestionShowing = !isQuestionShowing
         
     }
     
     func addTapped(sender: UIBarButtonItem) {
+//        if doesCardContainText {
+//            print("card contains text")
+//        }
         mode = .AddCard
         card = nil
         questionTextView.text = ""
         answerTextView.text = ""
         questionTextView.placeholderLabel.hidden = false
         answerTextView.placeholderLabel.hidden = false
+        if !isQuestionShowing {
+            counterView(switchButton)
+        }
     }
 
 }

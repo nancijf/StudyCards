@@ -32,12 +32,12 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         }
         
         self.fetchedResultsController.delegate = self
-        actionBarButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "addTapped:")
-        doneBarButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "editTapped:")
+        actionBarButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(addTapped))
+        doneBarButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(editTapped))
         self.navigationItem.rightBarButtonItem = actionBarButton
         
         self.navigationItem.setHidesBackButton(true, animated: false)
-        let newBackButton = UIBarButtonItem(title: "Back", style: .Plain, target: self, action: "backButtonTapped:")
+        let newBackButton = UIBarButtonItem(title: "Back", style: .Plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = newBackButton
         self.navigationController?.interactivePopGestureRecognizer!.enabled = false
     }
@@ -59,6 +59,8 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
             alert.addAction(saveAction)
             alert.addAction(cancelAction)
             presentViewController(alert, animated: true, completion: nil)
+        } else {
+            self.navigationController?.popViewControllerAnimated(true)
         }
     }
 
@@ -240,28 +242,28 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
     
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch type {
-        case .Insert:
-            self.tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Delete:
-            self.tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        default:
-            return
+            case .Insert:
+                self.tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+            case .Delete:
+                self.tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+            default:
+                return
         }
     }
     
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch type {
-        case .Insert:
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        case .Delete:
-            self.selectedCategories?.removeObject(anObject)
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-        case .Update:
-            self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, atIndexPath: indexPath!)
-        case .Move:
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        }
+            case .Insert:
+                tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            case .Delete:
+                self.selectedCategories?.removeObject(anObject)
+                tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            case .Update:
+                self.configureCell(tableView.cellForRowAtIndexPath(indexPath!)!, atIndexPath: indexPath!)
+            case .Move:
+                tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+                tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            }
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
