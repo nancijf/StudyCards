@@ -10,23 +10,69 @@ import UIKit
 
 class DetailViewController: UIViewController {
     
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
-    @IBOutlet weak var questionTextView: UITextView!
-    @IBOutlet weak var answerTextView: UITextView!
+    @IBOutlet weak var questionLabel: UILabel!
+    @IBOutlet weak var answerLabel: UILabel!
     
     var deck: Deck?
-
-//    var deckItem: Deck? {
-//        didSet {
-//            // Update the view.
-//            self.configureView()
-//        }
-//    }
-
+    var isQuestionShowing: Bool = true
+    var cards: [Card]?
+    
+    struct CardIndex {
+        private var cardCount: Int = 0
+        private var cardIndex: Int = 0
+        
+        init(cardCount: Int) {
+            self.cardCount = cardCount
+        }
+        
+        func current() -> Int {
+            return cardIndex
+        }
+        
+        mutating func next() -> Int {
+            cardIndex += 1
+            if cardIndex >= cardCount {
+                cardIndex = 0
+            }
+            return cardIndex
+        }
+        
+        mutating func previous() -> Int {
+            cardIndex -= 1
+            if cardIndex < 0 {
+                cardIndex = cardCount - 1
+            }
+            return cardIndex
+        }
+    }
+    
+    var cardIndex: CardIndex?
+    
+    @IBAction func switchButton(sender: UIButton) {
+        counterView(sender)
+    }
+    
+    @IBAction func getNextCard(sender: UIBarButtonItem) {
+        let nextCardIndex = self.cardIndex!.next()
+        let card = self.cards?[nextCardIndex]
+        questionLabel.text = card?.question
+        answerLabel.text = card?.answer
+    }
+    
+    @IBAction func getPreviousCard(sender: UIBarButtonItem) {
+        let prevCardIndex = self.cardIndex!.previous()
+        let card = self.cards?[prevCardIndex]
+        questionLabel.text = card?.question
+        answerLabel.text = card?.answer
+    }
+    
     func configureView() {
         // Update the user interface for the detail item.
         if let deck = self.deck, cards = deck.cards, card = cards.firstObject as? Card {
-            questionTextView.text = card.question
+            self.cards = cards.array as? [Card]
+            questionLabel.text = card.question
+            answerLabel.text = card.answer
+            self.cardIndex = CardIndex(cardCount: cards.count)
         }
     }
 
@@ -35,12 +81,39 @@ class DetailViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         self.configureView()
         self.navigationItem.title = deck?.title
+        answerLabel.hidden = true
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBAction func counterView(sender: AnyObject) {
+        if (isQuestionShowing) {
+            
+            // hide Question - show Answer
+            UIView.transitionFromView(questionLabel,
+                                      toView: answerLabel,
+                                      duration: 1.0,
+                                      options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
+                                      completion:nil)
+//            switchButton.setTitle("Question", forState: .Normal)
+            
+        } else {
+            
+            // hide Answer - show Question
+            UIView.transitionFromView(answerLabel,
+                                      toView: questionLabel,
+                                      duration: 1.0,
+                                      options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
+                                      completion: nil)
+//            switchButton.setTitle("Answer", forState: .Normal)
+        }
+        isQuestionShowing = !isQuestionShowing
+        
+    }
+
 
 }
 

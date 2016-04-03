@@ -4,6 +4,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Master-->
@@ -33,27 +34,65 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="placeholder text" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="fX0-Hd-l8X">
-                                <rect key="frame" x="20" y="129" width="560" height="372"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
-                            </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6aw-Uy-4Sr">
-                                <rect key="frame" x="492" y="550" width="51" height="30"/>
-                                <state key="normal" title="Answer"/>
-                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="DHS-OA-E79">
+                                <rect key="frame" x="20" y="72" width="560" height="508"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="508" id="O7G-2e-uwj"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eNW-U9-wzc">
+                                <rect key="frame" x="20" y="72" width="560" height="508"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="508" id="vcH-OZ-dW6"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="eNW-U9-wzc" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" constant="8" id="5il-nJ-5D8"/>
+                            <constraint firstItem="DHS-OA-E79" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" id="Dao-g3-3Wc"/>
+                            <constraint firstItem="DHS-OA-E79" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" constant="8" symbolic="YES" id="SMQ-ot-R4n"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="eNW-U9-wzc" secondAttribute="trailing" id="gGu-aX-T9H"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="eNW-U9-wzc" secondAttribute="leading" id="gJl-L4-0eA"/>
+                            <constraint firstItem="DHS-OA-E79" firstAttribute="trailing" secondItem="svH-Pt-448" secondAttribute="trailingMargin" id="i7w-MZ-D5o"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="ii1-gJ-U8H" appends="YES" id="4mj-EU-zJ3"/>
+                        </connections>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Detail" id="mOI-FS-AaM"/>
+                    <navigationItem key="navigationItem" title="Detail" id="mOI-FS-AaM">
+                        <rightBarButtonItems>
+                            <barButtonItem title="Next" id="c7Q-Yd-4ha">
+                                <connections>
+                                    <action selector="getNextCard:" destination="JEX-9P-axG" id="Vfv-zb-Rgs"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Prev" id="gs4-Ni-xqK">
+                                <connections>
+                                    <action selector="getPreviousCard:" destination="JEX-9P-axG" id="KCg-HB-Tg8"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
                     <connections>
-                        <outlet property="questionTextView" destination="fX0-Hd-l8X" id="tZo-Vd-qSa"/>
+                        <outlet property="answerLabel" destination="eNW-U9-wzc" id="tNl-cd-k2p"/>
+                        <outlet property="questionLabel" destination="DHS-OA-E79" id="ctm-UU-zUm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FJe-Yq-33r" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="ii1-gJ-U8H">
+                    <connections>
+                        <action selector="counterView:" destination="JEX-9P-axG" id="OgO-AA-LmZ"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="709" y="129"/>
         </scene>

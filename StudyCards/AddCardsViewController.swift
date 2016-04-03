@@ -25,6 +25,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             return !questionTextView.text.isEmpty || !answerTextView.text.isEmpty
         }
     }
+    var wasCardSaved: Bool = false
     var deck: Deck?
     var card: Card?
     var delegate: AddCardsViewControllerDelegate?
@@ -110,11 +111,11 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 alert.dismissViewControllerAnimated(true, completion: nil)
             }
         })
-
+        wasCardSaved = true
     }
     
     @IBAction func doneWasPressed(sender: AnyObject) {
-        if doesCardContainText {
+        if doesCardContainText && !wasCardSaved {
             let alert = UIAlertController(title: "Alert", message: "Do you want to save this card?", preferredStyle: UIAlertControllerStyle.Alert)
             let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in
                 self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
@@ -124,14 +125,11 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 if self.mode == .AddCard {
                     let newCard = CardStruct(question: self.questionTextView.text, answer: self.answerTextView.text, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: self.ordinal, images: nil, deck: self.deck)
                     self.card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
-//                    self.mode = .EditCard
-//                    var alertMessage = "Your new card has been saved."
                 } else if self.mode == .EditCard {
                     if var updateCard = self.card?.asStruct() {
                         updateCard.question = self.questionTextView.text
                         updateCard.answer = self.answerTextView.text
                         self.card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(updateCard, cardObj: self.card)
-//                        var alertMessage = "Changes to your card have been saved."
                     }
                 }
                 self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
@@ -140,8 +138,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             alert.addAction(saveAction)
             alert.addAction(cancelAction)
             presentViewController(alert, animated: true, completion: nil)
-//            self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
-//            self.navigationController?.popViewControllerAnimated(true)
         } else {
             self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
             self.navigationController?.popViewControllerAnimated(true)
@@ -176,9 +172,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     }
     
     func addTapped(sender: UIBarButtonItem) {
-//        if doesCardContainText {
-//            print("card contains text")
-//        }
         mode = .AddCard
         card = nil
         questionTextView.text = ""
@@ -188,6 +181,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         if !isQuestionShowing {
             counterView(switchButton)
         }
+        wasCardSaved = false
     }
 
 }
