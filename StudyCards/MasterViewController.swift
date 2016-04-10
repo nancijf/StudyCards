@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchBarDelegate {
 
     var detailViewController: CardPageViewController? = nil
     
@@ -30,8 +30,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
     
-    override func setEditing(editing: Bool, animated: Bool)
-    {
+    override func setEditing(editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         navigationItem.rightBarButtonItem?.enabled = !editing
     }
@@ -40,10 +39,15 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationController?.hidesBarsOnTap = false
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func getJSONData(file: String) {
@@ -69,19 +73,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                                     }
                                     newCategories.addObject(categoryObject)
                                 }
-                                print("Categories: \(newCategories)")
                             }
                             let newDeck = DeckStruct(title: deckTitle, desc: nil, testscore: 0.0, categories: newCategories, cards: nil)
                             if let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck) {
                                 if let cards = dictionary["deck"]?["cards"] as? [[String: AnyObject]] {
-                                    var cardNum: Int32 = 1
                                     for card: [String: AnyObject] in cards {
                                         if let question = card["card"]?["question"] as? String, let answer = card["card"]?["answer"] as? String {
-//                                            print ("\(question)\n")
-//                                            print("\(answer)\n")
-                                            let newCard = CardStruct(question: question, answer: answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: cardNum, images: nil, deck: deckObj)
+                                            let newCard = CardStruct(question: question, answer: answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: 0, images: nil, deck: deckObj)
                                             StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
-                                            cardNum += 1
                                         }
                                     }
                                 }
@@ -184,13 +183,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-        print(indexPath.row)
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyBoard.instantiateViewControllerWithIdentifier("CardListTableViewController") as? CardListTableViewController
         controller?.deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
         self.navigationController?.pushViewController(controller!, animated: true)
     }
-    
     
     // MARK: - Fetched results controller
     
@@ -243,15 +240,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         self.tableView.endUpdates()
     }
-
-    /*
-     // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
-     
-     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-         // In the simplest, most efficient, case, reload the table view.
-         self.tableView.reloadData()
-     }
-     */
 
 }
 

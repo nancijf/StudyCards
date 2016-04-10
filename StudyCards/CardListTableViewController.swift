@@ -19,6 +19,12 @@ class CardListTableViewController: UITableViewController {
         cards = deck?.cards?.array as? [Card]
         self.navigationItem.title = deck?.title
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationController?.hidesBarsOnTap = false
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -45,7 +51,7 @@ class CardListTableViewController: UITableViewController {
 
         let card = self.cards?[indexPath.row]
         cell.textLabel?.text = card?.question
-        cell.detailTextLabel?.text = String((card?.ordinal)!)
+        cell.detailTextLabel?.text = String((indexPath.row + 1))
 
         return cell
     }

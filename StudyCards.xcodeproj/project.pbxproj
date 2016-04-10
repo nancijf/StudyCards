@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		B81F87101CBAC380001D2B9E /* IndexCardImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81F870F1CBAC380001D2B9E /* IndexCardImageView.swift */; };
-		B8538F9C1CB1C683008F4AB5 /* ImportJSONFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8538F9B1CB1C683008F4AB5 /* ImportJSONFile.swift */; };
 		B8538F9F1CB1CD02008F4AB5 /* US_Capitol_Cities.json in Resources */ = {isa = PBXBuildFile; fileRef = B8538F9E1CB1CD02008F4AB5 /* US_Capitol_Cities.json */; };
 		B8538FA11CB1CF49008F4AB5 /* US_Presidents.json in Resources */ = {isa = PBXBuildFile; fileRef = B8538FA01CB1CF49008F4AB5 /* US_Presidents.json */; };
 		B872BB7F1C78A98C0019DED3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B872BB7E1C78A98C0019DED3 /* AppDelegate.swift */; };
@@ -50,7 +49,6 @@
 
 /* Begin PBXFileReference section */
 		B81F870F1CBAC380001D2B9E /* IndexCardImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndexCardImageView.swift; sourceTree = "<group>"; };
-		B8538F9B1CB1C683008F4AB5 /* ImportJSONFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportJSONFile.swift; sourceTree = "<group>"; };
 		B8538F9E1CB1CD02008F4AB5 /* US_Capitol_Cities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = US_Capitol_Cities.json; sourceTree = "<group>"; };
 		B8538FA01CB1CF49008F4AB5 /* US_Presidents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = US_Presidents.json; sourceTree = "<group>"; };
 		B872BB7B1C78A98C0019DED3 /* StudyCards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StudyCards.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,7 +150,6 @@
 				B872BB801C78A98C0019DED3 /* StudyCards.xcdatamodeld */,
 				B872BBB31C78AD3B0019DED3 /* Model */,
 				B8ECC7461C820A8B00503727 /* ViewModels.swift */,
-				B8538F9B1CB1C683008F4AB5 /* ImportJSONFile.swift */,
 			);
 			path = StudyCards;
 			sourceTree = "<group>";
@@ -306,7 +303,6 @@
 				B872BBBE1C78B1B00019DED3 /* Card.swift in Sources */,
 				B8E7F9D71CBA787200FF2A20 /* CardListTableViewController.swift in Sources */,
 				B872BBBD1C78B1B00019DED3 /* Card+CoreDataProperties.swift in Sources */,
-				B8538F9C1CB1C683008F4AB5 /* ImportJSONFile.swift in Sources */,
 				B872BBC71C7924D50019DED3 /* AddDeckViewController.swift in Sources */,
 				B8ECC7471C820A8B00503727 /* ViewModels.swift in Sources */,
 				B872BB821C78A98C0019DED3 /* StudyCards.xcdatamodeld in Sources */,

@@ -34,13 +34,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="DHS-OA-E79">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="p4E-Hg-o24" customClass="IndexCardImageView" customModule="StudyCards" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="topLineWidth">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="lineSpacing">
+                                        <real key="value" value="30"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="DHS-OA-E79">
                                 <rect key="frame" x="20" y="20" width="560" height="560"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eNW-U9-wzc">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" preservesSuperviewLayoutMargins="YES" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eNW-U9-wzc">
                                 <rect key="frame" x="20" y="20" width="560" height="560"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -56,16 +70,20 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="p4E-Hg-o24" secondAttribute="bottom" id="0RK-6x-hIm"/>
                             <constraint firstItem="eNW-U9-wzc" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" id="5il-nJ-5D8"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vZU-Vf-z1R" secondAttribute="trailing" constant="5" id="BBm-W1-Q61"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="vZU-Vf-z1R" secondAttribute="bottom" constant="5" id="C8r-zI-b8n"/>
                             <constraint firstItem="DHS-OA-E79" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" id="Dao-g3-3Wc"/>
-                            <constraint firstItem="DHS-OA-E79" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" id="SMQ-ot-R4n"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="eNW-U9-wzc" secondAttribute="bottom" constant="20" id="XhM-r6-s7y"/>
+                            <constraint firstAttribute="trailing" secondItem="p4E-Hg-o24" secondAttribute="trailing" id="aGT-1S-LhS"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="DHS-OA-E79" secondAttribute="bottom" constant="20" id="ars-Rq-LiD"/>
                             <constraint firstAttribute="trailingMargin" secondItem="eNW-U9-wzc" secondAttribute="trailing" id="gGu-aX-T9H"/>
                             <constraint firstAttribute="leadingMargin" secondItem="eNW-U9-wzc" secondAttribute="leading" id="gJl-L4-0eA"/>
                             <constraint firstItem="DHS-OA-E79" firstAttribute="trailing" secondItem="svH-Pt-448" secondAttribute="trailingMargin" id="i7w-MZ-D5o"/>
+                            <constraint firstItem="p4E-Hg-o24" firstAttribute="top" secondItem="svH-Pt-448" secondAttribute="top" id="l0s-Xe-aYC"/>
+                            <constraint firstItem="p4E-Hg-o24" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leading" id="nsn-gu-CA4"/>
+                            <constraint firstItem="DHS-OA-E79" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" id="ynn-Hu-nKh"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="ii1-gJ-U8H" appends="YES" id="4mj-EU-zJ3"/>
@@ -88,6 +106,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="answerLabel" destination="eNW-U9-wzc" id="tNl-cd-k2p"/>
+                        <outlet property="backgroundViewImage" destination="p4E-Hg-o24" id="GPq-kT-EcU"/>
                         <outlet property="cardCounter" destination="vZU-Vf-z1R" id="mxi-vC-LqP"/>
                         <outlet property="questionLabel" destination="DHS-OA-E79" id="ctm-UU-zUm"/>
                     </connections>
@@ -99,7 +118,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="709" y="129"/>
+            <point key="canvasLocation" x="705" y="873"/>
         </scene>
         <!--Card Page View Controller-->
         <scene sceneID="NGR-M8-6Ks">
@@ -109,7 +128,7 @@
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n4H-XM-58j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-38" y="873"/>
+            <point key="canvasLocation" x="-45" y="873"/>
         </scene>
         <!--Add Cards View Controller-->
         <scene sceneID="t81-93-I1g">

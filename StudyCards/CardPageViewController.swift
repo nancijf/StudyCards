@@ -29,16 +29,22 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         super.viewDidLoad()
         
         if let cards = deck?.cards?.array as? [Card] {
-            for card in cards {
+            for (idx, card) in cards.enumerate() {
                 if let controller = cardViewControllerWith(card) {
                     controllerArray.append(controller)
+                    card.ordinal = idx + 1
                 }
             }
             setViewControllers([controllerArray[currentIndex]], direction: .Forward, animated: true, completion: nil)
         }
         
         dataSource = self
-
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationController?.hidesBarsOnTap = true
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -84,15 +90,4 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         
         return controllerArray[nextIndex]
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

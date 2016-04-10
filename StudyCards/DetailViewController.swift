@@ -13,6 +13,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var answerLabel: UILabel!
     @IBOutlet weak var cardCounter: UITextField!
+    @IBOutlet weak var backgroundViewImage: IndexCardImageView!
     
     var deck: Deck?
     var isQuestionShowing: Bool = true
@@ -76,12 +77,6 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let navBarHeight: CGFloat = self.navigationController?.navigationBar.frame.height ?? 44.0
-        let topMargin = UIApplication.sharedApplication().statusBarFrame.height + navBarHeight
-        let indexCardFrame = UIEdgeInsetsInsetRect(self.view.frame, UIEdgeInsets(top: topMargin, left: 0, bottom: 0, right: 0))
-        let indexCardImageView = IndexCardImageView(frame: indexCardFrame)
-        indexCardImageView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        self.view.insertSubview(indexCardImageView, atIndex: 0)
         self.configureView()
         self.navigationItem.title = deck?.title
         answerLabel.hidden = true

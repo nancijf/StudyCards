@@ -8,18 +8,19 @@
 
 import UIKit
 
+
 class IndexCardImageView: UIImageView {
 
     let topSpacing: CGFloat = 80.0
     
-    var lineColor = UIColor.clearColor()
-    var lineWidth: CGFloat = 1.0
-    var topLineColor = UIColor.clearColor()
-    var topLineWidth: CGFloat = 2.0
+    @IBInspectable var lineColor = UIColor.clearColor()
+    @IBInspectable var lineWidth: CGFloat = 1.0
+    @IBInspectable var topLineColor = UIColor.clearColor()
+    @IBInspectable var topLineWidth: CGFloat = 2.0
+    @IBInspectable var lineSpacing: CGFloat = 35.0
+    @IBInspectable var withLines: Bool = true
     
     init(frame: CGRect,
-         lineSpacing: CGFloat = 35.0,
-         withLines: Bool = true,
          backgroundColor: UIColor = UIColor(red: 0.9999, green: 0.9956, blue: 0.9749, alpha: 1.0),
          lineColor: UIColor = UIColor(red: 0.3964, green: 0.6393, blue: 0.9988, alpha: 0.5),
          topLineColor:UIColor = UIColor(red: 0.8338, green: 0.3722, blue: 0.3937, alpha: 0.5)) {
@@ -34,7 +35,17 @@ class IndexCardImageView: UIImageView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        let backgroundColor: UIColor = UIColor(red: 0.9999, green: 0.9956, blue: 0.9749, alpha: 1.0)
+        let lineColor: UIColor = UIColor(red: 0.3964, green: 0.6393, blue: 0.9988, alpha: 0.5)
+        let topLineColor:UIColor = UIColor(red: 0.8338, green: 0.3722, blue: 0.3937, alpha: 0.5)
+            
+        super.init(coder: aDecoder)
+        
+        self.backgroundColor = backgroundColor
+        self.topLineColor = topLineColor
+        self.lineColor = lineColor
+        
+        self.image = self.drawIndexCard(frame, lineSpacing: lineSpacing, withLines: withLines)
     }
     
     func drawIndexCard(rect: CGRect, lineSpacing: CGFloat = 24.0, withLines: Bool = true) -> UIImage? {
