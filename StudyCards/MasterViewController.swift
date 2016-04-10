@@ -11,8 +11,8 @@ import CoreData
 
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
-    var detailViewController: DetailViewController? = nil
-
+    var detailViewController: CardPageViewController? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,7 +21,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
         if let split = self.splitViewController {
             let controllers = split.viewControllers
-            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
+            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
+        }
+        
+        if fetchedResultsController.fetchedObjects?.count == 0 {
+            getJSONData("US_Presidents")
+            getJSONData("US_Capitol_Cities")
         }
     }
     
@@ -40,6 +45,60 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func getJSONData(file: String) {
+        if let filePath = NSBundle.mainBundle().pathForResource(file, ofType: "json") {
+            do {
+                let data = try NSData(contentsOfFile: filePath, options: NSDataReadingOptions.DataReadingMappedIfSafe)
+                do {
+                    let jsonString = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
+                    if let dictionary = jsonString as? [String: AnyObject] {
+                        if let deckTitle = dictionary["deck"]?["title"] as? String {
+                            let newCategories = NSMutableOrderedSet()
+                            if let categories = dictionary["deck"]?["categories"] as? [String] {
+                                for category in categories {
+                                    let sortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "name", ascending: true)]
+                                    let resultsController = StudyCardsDataStack.sharedInstance.fetchedResultsController("Category", sortDescriptors: sortDescriptors, predicate: NSPredicate(format: "name == %@", category))
+                                    
+                                    guard let categoryObject = resultsController?.fetchedObjects?.first as? Category else {
+                                        let categoryToAdd = CategoryStruct(name: category)
+                                        if let categoryObject = StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(categoryToAdd) {
+                                            newCategories.addObject(categoryObject)                                        
+                                        }
+                                        continue
+                                    }
+                                    newCategories.addObject(categoryObject)
+                                }
+                                print("Categories: \(newCategories)")
+                            }
+                            let newDeck = DeckStruct(title: deckTitle, desc: nil, testscore: 0.0, categories: newCategories, cards: nil)
+                            if let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck) {
+                                if let cards = dictionary["deck"]?["cards"] as? [[String: AnyObject]] {
+                                    var cardNum: Int32 = 1
+                                    for card: [String: AnyObject] in cards {
+                                        if let question = card["card"]?["question"] as? String, let answer = card["card"]?["answer"] as? String {
+//                                            print ("\(question)\n")
+//                                            print("\(answer)\n")
+                                            let newCard = CardStruct(question: question, answer: answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: cardNum, images: nil, deck: deckObj)
+                                            StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
+                                            cardNum += 1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }
+                } catch let error as NSError {
+                    print(error.localizedDescription)
+                }
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+        } else {
+            print("Invalid filename or path")
+        }
+    }
 
     // MARK: - Segues
 
@@ -47,7 +106,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         if segue.identifier == "ShowDeck" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let deck = self.fetchedResultsController.objectAtIndexPath(indexPath)
-                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
+                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! CardPageViewController
                 controller.deck = deck as? Deck
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true
@@ -119,8 +178,20 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
         cell.textLabel!.text = deck?.title
+        if let cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
+            cell.textLabel?.text = (cell.textLabel?.text)! + " (\(cardCount) Cards)"
+        }
     }
-
+    
+    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+        print(indexPath.row)
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let controller = storyBoard.instantiateViewControllerWithIdentifier("CardListTableViewController") as? CardListTableViewController
+        controller?.deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
+        self.navigationController?.pushViewController(controller!, animated: true)
+    }
+    
+    
     // MARK: - Fetched results controller
     
     lazy var fetchedResultsController: NSFetchedResultsController = {

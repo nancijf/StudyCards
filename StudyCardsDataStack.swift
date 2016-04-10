@@ -17,7 +17,7 @@ class StudyCardsDataStack {
     
     var managedObjectContext: NSManagedObjectContext?
     
-    func addOrEditDeckObject(deck: DeckStruct, deckObj: Deck? = nil) {
+    func addOrEditDeckObject(deck: DeckStruct, deckObj: Deck? = nil) -> Deck? {
         var deckEntity = deckObj
         
         if deckEntity == nil {
@@ -36,9 +36,11 @@ class StudyCardsDataStack {
         } catch {
             abort()
         }
+        
+        return deckEntity
     }
     
-    func addOrEditCategoryObject(category: CategoryStruct, categoryObj: Category? = nil) {
+    func addOrEditCategoryObject(category: CategoryStruct, categoryObj: Category? = nil) -> Category? {
         var categoryEntity = categoryObj
         
         if categoryEntity == nil {
@@ -52,6 +54,8 @@ class StudyCardsDataStack {
         } catch {
             abort()
         }
+        
+        return categoryEntity
     }
     
     func addOrEditCardObject(card: CardStruct, cardObj: Card? = nil) -> Card? {
@@ -114,7 +118,7 @@ class StudyCardsDataStack {
         fetchRequest.sortDescriptors = sortDescriptors
         fetchRequest.predicate = predicate
         
-        if let aFetchedResultsController: NSFetchedResultsController? = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: entityName) {
+        if let aFetchedResultsController: NSFetchedResultsController? = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil) {
             fetchedResultsController = aFetchedResultsController
             do {
                 try fetchedResultsController!.performFetch()

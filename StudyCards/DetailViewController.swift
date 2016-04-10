@@ -12,10 +12,12 @@ class DetailViewController: UIViewController {
     
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var answerLabel: UILabel!
+    @IBOutlet weak var cardCounter: UITextField!
     
     var deck: Deck?
     var isQuestionShowing: Bool = true
     var cards: [Card]?
+    var card: Card?
     
     struct CardIndex {
         private var cardCount: Int = 0
@@ -48,10 +50,6 @@ class DetailViewController: UIViewController {
     
     var cardIndex: CardIndex?
     
-    @IBAction func switchButton(sender: UIButton) {
-        counterView(sender)
-    }
-    
     @IBAction func getNextCard(sender: UIBarButtonItem) {
         let nextCardIndex = self.cardIndex!.next()
         let card = self.cards?[nextCardIndex]
@@ -68,17 +66,22 @@ class DetailViewController: UIViewController {
     
     func configureView() {
         // Update the user interface for the detail item.
-        if let deck = self.deck, cards = deck.cards, card = cards.firstObject as? Card {
-            self.cards = cards.array as? [Card]
-            questionLabel.text = card.question
-            answerLabel.text = card.answer
-            self.cardIndex = CardIndex(cardCount: cards.count)
+        if let currentCard = self.card {
+            questionLabel.text = currentCard.question
+            answerLabel.text = currentCard.answer
+            cardCounter.text = String(currentCard.ordinal)
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let navBarHeight: CGFloat = self.navigationController?.navigationBar.frame.height ?? 44.0
+        let topMargin = UIApplication.sharedApplication().statusBarFrame.height + navBarHeight
+        let indexCardFrame = UIEdgeInsetsInsetRect(self.view.frame, UIEdgeInsets(top: topMargin, left: 0, bottom: 0, right: 0))
+        let indexCardImageView = IndexCardImageView(frame: indexCardFrame)
+        indexCardImageView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        self.view.insertSubview(indexCardImageView, atIndex: 0)
         self.configureView()
         self.navigationItem.title = deck?.title
         answerLabel.hidden = true
@@ -98,8 +101,6 @@ class DetailViewController: UIViewController {
                                       duration: 1.0,
                                       options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
                                       completion:nil)
-//            switchButton.setTitle("Question", forState: .Normal)
-            
         } else {
             
             // hide Answer - show Question
@@ -108,7 +109,6 @@ class DetailViewController: UIViewController {
                                       duration: 1.0,
                                       options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
                                       completion: nil)
-//            switchButton.setTitle("Answer", forState: .Normal)
         }
         isQuestionShowing = !isQuestionShowing
         
