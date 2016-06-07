@@ -1,36 +1,59 @@
 //
-//  CardListTableViewController.swift
+//  QuizletTableViewController.swift
 //  StudyCards
 //
-//  Created by Nanci Frank on 4/10/16.
+//  Created by Nanci Frank on 5/1/16.
 //  Copyright © 2016 Wildcat Productions. All rights reserved.
 //
 
 import UIKit
 
-class CardListTableViewController: UITableViewController {
+class QuizletTableViewController: UITableViewController, UISearchBarDelegate {
     
-    var deck: Deck?
-    var cards: [Card]?
+    let quizletController = QuizletController()
+    var quizletData = [QSetObject]()
+    var qlCardData = [CardStruct]()
+    
+    let cellIdentifier = "qlCellIdentifier"
+    
+    lazy var searchBar:UISearchBar =
+        {
+            let searchBarWidth = self.view.frame.width * 0.5
+            let searchBar = UISearchBar(frame: CGRectMake(0, 0, searchBarWidth, 20))
+            return searchBar
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        cards = deck?.cards?.array as? [Card]
-        self.navigationItem.title = deck?.title
+
+        searchBar.delegate = self
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        self.navigationController?.hidesBarsOnTap = false
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    override func viewWillAppear(animated: Bool) {
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: searchBar)
+        searchBar.placeholder = "Search Quizlet"
+        
+        searchBar.becomeFirstResponder()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        if let searchText = searchBar.text {
+            if let escapedText = searchText.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
+                quizletController.searchQuizlet(escapedText, onSuccess: { (quizletData) in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.quizletData = quizletData
+                        self.tableView.reloadData()
+                    })
+                })
+            }
+        }
+        searchBar.resignFirstResponder()
+    }
 
     // MARK: - Table view data source
 
@@ -41,29 +64,29 @@ class CardListTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        guard let cardCount = cards?.count else {
-            return 0
-        }
-        return cardCount
+        return quizletData.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
 
-        let card = self.cards?[indexPath.row]
-        cell.textLabel?.text = card?.question
-        cell.detailTextLabel?.text = String((indexPath.row + 1))
+        let qlData = self.quizletData[indexPath.row]
+        cell.textLabel?.text = qlData.title
+        cell.detailTextLabel?.text = String(qlData.id!)
 
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let storyBoard = UIStoryboard(name: kStoryBoardID, bundle: nil)
-        let controller = storyBoard.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
-        controller?.deck = self.deck
-        controller?.currentIndex = indexPath.row
-        self.navigationController?.pushViewController(controller!, animated: true)
-
+        let cell = tableView.cellForRowAtIndexPath(indexPath)
+        if let idNum = cell?.detailTextLabel?.text {
+            quizletController.retrieveSets(idNum, onSuccess: { (qlCardData) in
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.qlCardData = qlCardData
+                    print("qlCardData: \(self.qlCardData)")
+                })
+            })
+        }
     }
 
     /*

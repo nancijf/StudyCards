@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -30,24 +30,10 @@
                         <viewControllerLayoutGuide type="top" id="SYR-Wa-9uf"/>
                         <viewControllerLayoutGuide type="bottom" id="GAO-Cl-Wes"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="svH-Pt-448">
+                    <view key="view" contentMode="scaleToFill" id="svH-Pt-448" customClass="IndexCard" customModule="StudyCards" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="p4E-Hg-o24" customClass="IndexCardImageView" customModule="StudyCards" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
-                                        <real key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="topLineWidth">
-                                        <real key="value" value="2"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="lineSpacing">
-                                        <real key="value" value="30"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="DHS-OA-E79">
                                 <rect key="frame" x="20" y="20" width="560" height="560"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
@@ -70,21 +56,34 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="p4E-Hg-o24" secondAttribute="bottom" id="0RK-6x-hIm"/>
                             <constraint firstItem="eNW-U9-wzc" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" id="5il-nJ-5D8"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vZU-Vf-z1R" secondAttribute="trailing" constant="5" id="BBm-W1-Q61"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="vZU-Vf-z1R" secondAttribute="bottom" constant="5" id="C8r-zI-b8n"/>
                             <constraint firstItem="DHS-OA-E79" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" id="Dao-g3-3Wc"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="eNW-U9-wzc" secondAttribute="bottom" constant="20" id="XhM-r6-s7y"/>
-                            <constraint firstAttribute="trailing" secondItem="p4E-Hg-o24" secondAttribute="trailing" id="aGT-1S-LhS"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="DHS-OA-E79" secondAttribute="bottom" constant="20" id="ars-Rq-LiD"/>
                             <constraint firstAttribute="trailingMargin" secondItem="eNW-U9-wzc" secondAttribute="trailing" id="gGu-aX-T9H"/>
                             <constraint firstAttribute="leadingMargin" secondItem="eNW-U9-wzc" secondAttribute="leading" id="gJl-L4-0eA"/>
                             <constraint firstItem="DHS-OA-E79" firstAttribute="trailing" secondItem="svH-Pt-448" secondAttribute="trailingMargin" id="i7w-MZ-D5o"/>
-                            <constraint firstItem="p4E-Hg-o24" firstAttribute="top" secondItem="svH-Pt-448" secondAttribute="top" id="l0s-Xe-aYC"/>
-                            <constraint firstItem="p4E-Hg-o24" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leading" id="nsn-gu-CA4"/>
                             <constraint firstItem="DHS-OA-E79" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" id="ynn-Hu-nKh"/>
                         </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
+                                <real key="value" value="0.5"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="topLineWidth">
+                                <real key="value" value="2"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="lineSpacing">
+                                <real key="value" value="35"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="lineColor">
+                                <color key="value" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="topLineColor">
+                                <color key="value" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="ii1-gJ-U8H" appends="YES" id="4mj-EU-zJ3"/>
                         </connections>
@@ -106,7 +105,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="answerLabel" destination="eNW-U9-wzc" id="tNl-cd-k2p"/>
-                        <outlet property="backgroundViewImage" destination="p4E-Hg-o24" id="GPq-kT-EcU"/>
                         <outlet property="cardCounter" destination="vZU-Vf-z1R" id="mxi-vC-LqP"/>
                         <outlet property="questionLabel" destination="DHS-OA-E79" id="ctm-UU-zUm"/>
                     </connections>
@@ -129,6 +127,61 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n4H-XM-58j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-45" y="873"/>
+        </scene>
+        <!--Quizlet Table View Controller-->
+        <scene sceneID="RWt-kS-yHh">
+            <objects>
+                <tableViewController id="P3g-Ka-Os8" customClass="QuizletTableViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="QAK-RS-wUA">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="qlCellIdentifier" textLabel="2HZ-wM-Ndy" detailTextLabel="M3s-Uk-ZJb" style="IBUITableViewCellStyleSubtitle" id="zuF-mf-mdO">
+                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zuF-mf-mdO" id="fbO-HX-f3F">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2HZ-wM-Ndy">
+                                            <rect key="frame" x="15" y="6" width="31.5" height="19.5"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="M3s-Uk-ZJb">
+                                            <rect key="frame" x="15" y="25.5" width="40.5" height="13.5"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="P3g-Ka-Os8" id="go6-Ws-MV6"/>
+                            <outlet property="delegate" destination="P3g-Ka-Os8" id="LeE-Cu-FNT"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="searchDisplayController" destination="FlE-g1-6jc" id="PbF-Gy-PVo"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Iqi-sh-dtI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="FlE-g1-6jc">
+                    <connections>
+                        <outlet property="delegate" destination="P3g-Ka-Os8" id="Yez-rK-SbO"/>
+                        <outlet property="searchContentsController" destination="P3g-Ka-Os8" id="9IF-pd-Xyf"/>
+                        <outlet property="searchResultsDataSource" destination="P3g-Ka-Os8" id="vef-Vq-v7B"/>
+                        <outlet property="searchResultsDelegate" destination="P3g-Ka-Os8" id="Yyd-Kt-mS0"/>
+                    </connections>
+                </searchDisplayController>
+            </objects>
+            <point key="canvasLocation" x="679" y="129"/>
         </scene>
         <!--Add Cards View Controller-->
         <scene sceneID="t81-93-I1g">
@@ -293,11 +346,19 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Stg-xc-62n">
-                            <connections>
-                                <segue destination="83o-js-ZpY" kind="show" identifier="AddNewDeck" id="OfU-r2-jwJ"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="Stg-xc-62n">
+                                <connections>
+                                    <segue destination="83o-js-ZpY" kind="show" identifier="AddNewDeck" id="OfU-r2-jwJ"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Quizlet" id="5k9-ei-nLx">
+                                <connections>
+                                    <action selector="runQuizlet:" destination="7bK-jq-Zjz" id="cdd-15-tqN"/>
+                                    <segue destination="P3g-Ka-Os8" kind="show" id="5vU-cL-U48"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <segue destination="83o-js-ZpY" kind="show" identifier="EditDeck" id="Og1-Gt-bXN"/>

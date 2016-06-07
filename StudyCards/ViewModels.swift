@@ -31,3 +31,16 @@ struct CardStruct {
     var deck: Deck?
 }
 
+class QSetObject: NSObject {
+    
+    var title: String?
+    var id: Int?
+    var subjects: [String]?
+    
+}
+
+class TempCard: NSObject {
+    var question: String?
+    var answer: String?
+}
+

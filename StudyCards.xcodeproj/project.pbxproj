@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B81F87101CBAC380001D2B9E /* IndexCardImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81F870F1CBAC380001D2B9E /* IndexCardImageView.swift */; };
+		B829712D1CD55A7D00509E1E /* QuizletController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B829712C1CD55A7D00509E1E /* QuizletController.swift */; };
+		B829712F1CD6A05D00509E1E /* QuizletTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B829712E1CD6A05D00509E1E /* QuizletTableViewController.swift */; };
+		B84223511CBBBC1000B7A29D /* IndexCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84223501CBBBC1000B7A29D /* IndexCard.swift */; };
 		B8538F9F1CB1CD02008F4AB5 /* US_Capitol_Cities.json in Resources */ = {isa = PBXBuildFile; fileRef = B8538F9E1CB1CD02008F4AB5 /* US_Capitol_Cities.json */; };
 		B8538FA11CB1CF49008F4AB5 /* US_Presidents.json in Resources */ = {isa = PBXBuildFile; fileRef = B8538FA01CB1CF49008F4AB5 /* US_Presidents.json */; };
 		B872BB7F1C78A98C0019DED3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B872BB7E1C78A98C0019DED3 /* AppDelegate.swift */; };
@@ -48,7 +50,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B81F870F1CBAC380001D2B9E /* IndexCardImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndexCardImageView.swift; sourceTree = "<group>"; };
+		B829712C1CD55A7D00509E1E /* QuizletController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizletController.swift; sourceTree = "<group>"; };
+		B829712E1CD6A05D00509E1E /* QuizletTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizletTableViewController.swift; sourceTree = "<group>"; };
+		B84223501CBBBC1000B7A29D /* IndexCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndexCard.swift; sourceTree = "<group>"; };
 		B8538F9E1CB1CD02008F4AB5 /* US_Capitol_Cities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = US_Capitol_Cities.json; sourceTree = "<group>"; };
 		B8538FA01CB1CF49008F4AB5 /* US_Presidents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = US_Presidents.json; sourceTree = "<group>"; };
 		B872BB7B1C78A98C0019DED3 /* StudyCards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StudyCards.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,7 +146,9 @@
 				B8E7F9D41CB9937400FF2A20 /* CardPageViewController.swift */,
 				B872BB851C78A98C0019DED3 /* DetailViewController.swift */,
 				B8E7F9D61CBA787200FF2A20 /* CardListTableViewController.swift */,
-				B81F870F1CBAC380001D2B9E /* IndexCardImageView.swift */,
+				B829712C1CD55A7D00509E1E /* QuizletController.swift */,
+				B829712E1CD6A05D00509E1E /* QuizletTableViewController.swift */,
+				B84223501CBBBC1000B7A29D /* IndexCard.swift */,
 				B872BB871C78A98C0019DED3 /* Main.storyboard */,
 				B872BB8A1C78A98C0019DED3 /* Assets.xcassets */,
 				B872BB8C1C78A98C0019DED3 /* LaunchScreen.storyboard */,
@@ -236,6 +242,7 @@
 				TargetAttributes = {
 					B872BB7A1C78A98C0019DED3 = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = KD7N7R2FNY;
 					};
 					B872BB931C78A98C0019DED3 = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -297,7 +304,6 @@
 				B872BBC21C78B1B00019DED3 /* Category.swift in Sources */,
 				B872BBC11C78B1B00019DED3 /* Category+CoreDataProperties.swift in Sources */,
 				B8ECC7451C81F95D00503727 /* StudyCardsDataStack.swift in Sources */,
-				B81F87101CBAC380001D2B9E /* IndexCardImageView.swift in Sources */,
 				B8D2B24D1C9D86AA003C9BEE /* NFTextView.swift in Sources */,
 				B872BBC01C78B1B00019DED3 /* Image.swift in Sources */,
 				B872BBBE1C78B1B00019DED3 /* Card.swift in Sources */,
@@ -306,11 +312,14 @@
 				B872BBC71C7924D50019DED3 /* AddDeckViewController.swift in Sources */,
 				B8ECC7471C820A8B00503727 /* ViewModels.swift in Sources */,
 				B872BB821C78A98C0019DED3 /* StudyCards.xcdatamodeld in Sources */,
+				B829712F1CD6A05D00509E1E /* QuizletTableViewController.swift in Sources */,
 				B872BBC31C78B1B00019DED3 /* Deck+CoreDataProperties.swift in Sources */,
 				B872BB841C78A98C0019DED3 /* MasterViewController.swift in Sources */,
+				B829712D1CD55A7D00509E1E /* QuizletController.swift in Sources */,
 				B872BB861C78A98C0019DED3 /* DetailViewController.swift in Sources */,
 				B8E7F9D51CB9937400FF2A20 /* CardPageViewController.swift in Sources */,
 				B872BBBF1C78B1B00019DED3 /* Image+CoreDataProperties.swift in Sources */,
+				B84223511CBBBC1000B7A29D /* IndexCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,6 +448,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = StudyCards/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.nancifrank.StudyCards;
@@ -450,6 +460,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = StudyCards/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.nancifrank.StudyCards;

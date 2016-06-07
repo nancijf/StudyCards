@@ -13,7 +13,6 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var answerLabel: UILabel!
     @IBOutlet weak var cardCounter: UITextField!
-    @IBOutlet weak var backgroundViewImage: IndexCardImageView!
     
     var deck: Deck?
     var isQuestionShowing: Bool = true
@@ -77,6 +76,8 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        let indexCard = self.view as? IndexCard
+//        indexCard?.lineColor = UIColor ( red: 0.5, green: 0.0, blue: 0.5, alpha: 1.0 )
         self.configureView()
         self.navigationItem.title = deck?.title
         answerLabel.hidden = true
@@ -85,6 +86,10 @@ class DetailViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+        self.view.setNeedsDisplay()
     }
     
     @IBAction func counterView(sender: AnyObject) {
