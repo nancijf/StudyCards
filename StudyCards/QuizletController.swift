@@ -25,11 +25,10 @@ class QuizletController: NSObject {
     let searchSets = "/search/sets?per_page=25&q="
     let getSet = "/sets/"
     
-//    var tempCards = [TempCard]()
     var tempCards = [CardStruct]()
     
-    func retrieveSets(setID: String, onSuccess: SuccessBlock2) {
-        let urlPath = baseURL + getSet + setID + "?\(clientID)" + "&whitespace=1"
+    func retrieveSets(setID: Int, onSuccess: SuccessBlock2) {
+        let urlPath = baseURL + getSet + String(setID) + "?\(clientID)" + "&whitespace=1"
         guard let endpoint = NSURL(string: urlPath) else {
             print("Error creating endpoint")
             return
@@ -48,13 +47,19 @@ class QuizletController: NSObject {
                 }
 
                 if let terms = json["terms"] as? [AnyObject] {
+                    self.tempCards.removeAll()
                     for term in terms {
                         if let termDict = term as? [String: AnyObject] {
-//                            let tempCard = TempCard()
+                            var imageData = ImageStruct()
+                            if let imageURL = termDict["image"] as? [String: AnyObject] {
+//                                print("Image URL is: \(imageURL["url"])")
+                                imageData.imageURL = imageURL["url"] as? NSObject
+                                imageData.width = (imageURL["width"] as? Float)!
+                                imageData.height = (imageURL["height"] as? Float)!
+                            }
+//                            self.images?.setByAddingObjectsFromSet(imageData)
                             if let question = termDict["term"] as? String, let answer = termDict["definition"] as? String {
-                                let tempCard = CardStruct(question: question, answer: answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: 0, images: nil, deck: nil)
-//                                tempCard.question = question
-//                                tempCard.answer = answer 
+                                let tempCard = CardStruct(question: question, answer: answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: 0, images: [imageData], deck: nil)
                                 self.tempCards.append(tempCard)
                             }
                         }
@@ -71,6 +76,7 @@ class QuizletController: NSObject {
 
     func searchQuizlet(searchText: String, onSuccess: SuccessBlock) {
         let urlPath = baseURL + searchSets + searchText + "&\(clientID)"
+//        print(urlPath)
         guard let endpoint = NSURL(string: urlPath) else {
             print("Error creating endpoint")
             return
@@ -94,6 +100,7 @@ class QuizletController: NSObject {
                             let qSetObj = QSetObject()
                             qSetObj.title = setDict["title"] as? String
                             qSetObj.id = Int(String(setDict["id"]!))
+                            qSetObj.totalQuestions = setDict["term_count"] as? Int
                             qSetObj.subjects = [String(setDict["subjects"])]
                             setData.append(qSetObj)
                         }
@@ -105,7 +112,7 @@ class QuizletController: NSObject {
             } catch let error as NSError {
                 print(error.debugDescription)
             }
-            }.resume()
+        }.resume()
     }
 }
 

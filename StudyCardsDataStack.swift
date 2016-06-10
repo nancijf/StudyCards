@@ -75,7 +75,6 @@ class StudyCardsDataStack {
         cardEntity?.images = nil
         cardEntity?.deck = card.deck
         
-        
         // Save the context.
         do {
             try self.managedObjectContext?.save()

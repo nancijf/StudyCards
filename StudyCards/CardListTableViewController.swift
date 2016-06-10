@@ -8,16 +8,28 @@
 
 import UIKit
 
+enum CardListControllerMode: Int {
+    case ObjectData
+    case StructData
+}
+
 class CardListTableViewController: UITableViewController {
     
     var deck: Deck?
     var cards: [Card]?
+    var tempCards: [CardStruct]?
+    var mode: CardListControllerMode?
+    var tempCardTitle: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         cards = deck?.cards?.array as? [Card]
-        self.navigationItem.title = deck?.title
+        if let title = tempCardTitle {
+            self.navigationItem.title = title
+        } else {
+            self.navigationItem.title = deck?.title
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -35,24 +47,34 @@ class CardListTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        guard let cardCount = cards?.count else {
-            return 0
+        if mode == .StructData {
+            guard let cardCount = tempCards?.count else {
+                return 0
+            }
+            return cardCount
+        } else {
+            guard let cardCount = cards?.count else {
+                return 0
+            }
+            return cardCount
         }
-        return cardCount
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        let card = self.cards?[indexPath.row]
-        cell.textLabel?.text = card?.question
-        cell.detailTextLabel?.text = String((indexPath.row + 1))
+        if mode == .StructData {
+            let card = self.tempCards?[indexPath.row]
+            cell.textLabel?.text = card?.question
+            cell.detailTextLabel?.text = String((indexPath.row + 1))
+        } else {
+            let card = self.cards?[indexPath.row]
+            cell.textLabel?.text = card?.question
+            cell.detailTextLabel?.text = String((indexPath.row + 1))
+        }
 
         return cell
     }
@@ -60,7 +82,14 @@ class CardListTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let storyBoard = UIStoryboard(name: kStoryBoardID, bundle: nil)
         let controller = storyBoard.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
-        controller?.deck = self.deck
+        if mode == .StructData {
+            controller?.tempCards = self.tempCards
+            controller?.usingCardStruct = true
+            controller?.tempCardTitle = tempCardTitle
+        } else {
+            controller?.deck = self.deck
+            controller?.usingCardStruct = false
+        }
         controller?.currentIndex = indexPath.row
         self.navigationController?.pushViewController(controller!, animated: true)
 

@@ -13,11 +13,15 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var answerLabel: UILabel!
     @IBOutlet weak var cardCounter: UITextField!
+    @IBOutlet weak var cardImage: UIImageView!
     
     var deck: Deck?
     var isQuestionShowing: Bool = true
+    var isUsingCardStruct: Bool = false
     var cards: [Card]?
     var card: Card?
+    var tempCard: CardStruct?
+    var tempCardTitle: String?
     
     struct CardIndex {
         private var cardCount: Int = 0
@@ -66,10 +70,23 @@ class DetailViewController: UIViewController {
     
     func configureView() {
         // Update the user interface for the detail item.
-        if let currentCard = self.card {
-            questionLabel.text = currentCard.question
-            answerLabel.text = currentCard.answer
-            cardCounter.text = String(currentCard.ordinal)
+        if isUsingCardStruct {
+            if let currentCard = self.tempCard {
+                questionLabel.text = currentCard.question
+                answerLabel.text = currentCard.answer
+                cardCounter.text = String(currentCard.ordinal)
+                if let image = currentCard.images, imageurl = image[0].imageURL as? String {
+                        if let data = NSData(contentsOfURL: NSURL(string: imageurl)!) {
+                            cardImage.image = UIImage(data: data)
+                        }
+                }
+            }
+        } else {
+            if let currentCard = self.card {
+                questionLabel.text = currentCard.question
+                answerLabel.text = currentCard.answer
+                cardCounter.text = String(currentCard.ordinal)
+            }
         }
     }
 
@@ -96,6 +113,7 @@ class DetailViewController: UIViewController {
         if (isQuestionShowing) {
             
             // hide Question - show Answer
+            cardImage.hidden = true
             UIView.transitionFromView(questionLabel,
                                       toView: answerLabel,
                                       duration: 1.0,
@@ -109,6 +127,7 @@ class DetailViewController: UIViewController {
                                       duration: 1.0,
                                       options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
                                       completion: nil)
+            cardImage.hidden = false
         }
         isQuestionShowing = !isQuestionShowing
         

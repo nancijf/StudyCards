@@ -27,8 +27,18 @@ struct CardStruct {
     var correctanswers: Int32
     var wronganswers: Int32
     var ordinal: Int32
-    var images: NSSet?
+    var images: [ImageStruct]?
     var deck: Deck?
+}
+
+struct ImageStruct {
+    var imagepath: String?
+    var imageURL: NSObject?
+    var width: Float = 0.0
+    var height: Float = 0.0
+    var xpos: Float = 0.0
+    var ypos: Float = 0.0
+    var cards: NSSet?    
 }
 
 class QSetObject: NSObject {
@@ -36,11 +46,8 @@ class QSetObject: NSObject {
     var title: String?
     var id: Int?
     var subjects: [String]?
+    var totalQuestions: Int?
     
 }
 
-class TempCard: NSObject {
-    var question: String?
-    var answer: String?
-}
 

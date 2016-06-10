@@ -36,13 +36,13 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="DHS-OA-E79">
                                 <rect key="frame" x="20" y="20" width="560" height="560"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" preservesSuperviewLayoutMargins="YES" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eNW-U9-wzc">
                                 <rect key="frame" x="20" y="20" width="560" height="560"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -52,6 +52,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iAh-vh-FuB">
+                                <rect key="frame" x="20" y="362" width="560" height="201"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -60,12 +63,16 @@
                             <constraint firstAttribute="trailingMargin" secondItem="vZU-Vf-z1R" secondAttribute="trailing" constant="5" id="BBm-W1-Q61"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="vZU-Vf-z1R" secondAttribute="bottom" constant="5" id="C8r-zI-b8n"/>
                             <constraint firstItem="DHS-OA-E79" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" id="Dao-g3-3Wc"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="iAh-vh-FuB" secondAttribute="trailing" constant="12" id="FUc-tf-VYf"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="eNW-U9-wzc" secondAttribute="bottom" constant="20" id="XhM-r6-s7y"/>
+                            <constraint firstItem="iAh-vh-FuB" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" constant="342" id="ZvP-ml-pPB"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="DHS-OA-E79" secondAttribute="bottom" constant="20" id="ars-Rq-LiD"/>
                             <constraint firstAttribute="trailingMargin" secondItem="eNW-U9-wzc" secondAttribute="trailing" id="gGu-aX-T9H"/>
                             <constraint firstAttribute="leadingMargin" secondItem="eNW-U9-wzc" secondAttribute="leading" id="gJl-L4-0eA"/>
                             <constraint firstItem="DHS-OA-E79" firstAttribute="trailing" secondItem="svH-Pt-448" secondAttribute="trailingMargin" id="i7w-MZ-D5o"/>
+                            <constraint firstItem="iAh-vh-FuB" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" constant="12" id="poU-AP-Xbw"/>
                             <constraint firstItem="DHS-OA-E79" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" id="ynn-Hu-nKh"/>
+                            <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="iAh-vh-FuB" secondAttribute="bottom" constant="37" id="z8x-Gi-sT0"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
@@ -106,6 +113,7 @@
                     <connections>
                         <outlet property="answerLabel" destination="eNW-U9-wzc" id="tNl-cd-k2p"/>
                         <outlet property="cardCounter" destination="vZU-Vf-z1R" id="mxi-vC-LqP"/>
+                        <outlet property="cardImage" destination="iAh-vh-FuB" id="gDz-UW-Qlu"/>
                         <outlet property="questionLabel" destination="DHS-OA-E79" id="ctm-UU-zUm"/>
                     </connections>
                 </viewController>
@@ -148,14 +156,14 @@
                                             <rect key="frame" x="15" y="6" width="31.5" height="19.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="M3s-Uk-ZJb">
                                             <rect key="frame" x="15" y="25.5" width="40.5" height="13.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -167,6 +175,8 @@
                             <outlet property="delegate" destination="P3g-Ka-Os8" id="LeE-Cu-FNT"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="FlE-g1-6jc" id="PbF-Gy-PVo"/>
                     </connections>
@@ -355,7 +365,7 @@
                             <barButtonItem title="Quizlet" id="5k9-ei-nLx">
                                 <connections>
                                     <action selector="runQuizlet:" destination="7bK-jq-Zjz" id="cdd-15-tqN"/>
-                                    <segue destination="P3g-Ka-Os8" kind="show" id="5vU-cL-U48"/>
+                                    <segue destination="P3g-Ka-Os8" kind="show" identifier="quizletSearch" id="5vU-cL-U48"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -425,7 +435,7 @@
                                 <rect key="frame" x="0.0" y="92" width="600" height="49"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OZw-hg-peq" id="60I-uV-jUr">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="49"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="48.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="we7-Ym-Thi" userLabel="TitleTextField">
@@ -482,7 +492,7 @@
                                 <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="H22-3N-P3Y" id="M0u-I1-wrh">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -515,6 +525,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="2cg-Bw-jWi"/>
-        <segue reference="Og1-Gt-bXN"/>
+        <segue reference="OfU-r2-jwJ"/>
     </inferredMetricsTieBreakers>
 </document>

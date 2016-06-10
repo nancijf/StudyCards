@@ -110,10 +110,19 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         if segue.identifier == "ShowDeck" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let deck = self.fetchedResultsController.objectAtIndexPath(indexPath)
+                
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! CardPageViewController
                 controller.deck = deck as? Deck
-                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-                controller.navigationItem.leftItemsSupplementBackButton = true
+                if controller.deck?.cards?.count == 0 {
+                    print("there are no cards to display")
+                    let alert = UIAlertController(title: "Alert", message: "There are no cards in this deck to display.", preferredStyle: .Alert)
+                    let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+                    alert.addAction(okAction)
+                    presentViewController(alert, animated: true, completion: nil)
+                } else {
+                    controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+                    controller.navigationItem.leftItemsSupplementBackButton = true
+                }
             }
         }
         else if segue.identifier == "AddNewDeck" {

@@ -18,6 +18,10 @@ class Card: NSManagedObject {
 
 extension Card {
     func asStruct() -> CardStruct {
-        return CardStruct(question: self.question, answer: self.answer, hidden: self.hidden, correctanswers: self.correctanswers, wronganswers: self.wronganswers, ordinal: self.ordinal, images: self.images, deck: self.deck)
+        var imageData = [ImageStruct]()
+        for image in (images?.allObjects as? [Image])! {
+            imageData.append(image.asStruct())
+        }
+        return CardStruct(question: self.question, answer: self.answer, hidden: self.hidden, correctanswers: self.correctanswers, wronganswers: self.wronganswers, ordinal: self.ordinal, images: imageData, deck: self.deck)
     }
 }

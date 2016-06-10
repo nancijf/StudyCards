@@ -16,9 +16,9 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate {
     
     let cellIdentifier = "qlCellIdentifier"
     
-    lazy var searchBar:UISearchBar =
+    lazy var searchBar: UISearchBar =
         {
-            let searchBarWidth = self.view.frame.width * 0.5
+            let searchBarWidth = self.view.frame.width * 0.75
             let searchBar = UISearchBar(frame: CGRectMake(0, 0, searchBarWidth, 20))
             return searchBar
     }()
@@ -31,7 +31,9 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate {
     
     override func viewWillAppear(animated: Bool) {
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: searchBar)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchBar)
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: nil)
+//        self.view.addSubview(searchBar)
         searchBar.placeholder = "Search Quizlet"
         
         searchBar.becomeFirstResponder()
@@ -72,18 +74,26 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate {
 
         let qlData = self.quizletData[indexPath.row]
         cell.textLabel?.text = qlData.title
-        cell.detailTextLabel?.text = String(qlData.id!)
+        if let questionCount = qlData.totalQuestions {
+            cell.detailTextLabel?.text = String(questionCount)
+        }
 
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
-        if let idNum = cell?.detailTextLabel?.text {
-            quizletController.retrieveSets(idNum, onSuccess: { (qlCardData) in
+        let idNum = quizletData[indexPath.row].id
+        if let setNum = idNum {
+            quizletController.retrieveSets(setNum, onSuccess: { (qlCardData) in
                 dispatch_async(dispatch_get_main_queue(), {
                     self.qlCardData = qlCardData
-                    print("qlCardData: \(self.qlCardData)")
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let controller = storyboard.instantiateViewControllerWithIdentifier("CardListTableViewController") as? CardListTableViewController
+                    controller?.mode = .StructData
+                    controller?.tempCards = qlCardData
+                    controller?.tempCardTitle = cell?.textLabel?.text
+                    self.navigationController?.pushViewController(controller!, animated: true)
                 })
             })
         }
