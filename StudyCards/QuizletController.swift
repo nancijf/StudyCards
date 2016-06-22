@@ -26,6 +26,7 @@ class QuizletController: NSObject {
     let getSet = "/sets/"
     
     var tempCards = [CardStruct]()
+    var imageURL: String?
     
     func retrieveSets(setID: Int, onSuccess: SuccessBlock2) {
         let urlPath = baseURL + getSet + String(setID) + "?\(clientID)" + "&whitespace=1"
@@ -50,16 +51,11 @@ class QuizletController: NSObject {
                     self.tempCards.removeAll()
                     for term in terms {
                         if let termDict = term as? [String: AnyObject] {
-                            var imageData = ImageStruct()
-                            if let imageURL = termDict["image"] as? [String: AnyObject] {
-//                                print("Image URL is: \(imageURL["url"])")
-                                imageData.imageURL = imageURL["url"] as? NSObject
-                                imageData.width = (imageURL["width"] as? Float)!
-                                imageData.height = (imageURL["height"] as? Float)!
-                            }
-//                            self.images?.setByAddingObjectsFromSet(imageData)
                             if let question = termDict["term"] as? String, let answer = termDict["definition"] as? String {
-                                let tempCard = CardStruct(question: question, answer: answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: 0, images: [imageData], deck: nil)
+                                if let imageData = termDict["image"] as? [String: AnyObject] {
+                                    self.imageURL = imageData["url"] as? String
+                                }
+                                let tempCard = CardStruct(question: question, answer: answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: 0, imageURL: self.imageURL, deck: nil)
                                 self.tempCards.append(tempCard)
                             }
                         }

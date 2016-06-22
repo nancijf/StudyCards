@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15D21" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15F34" minimumToolsVersion="Automatic">
     <entity name="Card" representedClassName=".Card" syncable="YES">
         <attribute name="answer" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="correctanswers" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="hidden" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ordinal" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wronganswers" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="deck" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Deck" inverseName="cards" inverseEntity="Deck" syncable="YES"/>
-        <relationship name="images" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Image" inverseName="cards" inverseEntity="Image" syncable="YES"/>
     </entity>
     <entity name="Category" representedClassName=".Category" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -27,12 +27,11 @@
         <attribute name="width" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="xpos" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="ypos" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <relationship name="cards" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Card" inverseName="images" inverseEntity="Card" syncable="YES"/>
     </entity>
     <elements>
         <element name="Card" positionX="450" positionY="63" width="128" height="165"/>
         <element name="Category" positionX="97" positionY="312" width="128" height="60"/>
         <element name="Deck" positionX="99" positionY="108" width="128" height="120"/>
-        <element name="Image" positionX="448" positionY="333" width="128" height="150"/>
+        <element name="Image" positionX="448" positionY="333" width="128" height="135"/>
     </elements>
 </model>

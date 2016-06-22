@@ -60,27 +60,18 @@ class StudyCardsDataStack {
     
     func addOrEditCardObject(card: CardStruct, cardObj: Card? = nil) -> Card? {
         var cardEntity = cardObj
-        var imageSet = NSMutableSet()
         
         if cardEntity == nil {
             cardEntity = NSEntityDescription.insertNewObjectForEntityForName("Card", inManagedObjectContext: self.managedObjectContext!) as? Card
         }
         
-        if card.images != nil {
-            for image in card.images! {
-                let newImage = StudyCardsDataStack.sharedInstance.addOrEditImageObject(image)
-                imageSet.addObject("text")
-            }
-        }
-        
         cardEntity?.question = card.question
         cardEntity?.answer = card.answer
-        cardEntity?.deck = card.deck
         cardEntity?.ordinal = card.ordinal
         cardEntity?.hidden = card.hidden
         cardEntity?.correctanswers = card.correctanswers
         cardEntity?.wronganswers = card.wronganswers
-        cardEntity?.images = imageSet
+        cardEntity?.imageURL = card.imageURL
         cardEntity?.deck = card.deck
         
         // Save the context.
@@ -94,32 +85,6 @@ class StudyCardsDataStack {
         return cardEntity
     }
     
-    func addOrEditImageObject(image: ImageStruct, imageObj: Image? = nil) -> Image? {
-        var imageEntity = imageObj
-        
-        if imageEntity == nil {
-            imageEntity = NSEntityDescription.insertNewObjectForEntityForName("Image", inManagedObjectContext: self.managedObjectContext!) as? Image
-        }
-        
-        imageEntity?.imagepath = image.imagepath
-        imageEntity?.imageURL = image.imageURL
-        imageEntity?.width = image.width
-        imageEntity?.height = image.height
-        imageEntity?.xpos = 0.0
-        imageEntity?.ypos = 0.0
-        imageEntity?.cards = image.cards
-        
-        // Save the context.
-        do {
-            try self.managedObjectContext?.save()
-            
-        } catch {
-            abort()
-        }
-        
-        return imageEntity
-    }
-
     func deleteCardObject(cardObj: Card? = nil, deckObj: Deck?) {
         if let cardEntity = cardObj, let cards = deckObj?.cards?.mutableCopy() {
             cards.removeObject(cardEntity)

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GameplayKit
 
 enum CardListControllerMode: Int {
     case ObjectData
@@ -30,6 +31,8 @@ class CardListTableViewController: UITableViewController {
         } else {
             self.navigationItem.title = deck?.title
         }
+        self.tableView.estimatedRowHeight = 40
+        self.tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -41,6 +44,18 @@ class CardListTableViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func canBecomeFirstResponder() -> Bool {
+        return true
+    }
+    
+    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
+        if motion == .MotionShake && mode != .StructData {
+            let shuffled = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(cards!)
+            cards = shuffled as? [Card]
+            tableView.reloadData()
+        }
     }
     
 

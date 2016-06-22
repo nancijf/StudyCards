@@ -91,7 +91,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     @IBAction func saveButton(sender: AnyObject) {
         var alertMessage = ""
         if mode == .AddCard {
-            let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: ordinal, images: nil, deck: deck)
+            let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: ordinal, imageURL: nil, deck: deck)
             card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
             mode = .EditCard
             alertMessage = "Your new card has been saved."
@@ -123,7 +123,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             }
             let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
                 if self.mode == .AddCard {
-                    let newCard = CardStruct(question: self.questionTextView.text, answer: self.answerTextView.text, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: self.ordinal, images: nil, deck: self.deck)
+                    let newCard = CardStruct(question: self.questionTextView.text, answer: self.answerTextView.text, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: self.ordinal, imageURL: nil, deck: self.deck)
                     self.card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
                 } else if self.mode == .EditCard {
                     if var updateCard = self.card?.asStruct() {

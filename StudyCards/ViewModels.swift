@@ -27,7 +27,7 @@ struct CardStruct {
     var correctanswers: Int32
     var wronganswers: Int32
     var ordinal: Int32
-    var images: [ImageStruct]?
+    var imageURL: String?
     var deck: Deck?
 }
 

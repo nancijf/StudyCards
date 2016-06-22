@@ -22,7 +22,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     var tempCards: [CardStruct]?
     var usingCardStruct = false
     var tempCardTitle: String?
-    var imageSet: NSSet?
     
     lazy var mainStoryBoard: UIStoryboard = {
         let storyboard: UIStoryboard = UIStoryboard(name: kStoryBoardID, bundle: nil)
@@ -81,8 +80,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
 
         let deckEntity = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
         for tempCard in tempCards! {
-//            print(tempCard.images)
-            let newCard = CardStruct(question: tempCard.question, answer: tempCard.answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: 0, images: tempCard.images, deck: deckEntity)
+            let newCard = CardStruct(question: tempCard.question, answer: tempCard.answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: 0, imageURL: tempCard.imageURL, deck: deckEntity)
             StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
         }
         if let navCotroller = self.navigationController {

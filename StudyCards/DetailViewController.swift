@@ -75,8 +75,8 @@ class DetailViewController: UIViewController {
                 questionLabel.text = currentCard.question
                 answerLabel.text = currentCard.answer
                 cardCounter.text = String(currentCard.ordinal)
-                if let image = currentCard.images, imageurl = image[0].imageURL as? String {
-                        if let data = NSData(contentsOfURL: NSURL(string: imageurl)!) {
+                if let image = currentCard.imageURL {
+                        if let data = NSData(contentsOfURL: NSURL(string: image)!) {
                             cardImage.image = UIImage(data: data)
                         }
                 }
@@ -86,6 +86,11 @@ class DetailViewController: UIViewController {
                 questionLabel.text = currentCard.question
                 answerLabel.text = currentCard.answer
                 cardCounter.text = String(currentCard.ordinal)
+                if let image = currentCard.imageURL {
+                    if let data = NSData(contentsOfURL: NSURL(string: image)!) {
+                        cardImage.image = UIImage(data: data)
+                    }
+                }
             }
         }
     }
