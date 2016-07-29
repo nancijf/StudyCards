@@ -32,8 +32,6 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate {
     override func viewWillAppear(animated: Bool) {
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchBar)
-//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: nil)
-//        self.view.addSubview(searchBar)
         searchBar.placeholder = "Search Quizlet"
         
         searchBar.becomeFirstResponder()
@@ -134,14 +132,5 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate {
     }
     */
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
