@@ -14,6 +14,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var answerLabel: UILabel!
     @IBOutlet weak var cardCounter: UITextField!
     @IBOutlet weak var cardImage: UIImageView!
+    @IBOutlet weak var checkbox: CardCheckBox!
     
     var deck: Deck?
     var isQuestionShowing: Bool = true
@@ -53,6 +54,10 @@ class DetailViewController: UIViewController {
     }
     
     var cardIndex: CardIndex?
+    
+    @IBAction func checkmarkTapped(sender: UIButton) {
+        sender.selected = !sender.selected
+    }
     
     @IBAction func getNextCard(sender: UIBarButtonItem) {
         let nextCardIndex = self.cardIndex!.next()
@@ -103,6 +108,7 @@ class DetailViewController: UIViewController {
         self.configureView()
         self.navigationItem.title = deck?.title
         answerLabel.hidden = true
+//        checkbox.setImage(UIImage(named: "BoxChecked"), forState: UIControlState.Selected)
     }
 
     override func didReceiveMemoryWarning() {

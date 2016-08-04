@@ -9,10 +9,11 @@
 import UIKit
 import CoreData
 
-class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchBarDelegate {
+class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating {
 
     var detailViewController: CardPageViewController? = nil
     var quizletController = QuizletController()
+    let searchController = UISearchController(searchResultsController: nil)
     
     @IBAction func runQuizlet(sender: UIBarButtonItem) {
 //        quizletController.searchQuizlet("cities")
@@ -23,7 +24,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         self.fetchedResultsController.delegate = self
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
-
+        
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.definesPresentationContext = true
+        searchController.searchBar.sizeToFit()
+        tableView.tableHeaderView = searchController.searchBar
+        self.tableView.contentOffset = CGPointMake(0, CGRectGetHeight(searchController.searchBar.frame))
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
@@ -53,6 +60,15 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func filterContentForSearchText(searchText: String) {
+        print(searchText)
+        tableView.reloadData()
+    }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        filterContentForSearchText(searchController.searchBar.text!)
     }
     
     func getJSONData(file: String) {
@@ -124,20 +140,17 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                     controller.navigationItem.leftItemsSupplementBackButton = true
                 }
             }
-        }
-        else if segue.identifier == "AddNewDeck" {
+        } else if segue.identifier == "AddNewDeck" {
             let controller = segue.destinationViewController as! AddDeckViewController
             controller.mode = .AddDeck
-        }
-        else if segue.identifier == "EditDeck" {
+        } else if segue.identifier == "EditDeck" {
             let controller = segue.destinationViewController as! AddDeckViewController
             controller.mode = .EditDeck
             controller.deck = sender as? Deck
         }
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool
-    {
+    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
         if identifier == "ShowDeck" {
             if tableView.editing {
                 return false
@@ -256,4 +269,5 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
 }
+
 
