@@ -35,7 +35,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="DHS-OA-E79">
-                                <rect key="frame" x="20" y="20" width="560" height="560"/>
+                                <rect key="frame" x="32" y="48" width="536" height="284"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -52,9 +52,12 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iAh-vh-FuB">
-                                <rect key="frame" x="32" y="318" width="536" height="201"/>
-                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Correct" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4BD-Zc-pKT">
+                                <rect key="frame" x="70" y="569" width="58" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SiA-VC-age" customClass="CardCheckBox" customModule="StudyCards" customModuleProvider="target">
                                 <rect key="frame" x="32" y="563" width="30" height="34"/>
                                 <state key="normal">
@@ -64,34 +67,33 @@
                                     <action selector="checkmarkTapped:" destination="JEX-9P-axG" eventType="touchUpInside" id="aXE-33-9gB"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Correct" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4BD-Zc-pKT">
-                                <rect key="frame" x="70" y="569" width="58" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iAh-vh-FuB">
+                                <rect key="frame" x="32" y="345" width="536" height="201"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="201" id="tij-3z-tBG"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="iAh-vh-FuB" firstAttribute="top" secondItem="DHS-OA-E79" secondAttribute="bottom" constant="13" id="1uh-S7-MD7"/>
+                            <constraint firstItem="iAh-vh-FuB" firstAttribute="leading" secondItem="SiA-VC-age" secondAttribute="leading" id="24v-lL-96H"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="DHS-OA-E79" secondAttribute="trailing" constant="12" id="2xh-7s-TZw"/>
                             <constraint firstItem="eNW-U9-wzc" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" id="5il-nJ-5D8"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vZU-Vf-z1R" secondAttribute="trailing" constant="5" id="BBm-W1-Q61"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="vZU-Vf-z1R" secondAttribute="bottom" constant="5" id="C8r-zI-b8n"/>
-                            <constraint firstItem="DHS-OA-E79" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" id="Dao-g3-3Wc"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="iAh-vh-FuB" secondAttribute="trailing" constant="12" id="FUc-tf-VYf"/>
+                            <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="iAh-vh-FuB" secondAttribute="bottom" constant="54" id="Il4-6j-wUv"/>
                             <constraint firstItem="4BD-Zc-pKT" firstAttribute="leading" secondItem="SiA-VC-age" secondAttribute="trailing" constant="8" id="L18-hJ-keV"/>
                             <constraint firstItem="SiA-VC-age" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" constant="12" id="Npe-8Z-foE"/>
                             <constraint firstItem="SiA-VC-age" firstAttribute="centerY" secondItem="4BD-Zc-pKT" secondAttribute="centerY" id="SFv-Fr-hL8"/>
+                            <constraint firstItem="iAh-vh-FuB" firstAttribute="centerX" secondItem="DHS-OA-E79" secondAttribute="centerX" id="Syq-Vo-usH"/>
                             <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="eNW-U9-wzc" secondAttribute="bottom" constant="20" id="XhM-r6-s7y"/>
-                            <constraint firstItem="iAh-vh-FuB" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" constant="298" id="ZvP-ml-pPB"/>
-                            <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="DHS-OA-E79" secondAttribute="bottom" constant="20" id="ars-Rq-LiD"/>
                             <constraint firstAttribute="trailingMargin" secondItem="eNW-U9-wzc" secondAttribute="trailing" id="gGu-aX-T9H"/>
                             <constraint firstAttribute="leadingMargin" secondItem="eNW-U9-wzc" secondAttribute="leading" id="gJl-L4-0eA"/>
                             <constraint firstItem="vZU-Vf-z1R" firstAttribute="centerY" secondItem="4BD-Zc-pKT" secondAttribute="centerY" id="hjc-Bh-Va8"/>
-                            <constraint firstItem="DHS-OA-E79" firstAttribute="trailing" secondItem="svH-Pt-448" secondAttribute="trailingMargin" id="i7w-MZ-D5o"/>
-                            <constraint firstItem="iAh-vh-FuB" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" constant="12" id="poU-AP-Xbw"/>
-                            <constraint firstItem="DHS-OA-E79" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" id="ynn-Hu-nKh"/>
-                            <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="iAh-vh-FuB" secondAttribute="bottom" constant="81" id="z8x-Gi-sT0"/>
+                            <constraint firstItem="DHS-OA-E79" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" constant="12" id="rOl-aK-5eR"/>
+                            <constraint firstItem="DHS-OA-E79" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" constant="28" id="tDG-kB-Jie"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
