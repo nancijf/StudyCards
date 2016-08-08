@@ -12,6 +12,7 @@ struct DeckStruct {
     var title: String?
     var desc: String?
     var testscore: Float
+    var correctanswers: Int32
     var categories: NSOrderedSet?
     var cards: NSOrderedSet?
 }
@@ -24,7 +25,7 @@ struct CardStruct {
     var question: String?
     var answer: String?
     var hidden: Bool
-    var correctanswers: Int32
+    var iscorrect: Bool
     var wronganswers: Int32
     var ordinal: Int32
     var imageURL: String?

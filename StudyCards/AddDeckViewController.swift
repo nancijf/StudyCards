@@ -65,7 +65,7 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
         let description = descriptionCell.descTextView.text
         
         if mode == .AddDeck {
-            let newDeck = DeckStruct(title: title, desc: description, testscore: 0.0, categories: tempCategories, cards: nil)
+            let newDeck = DeckStruct(title: title, desc: description, testscore: 0.0, correctanswers: 0, categories: tempCategories, cards: nil)
             StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
         }
         else if mode == .EditDeck {

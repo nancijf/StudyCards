@@ -17,7 +17,7 @@ class Deck: NSManagedObject {
 extension Deck {
     
     func asStruct() -> DeckStruct {
-        return DeckStruct(title: self.title, desc: self.desc, testscore: self.testscore, categories: self.categories, cards: self.cards)
+        return DeckStruct(title: self.title, desc: self.desc, testscore: self.testscore, correctanswers: self.correctanswers, categories: self.categories, cards: self.cards)
     }
     
 }

@@ -17,6 +17,7 @@ extension Deck {
     @NSManaged var title: String?
     @NSManaged var desc: String?
     @NSManaged var testscore: Float
+    @NSManaged var correctanswers: Int32
     @NSManaged var categories: NSOrderedSet?
     @NSManaged var cards: NSOrderedSet?
 

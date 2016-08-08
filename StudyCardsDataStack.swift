@@ -27,6 +27,7 @@ class StudyCardsDataStack {
         deckEntity?.title = deck.title
         deckEntity?.desc = deck.desc
         deckEntity?.testscore = deck.testscore
+        deckEntity?.correctanswers = deck.correctanswers
         deckEntity?.categories = deck.categories
         deckEntity?.cards = deck.cards
         
@@ -69,7 +70,7 @@ class StudyCardsDataStack {
         cardEntity?.answer = card.answer
         cardEntity?.ordinal = card.ordinal
         cardEntity?.hidden = card.hidden
-        cardEntity?.correctanswers = card.correctanswers
+        cardEntity?.iscorrect = card.iscorrect
         cardEntity?.wronganswers = card.wronganswers
         cardEntity?.imageURL = card.imageURL
         cardEntity?.deck = card.deck
@@ -98,6 +99,19 @@ class StudyCardsDataStack {
             } catch {
                 abort()
             }
+        }
+    }
+    
+    func updateCounts(deck: Deck?, card: Card?, isCorrect: Bool) {
+        let updateCount = isCorrect ? 1 : -1
+        deck?.correctanswers += updateCount
+        card?.iscorrect = isCorrect
+        
+        do {
+            try self.managedObjectContext?.save()
+            
+        } catch {
+            abort()
         }
     }
     

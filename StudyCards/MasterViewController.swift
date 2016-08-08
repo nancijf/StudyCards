@@ -95,12 +95,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                                     newCategories.addObject(categoryObject)
                                 }
                             }
-                            let newDeck = DeckStruct(title: deckTitle, desc: nil, testscore: 0.0, categories: newCategories, cards: nil)
+                            let newDeck = DeckStruct(title: deckTitle, desc: nil, testscore: 0.0, correctanswers: 0, categories: newCategories, cards: nil)
                             if let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck) {
                                 if let cards = dictionary["deck"]?["cards"] as? [[String: AnyObject]] {
                                     for card: [String: AnyObject] in cards {
                                         if let question = card["card"]?["question"] as? String, let answer = card["card"]?["answer"] as? String {
-                                            let newCard = CardStruct(question: question, answer: answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: 0, imageURL: nil, deck: deckObj)
+                                            let newCard = CardStruct(question: question, answer: answer, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: nil, deck: deckObj)
                                             StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
                                         }
                                     }

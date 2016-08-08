@@ -22,7 +22,7 @@ class QuizletController: NSObject {
     let baseURL = "https://api.quizlet.com/2.0"
     let clientID = "client_id=Z4FeYyPHVu"
     
-    let searchSets = "/search/sets?per_page=25&q="
+    let searchSets = "/search/classes?per_page=25&q="
     let getSet = "/sets/"
     
     var tempCards = [CardStruct]()
@@ -55,7 +55,7 @@ class QuizletController: NSObject {
                                 if let imageData = termDict["image"] as? [String: AnyObject] {
                                     self.imageURL = imageData["url"] as? String
                                 }
-                                let tempCard = CardStruct(question: question, answer: answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: 0, imageURL: self.imageURL, deck: nil)
+                                let tempCard = CardStruct(question: question, answer: answer, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: self.imageURL, deck: nil)
                                 self.tempCards.append(tempCard)
                             }
                         }

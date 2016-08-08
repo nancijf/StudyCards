@@ -76,11 +76,11 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     }
     
     func saveTapped(sender: UIBarButtonItem) {
-        let newDeck = DeckStruct(title: tempCardTitle, desc: nil, testscore: 0.0, categories: nil, cards: nil)
+        let newDeck = DeckStruct(title: tempCardTitle, desc: nil, testscore: 0.0, correctanswers: 0, categories: nil, cards: nil)
 
         let deckEntity = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
         for tempCard in tempCards! {
-            let newCard = CardStruct(question: tempCard.question, answer: tempCard.answer, hidden: false, correctanswers: 0, wronganswers: 0, ordinal: 0, imageURL: tempCard.imageURL, deck: deckEntity)
+            let newCard = CardStruct(question: tempCard.question, answer: tempCard.answer, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: tempCard.imageURL, deck: deckEntity)
             StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
         }
         if let navCotroller = self.navigationController {
@@ -115,7 +115,8 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }
         
         var previousIndex = viewControllerIndex - 1
-        
+//        print(deck?.cards![previousIndex])
+       
         if previousIndex < 0 {
             previousIndex = controllerArray.count - 1
         }
@@ -130,6 +131,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }
         
         var nextIndex = viewControllerIndex + 1
+//        print(deck?.cards![nextIndex])
         
         if nextIndex >= controllerArray.count {
             nextIndex = 0
@@ -137,6 +139,5 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         
         return controllerArray[nextIndex]
     }
-    
 
 }

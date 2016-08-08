@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class DetailViewController: UIViewController {
     
     @IBOutlet weak var questionLabel: UILabel!
@@ -19,58 +20,20 @@ class DetailViewController: UIViewController {
     var deck: Deck?
     var isQuestionShowing: Bool = true
     var isUsingCardStruct: Bool = false
-    var cards: [Card]?
     var card: Card?
     var tempCard: CardStruct?
     var tempCardTitle: String?
-    
-    struct CardIndex {
-        private var cardCount: Int = 0
-        private var cardIndex: Int = 0
-        
-        init(cardCount: Int) {
-            self.cardCount = cardCount
-        }
-        
-        func current() -> Int {
-            return cardIndex
-        }
-        
-        mutating func next() -> Int {
-            cardIndex += 1
-            if cardIndex >= cardCount {
-                cardIndex = 0
-            }
-            return cardIndex
-        }
-        
-        mutating func previous() -> Int {
-            cardIndex -= 1
-            if cardIndex < 0 {
-                cardIndex = cardCount - 1
-            }
-            return cardIndex
-        }
-    }
-    
-    var cardIndex: CardIndex?
+    var isCorrect: Bool = false
+    var testScore: UIBarButtonItem!
     
     @IBAction func checkmarkTapped(sender: UIButton) {
         sender.selected = !sender.selected
-    }
-    
-    @IBAction func getNextCard(sender: UIBarButtonItem) {
-        let nextCardIndex = self.cardIndex!.next()
-        let card = self.cards?[nextCardIndex]
-        questionLabel.text = card?.question
-        answerLabel.text = card?.answer
-    }
-    
-    @IBAction func getPreviousCard(sender: UIBarButtonItem) {
-        let prevCardIndex = self.cardIndex!.previous()
-        let card = self.cards?[prevCardIndex]
-        questionLabel.text = card?.question
-        answerLabel.text = card?.answer
+        if card?.iscorrect == true {
+            card?.iscorrect = false
+        } else {
+            card?.iscorrect = true
+        }
+        StudyCardsDataStack.sharedInstance.updateCounts(deck, card: card, isCorrect: sender.selected)
     }
     
     func configureView() {
@@ -82,6 +45,7 @@ class DetailViewController: UIViewController {
                 cardCounter.text = String(currentCard.ordinal)
                 if let image = currentCard.imageURL {
                         if let data = NSData(contentsOfURL: NSURL(string: image)!) {
+                            cardImage.hidden = false
                             cardImage.image = UIImage(data: data)
                         }
                 }
@@ -91,8 +55,12 @@ class DetailViewController: UIViewController {
                 questionLabel.text = currentCard.question
                 answerLabel.text = currentCard.answer
                 cardCounter.text = String(currentCard.ordinal)
+                if card?.iscorrect == true {
+                    checkbox.selected = true
+                }
                 if let image = currentCard.imageURL {
                     if let data = NSData(contentsOfURL: NSURL(string: image)!) {
+                        cardImage.hidden = false
                         cardImage.image = UIImage(data: data)
                     }
                 }
@@ -103,17 +71,15 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        let indexCard = self.view as? IndexCard
-//        indexCard?.lineColor = UIColor ( red: 0.5, green: 0.0, blue: 0.5, alpha: 1.0 )
         self.configureView()
         self.navigationItem.title = deck?.title
+        
         answerLabel.hidden = true
-//        checkbox.setImage(UIImage(named: "BoxChecked"), forState: UIControlState.Selected)
+        cardImage.hidden = true
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
