@@ -22,7 +22,7 @@ class QuizletController: NSObject {
     let baseURL = "https://api.quizlet.com/2.0"
     let clientID = "client_id=Z4FeYyPHVu"
     
-    let searchSets = "/search/classes?per_page=25&q="
+    let searchSets = "/search/sets?per_page=25&q="
     let getSet = "/sets/"
     
     var tempCards = [CardStruct]()

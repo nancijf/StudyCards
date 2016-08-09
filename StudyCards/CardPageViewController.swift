@@ -22,6 +22,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     var tempCards: [CardStruct]?
     var usingCardStruct = false
     var tempCardTitle: String?
+    var testScore: UIBarButtonItem!
     
     lazy var mainStoryBoard: UIStoryboard = {
         let storyboard: UIStoryboard = UIStoryboard(name: kStoryBoardID, bundle: nil)
@@ -65,6 +66,9 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         } else {
             self.navigationItem.title = deck?.title
         }
+        
+        testScore = UIBarButtonItem(title: "Score", style: .Plain, target: self, action: #selector(showScore))
+        self.navigationItem.rightBarButtonItem = testScore
 
         self.navigationController?.hidesBarsOnTap = true
         self.navigationController?.setNavigationBarHidden(true, animated: true)
@@ -73,6 +77,15 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func showScore() {
+        print(deck?.testscore)
+        if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let testScoreViewController = storyboard?.instantiateViewControllerWithIdentifier("ShowTestScores") as? TestScoreViewController {
+            testScoreViewController.deck = deck
+            self.navigationController?.pushViewController(testScoreViewController, animated: true)
+        }
+
     }
     
     func saveTapped(sender: UIBarButtonItem) {
@@ -91,6 +104,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     func cardViewControllerWith(card: Card) -> DetailViewController? {
         if let cardViewController = mainStoryBoard.instantiateViewControllerWithIdentifier(kViewControllerID) as? DetailViewController {
             cardViewController.card = card
+            cardViewController.deck = deck
             cardViewController.isUsingCardStruct = false
             
             return cardViewController
@@ -115,7 +129,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }
         
         var previousIndex = viewControllerIndex - 1
-//        print(deck?.cards![previousIndex])
        
         if previousIndex < 0 {
             previousIndex = controllerArray.count - 1
@@ -131,7 +144,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }
         
         var nextIndex = viewControllerIndex + 1
-//        print(deck?.cards![nextIndex])
         
         if nextIndex >= controllerArray.count {
             nextIndex = 0

@@ -105,6 +105,9 @@ class StudyCardsDataStack {
     func updateCounts(deck: Deck?, card: Card?, isCorrect: Bool) {
         let updateCount = isCorrect ? 1 : -1
         deck?.correctanswers += updateCount
+        if let totalCards = deck?.cards?.count {
+            deck?.testscore = Float((deck?.correctanswers)!) / Float(totalCards)
+        }
         card?.iscorrect = isCorrect
         
         do {

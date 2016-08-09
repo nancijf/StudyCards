@@ -24,7 +24,6 @@ class DetailViewController: UIViewController {
     var tempCard: CardStruct?
     var tempCardTitle: String?
     var isCorrect: Bool = false
-    var testScore: UIBarButtonItem!
     
     @IBAction func checkmarkTapped(sender: UIButton) {
         sender.selected = !sender.selected
@@ -33,7 +32,9 @@ class DetailViewController: UIViewController {
         } else {
             card?.iscorrect = true
         }
-        StudyCardsDataStack.sharedInstance.updateCounts(deck, card: card, isCorrect: sender.selected)
+        if !isUsingCardStruct {
+            StudyCardsDataStack.sharedInstance.updateCounts(deck, card: card, isCorrect: sender.selected)
+        }
     }
     
     func configureView() {
@@ -71,13 +72,14 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.configureView()
-        self.navigationItem.title = deck?.title
-        
         answerLabel.hidden = true
         cardImage.hidden = true
+        self.configureView()
+//        self.navigationItem.title = deck?.title
+//        testScore = UIBarButtonItem(title: "Score", style: .Plain, target: self, action: #selector(showScore))
+//        self.navigationItem.rightBarButtonItem = testScore
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
