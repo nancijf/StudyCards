@@ -65,10 +65,9 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             self.navigationItem.rightBarButtonItem = saveButton
         } else {
             self.navigationItem.title = deck?.title
+            testScore = UIBarButtonItem(title: "Score", style: .Plain, target: self, action: #selector(showScore))
+            self.navigationItem.rightBarButtonItem = testScore
         }
-        
-        testScore = UIBarButtonItem(title: "Score", style: .Plain, target: self, action: #selector(showScore))
-        self.navigationItem.rightBarButtonItem = testScore
 
         self.navigationController?.hidesBarsOnTap = true
         self.navigationController?.setNavigationBarHidden(true, animated: true)
@@ -80,7 +79,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     }
     
     func showScore() {
-        print(deck?.testscore)
+
         if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let testScoreViewController = storyboard?.instantiateViewControllerWithIdentifier("ShowTestScores") as? TestScoreViewController {
             testScoreViewController.deck = deck
             self.navigationController?.pushViewController(testScoreViewController, animated: true)

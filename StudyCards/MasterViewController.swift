@@ -9,11 +9,12 @@
 import UIKit
 import CoreData
 
-class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating {
+class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating, UISearchControllerDelegate {
 
     var detailViewController: CardPageViewController? = nil
     var quizletController = QuizletController()
     let searchController = UISearchController(searchResultsController: nil)
+    var searchPredicate: NSPredicate?
     
     @IBAction func runQuizlet(sender: UIBarButtonItem) {
 //        quizletController.searchQuizlet("cities")
@@ -29,7 +30,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         searchController.dimsBackgroundDuringPresentation = false
         searchController.definesPresentationContext = true
         searchController.searchBar.sizeToFit()
+        searchController.delegate = self
         tableView.tableHeaderView = searchController.searchBar
+        searchController.searchBar.scopeButtonTitles = ["All", "Title", "Category"]
         self.tableView.contentOffset = CGPointMake(0, CGRectGetHeight(searchController.searchBar.frame))
         if let split = self.splitViewController {
             let controllers = split.viewControllers
@@ -62,15 +65,36 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         super.didReceiveMemoryWarning()
     }
     
-    func filterContentForSearchText(searchText: String) {
-        print(searchText)
-        tableView.reloadData()
-    }
-    
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        filterContentForSearchText(searchController.searchBar.text!)
+        print("in updateSearchForSearchText")
+        print(searchController.searchBar.text)
+        let searchBar = searchController.searchBar
+        let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
+        if let searchText = searchController.searchBar.text where searchText.characters.count > 1 {
+            searchPredicate = NSPredicate(format: "title contains[c] %@", searchText)
+            self.fetchedResultsController.fetchRequest.predicate = searchPredicate
+            
+            do {
+                try self.fetchedResultsController.performFetch()
+                tableView.reloadData()
+            } catch {
+                abort()
+            }
+        }
     }
-    
+
+    func didDismissSearchController(searchController: UISearchController) {
+        self.fetchedResultsController.fetchRequest.predicate = nil
+        
+        do {
+            try self.fetchedResultsController.performFetch()
+            tableView.reloadData()
+        } catch {
+            abort()
+        }
+
+    }
+
     func getJSONData(file: String) {
         if let filePath = NSBundle.mainBundle().pathForResource(file, ofType: "json") {
             do {
@@ -162,12 +186,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // MARK: - Table View
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.fetchedResultsController.sections?.count ?? 0
+
+            return self.fetchedResultsController.sections?.count ?? 0
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section]
-        return sectionInfo.numberOfObjects
+
+            let sectionInfo = self.fetchedResultsController.sections![section]
+            return sectionInfo.numberOfObjects
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

@@ -12,6 +12,7 @@ import Foundation
 class BarGraphView: UIView {
     
     var deck: Deck?
+    var maxHeight = 300
     
     lazy var greenBar: UIView = {
         let view = UIView(frame: CGRectZero)
@@ -21,9 +22,10 @@ class BarGraphView: UIView {
     }()
     lazy var greenLabel: UILabel = {
         let label = UILabel()
-        label.text = "Money"
+        label.text = "Correct"
         label.textColor = UIColor.blackColor()
         label.textAlignment = .Center
+        label.font = label.font.fontWithSize(14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -35,9 +37,10 @@ class BarGraphView: UIView {
     }()
     lazy var redLabel: UILabel = {
         let label = UILabel()
-        label.text = "Invested"
+        label.text = "Not Answered"
         label.textColor = UIColor.blackColor()
         label.textAlignment = .Center
+        label.font = label.font.fontWithSize(14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -49,29 +52,29 @@ class BarGraphView: UIView {
     }()
     lazy var blueLabel: UILabel = {
         let label = UILabel()
-        label.text = "Time"
+        label.text = "% Correct"
         label.textColor = UIColor.blackColor()
         label.textAlignment = .Center
+        label.font = label.font.fontWithSize(14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    lazy var orangeBar: UIView = {
-        let view = UIView(frame: CGRectZero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.orangeColor()
-        return view
-    }()
-    lazy var orangeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Spend"
-        label.textColor = UIColor.blackColor()
-        label.textAlignment = .Center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+//    lazy var orangeBar: UIView = {
+//        let view = UIView(frame: CGRectZero)
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        view.backgroundColor = UIColor.orangeColor()
+//        return view
+//    }()
+//    lazy var orangeLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "Spend"
+//        label.textColor = UIColor.blackColor()
+//        label.textAlignment = .Center
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        return label
+//    }()
     lazy var chartLabel: UILabel = {
         let label = UILabel()
-        label.text = "Money Bar Chart"
         label.textColor = UIColor.blackColor()
         label.textAlignment = .Center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -89,6 +92,7 @@ class BarGraphView: UIView {
     var redBarConstraint: NSLayoutConstraint?
     var blueBarConstraint: NSLayoutConstraint?
     var orangeBarConstraint: NSLayoutConstraint?
+    var chartLabelConstraints: NSLayoutConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -131,11 +135,14 @@ class BarGraphView: UIView {
 //        self.addSubview(actionButton)
         self.addSubview(chartLabel)
         
-        let views = ["greenBar": greenBar, "redBar": redBar, "blueBar": blueBar, "stackView": stackView, "greenLabel": greenLabel, "redLabel": redLabel, "blueLabel": blueLabel]
+        let views = ["greenBar": greenBar, "redBar": redBar, "blueBar": blueBar, "stackView": stackView, "greenLabel": greenLabel, "redLabel": redLabel, "blueLabel": blueLabel, "chartLabel": chartLabel]
         let metrics = ["bottomPadding": 100, "barSpacing": 50, "barWidth": 75]
         
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-30-[stackView]-30-|", options: [], metrics: metrics, views: views))
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[stackView]-bottomPadding-|", options: [], metrics: metrics, views: views))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-100-[chartLabel]", options: [], metrics: metrics, views: views))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-30-[chartLabel]", options: [], metrics: metrics, views: views))
+
         
 //        greenStackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[greenBar]-20-[greenLabel]", options: [], metrics: metrics, views: views))
 //        redStackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[redBar]-20-[redLabel]", options: [], metrics: metrics, views: views))
@@ -163,6 +170,13 @@ class BarGraphView: UIView {
     }
     
     func animate(button: UIButton) {
+
+        if let cardCount = self.deck?.cards?.count {
+            chartLabel.text = "Total Questions: \(cardCount)"
+        }
+        let correctHeight = (self.deck?.testscore)! * Float(self.maxHeight)
+        let wrongHeight = (1.0 - (self.deck?.testscore)!) * Float(self.maxHeight)
+
         if button.titleLabel?.text == "Reset" {
             UIView.animateWithDuration(5.0, delay: 0.2, options: [.CurveEaseInOut], animations: {
                 self.greenBarConstraint?.constant = 2
@@ -179,8 +193,8 @@ class BarGraphView: UIView {
         }
         else {
             UIView.animateWithDuration(5.0, delay: 0.2, usingSpringWithDamping: 0.5, initialSpringVelocity: 5.0, options: [.CurveEaseInOut], animations: {
-                self.greenBarConstraint?.constant = 200
-                self.redBarConstraint?.constant = 300
+                self.greenBarConstraint?.constant = CGFloat(correctHeight)
+                self.redBarConstraint?.constant = CGFloat(wrongHeight)
                 self.blueBarConstraint?.constant = 50
 //                self.orangeBarConstraint?.constant = 100
                 
