@@ -52,24 +52,57 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         answerTextView.placeholderText = "Enter answer here..."
         questionTextView.delegate = self
         answerTextView.delegate = self
+        imageView.hidden = true
+        switchButton.setTitle("Switch to Answer", forState: .Normal)
+        answerTextView.hidden = true
+        questionTextView.becomeFirstResponder()
         
         if mode == .EditCard {
+            if let imageURL = card?.imageURL {
+                var imagePath = imageURL
+                if !imageURL.containsString("://") {
+                    imagePath = "file://" + createFilePath(withFileName: imageURL)
+                }
+                if let data = NSData(contentsOfURL: NSURL(string: imagePath)!) {
+                    imageAdded = true
+                    imageView.hidden = false
+                    imageView.image = UIImage(data: data)
+                    imageView.userInteractionEnabled = true
+                    let deleteImageButton = UIButton(frame: imageView.bounds)
+                    deleteImageButton.addTarget(self, action: #selector(AddCardsViewController.deleteImage(_:)), forControlEvents: .TouchUpInside)
+                    deleteImageButton.setTitle("X", forState: .Normal)
+                    deleteImageButton.setTitleColor(UIColor.redColor(), forState: .Normal)
+                    deleteImageButton.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+                    deleteImageButton.titleLabel?.font = UIFont.boldSystemFontOfSize(50)
+                    imageView.addSubview(deleteImageButton)
+                }
+            }
+
             questionTextView.text = card?.question
             answerTextView.text = card?.answer
             questionTextView.placeholderLabel.hidden = true
             answerTextView.placeholderLabel.hidden = true
         }
         
-        switchButton.setTitle("Switch to Answer", forState: .Normal)
-        answerTextView.hidden = true
+    }
+    
+    func deleteImage(sender: UIButton) {
         imageView.hidden = true
-        questionTextView.becomeFirstResponder()
+        imageAdded = false
     }
     
     func textViewDidChange(textView: UITextView) {
         if let nfTextView = textView as? NFTextView {
             nfTextView.placeholderLabel.hidden = !nfTextView.text.isEmpty
         }
+    }
+    
+    func createFilePath(withFileName fileName: String) -> String {
+        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        let docs: String = paths[0]
+        let fullPath = docs + "/" + fileName
+        
+        return fullPath
     }
 
     override func didReceiveMemoryWarning() {
@@ -94,12 +127,15 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     @IBAction func saveButton(sender: AnyObject) {
         var alertMessage = ""
         if mode == .AddCard {
-            let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: nil, deck: deck)
+            let imageURL = imageAdded ? saveImage(imageView.image) : nil
+            let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: imageURL, deck: deck)
             card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
             mode = .EditCard
             alertMessage = "Your new card has been saved."
         } else if mode == .EditCard {
             if var updateCard = self.card?.asStruct() {
+                let imageURL = imageAdded ? saveImage(imageView.image) : nil
+                updateCard.imageURL = imageURL
                 updateCard.question = questionTextView.text
                 updateCard.answer = answerTextView.text
                 card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(updateCard, cardObj: self.card)
@@ -115,6 +151,25 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             }
         })
         wasCardSaved = true
+    }
+    
+    func createUniqueFileName() -> String {
+        let uuid = CFUUIDCreateString(nil, CFUUIDCreate(nil)) as String
+        let uniqueFileName = "card-image-" + uuid + ".jpg"
+        
+        return uniqueFileName
+    }
+    
+    func saveImage(image: UIImage?) -> String? {
+        guard let image = image, data = UIImageJPEGRepresentation(image, 1.0) else {
+            return ""
+        }
+
+        let fileName = createUniqueFileName()
+        let fullPath = createFilePath(withFileName: fileName)
+        let _ = data.writeToFile(fullPath, atomically: true)
+        
+        return fileName
     }
     
     @IBAction func addPhoto(sender: UIButton) {
