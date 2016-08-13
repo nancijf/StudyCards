@@ -33,6 +33,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         if usingCardStruct {
+            controllerArray.removeAll()
             if let tempCards = tempCards {
                 for (idx, tempCard) in tempCards.enumerate() {
                     if let controller = cardViewControllerWithStruct(tempCard)  {

@@ -54,6 +54,8 @@ class QuizletController: NSObject {
                             if let question = termDict["term"] as? String, let answer = termDict["definition"] as? String {
                                 if let imageData = termDict["image"] as? [String: AnyObject] {
                                     self.imageURL = imageData["url"] as? String
+                                } else {
+                                    self.imageURL = nil
                                 }
                                 let tempCard = CardStruct(question: question, answer: answer, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: self.imageURL, deck: nil)
                                 self.tempCards.append(tempCard)

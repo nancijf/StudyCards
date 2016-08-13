@@ -237,16 +237,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="pYG-3c-hGU" customClass="NFTextView" customModule="StudyCards" customModuleProvider="target">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" showsHorizontalScrollIndicator="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="pYG-3c-hGU" customClass="NFTextView" customModule="StudyCards" customModuleProvider="target">
                                 <rect key="frame" x="20" y="85" width="566" height="471"/>
                                 <color key="backgroundColor" red="0.85006707293194672" green="0.93442687562390314" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="67F-PJ-Lyh" customClass="NFTextView" customModule="StudyCards" customModuleProvider="target">
-                                <rect key="frame" x="20" y="85" width="566" height="471"/>
-                                <color key="backgroundColor" red="1" green="0.84781780782347416" blue="0.64630446431788635" alpha="1" colorSpace="calibratedRGB"/>
                                 <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -281,9 +274,19 @@
                                             </connections>
                                         </button>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" id="LLy-qk-ZRr">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="5HH-mm-oxF">
+                                            <rect key="frame" x="111" y="7" width="41" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Photo"/>
+                                            <connections>
+                                                <action selector="addPhoto:" destination="9BG-A8-ggU" eventType="touchUpInside" id="ZdI-PQ-C9O"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" id="L20-vm-YHV">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bzv-8V-IEz">
-                                            <rect key="frame" x="111" y="7" width="53" height="30"/>
+                                            <rect key="frame" x="162" y="7" width="53" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Delete">
                                                 <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -308,25 +311,70 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kum-eM-6sO">
+                                <rect key="frame" x="35" y="556" width="536" height="0.0"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="201" id="Nze-Qw-uZC"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Nze-Qw-uZC"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="67F-PJ-Lyh" customClass="NFTextView" customModule="StudyCards" customModuleProvider="target">
+                                <rect key="frame" x="35" y="85" width="536" height="461"/>
+                                <color key="backgroundColor" red="1" green="0.84781780782347416" blue="0.64630446431788635" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="250" id="Ogk-Cp-pnJ"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="sUT-bH-WcD">
+                                        <variation key="heightClass=compact" constant="100"/>
+                                    </constraint>
+                                </constraints>
+                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Ogk-Cp-pnJ"/>
+                                    </mask>
+                                </variation>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="e5d-vO-9Yp" firstAttribute="bottom" secondItem="mxC-6e-UrO" secondAttribute="top" id="4EM-TF-cZz"/>
+                            <constraint firstItem="pYG-3c-hGU" firstAttribute="leading" secondItem="xL1-Or-P50" secondAttribute="leadingMargin" id="4cC-lR-6zV"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="67F-PJ-Lyh" secondAttribute="trailing" constant="9" id="5GH-Ff-G5s"/>
+                            <constraint firstItem="kum-eM-6sO" firstAttribute="top" secondItem="67F-PJ-Lyh" secondAttribute="bottom" constant="10" id="AbI-56-TkM"/>
                             <constraint firstItem="pYG-3c-hGU" firstAttribute="top" secondItem="k9c-bW-sfQ" secondAttribute="bottom" constant="65" id="AoA-Kp-VZ4"/>
                             <constraint firstItem="e5d-vO-9Yp" firstAttribute="leading" secondItem="xL1-Or-P50" secondAttribute="leading" id="IDG-02-XK6"/>
-                            <constraint firstItem="67F-PJ-Lyh" firstAttribute="leading" secondItem="xL1-Or-P50" secondAttribute="leadingMargin" id="fzC-cF-EHu"/>
-                            <constraint firstItem="67F-PJ-Lyh" firstAttribute="top" secondItem="pYG-3c-hGU" secondAttribute="top" id="jsb-Mw-U4u"/>
-                            <constraint firstItem="pYG-3c-hGU" firstAttribute="leading" secondItem="67F-PJ-Lyh" secondAttribute="leading" id="kNt-ov-rXa"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="kum-eM-6sO" secondAttribute="trailing" constant="9" id="Iyr-Iu-TBu"/>
+                            <constraint firstItem="pYG-3c-hGU" firstAttribute="bottom" secondItem="kum-eM-6sO" secondAttribute="bottom" id="Kgi-Oe-jAb"/>
+                            <constraint firstItem="67F-PJ-Lyh" firstAttribute="centerX" secondItem="kum-eM-6sO" secondAttribute="centerX" id="fyt-ZD-gNq"/>
+                            <constraint firstItem="pYG-3c-hGU" firstAttribute="leading" secondItem="67F-PJ-Lyh" secondAttribute="leading" constant="-15" id="kNt-ov-rXa"/>
+                            <constraint firstItem="e5d-vO-9Yp" firstAttribute="top" secondItem="kum-eM-6sO" secondAttribute="bottom" id="ogx-af-4F9"/>
                             <constraint firstItem="e5d-vO-9Yp" firstAttribute="top" secondItem="pYG-3c-hGU" secondAttribute="bottom" id="t0G-xE-0PU"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="67F-PJ-Lyh" secondAttribute="trailing" constant="-6" id="udx-wI-RGK"/>
+                            <constraint firstItem="67F-PJ-Lyh" firstAttribute="leading" secondItem="xL1-Or-P50" secondAttribute="leadingMargin" constant="15" id="vWH-hM-dpS"/>
                             <constraint firstAttribute="trailing" secondItem="e5d-vO-9Yp" secondAttribute="trailing" id="wVD-07-dOR"/>
-                            <constraint firstItem="pYG-3c-hGU" firstAttribute="trailing" secondItem="67F-PJ-Lyh" secondAttribute="trailing" id="y2l-3R-OXD"/>
-                            <constraint firstItem="e5d-vO-9Yp" firstAttribute="top" secondItem="67F-PJ-Lyh" secondAttribute="bottom" id="yjz-c4-chm"/>
+                            <constraint firstItem="kum-eM-6sO" firstAttribute="leading" secondItem="xL1-Or-P50" secondAttribute="leadingMargin" constant="15" id="xfD-fu-dDl"/>
+                            <constraint firstItem="67F-PJ-Lyh" firstAttribute="top" secondItem="k9c-bW-sfQ" secondAttribute="bottom" constant="65" id="xqN-cg-34x"/>
+                            <constraint firstItem="67F-PJ-Lyh" firstAttribute="leading" secondItem="kum-eM-6sO" secondAttribute="leading" id="xs0-gk-eBD"/>
+                            <constraint firstItem="pYG-3c-hGU" firstAttribute="trailing" secondItem="67F-PJ-Lyh" secondAttribute="trailing" constant="15" id="y2l-3R-OXD"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="kNt-ov-rXa"/>
+                                <exclude reference="y2l-3R-OXD"/>
+                                <exclude reference="fyt-ZD-gNq"/>
+                                <exclude reference="xs0-gk-eBD"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="answerTextView" destination="pYG-3c-hGU" id="Lav-Ri-gBz"/>
                         <outlet property="doneButton" destination="Fej-Uy-DYL" id="Iyy-tb-INg"/>
+                        <outlet property="imageView" destination="kum-eM-6sO" id="EYZ-Fi-90p"/>
                         <outlet property="questionTextView" destination="67F-PJ-Lyh" id="vc1-6a-CPY"/>
                         <outlet property="saveButton" destination="B5D-hj-87x" id="InX-b1-b33"/>
                         <outlet property="switchButton" destination="k7B-lZ-ddk" id="VyJ-7O-eRZ"/>

@@ -20,6 +20,7 @@ enum AddCardViewControllerMode: Int {
 class AddCardsViewController: UIViewController, UITextViewDelegate {
     
     var isQuestionShowing: Bool = true
+    var imageAdded: Bool = false
     var doesCardContainText: Bool {
         get {
             return !questionTextView.text.isEmpty || !answerTextView.text.isEmpty
@@ -38,6 +39,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var answerTextView: NFTextView!
     @IBOutlet weak var questionTextView: NFTextView!
+    @IBOutlet weak var imageView: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +62,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         
         switchButton.setTitle("Switch to Answer", forState: .Normal)
         answerTextView.hidden = true
+        imageView.hidden = true
         questionTextView.becomeFirstResponder()
     }
     
@@ -114,6 +117,10 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         wasCardSaved = true
     }
     
+    @IBAction func addPhoto(sender: UIButton) {
+        choosePhotoFromLibrary()
+    }
+    
     @IBAction func doneWasPressed(sender: AnyObject) {
         if doesCardContainText && !wasCardSaved {
             let alert = UIAlertController(title: "Alert", message: "Do you want to save this card?", preferredStyle: UIAlertControllerStyle.Alert)
@@ -148,6 +155,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         if (isQuestionShowing) {
 
             // hide Question - show Answer
+            imageView.hidden = true
             UIView.transitionFromView(questionTextView,
                 toView: answerTextView,
                 duration: 1.0,
@@ -159,6 +167,9 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         } else {
 
             // hide Answer - show Question
+            if imageAdded {
+                imageView.hidden = false
+            }
             UIView.transitionFromView(answerTextView,
                 toView: questionTextView,
                 duration: 1.0,
@@ -178,10 +189,35 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         answerTextView.text = ""
         questionTextView.placeholderLabel.hidden = false
         answerTextView.placeholderLabel.hidden = false
+        imageView.hidden = true
+        imageAdded = false
         if !isQuestionShowing {
             counterView(switchButton)
         }
         wasCardSaved = false
     }
 
+}
+
+extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func choosePhotoFromLibrary() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .PhotoLibrary
+        imagePicker.delegate = self
+        presentViewController(imagePicker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        imageView.image = image
+        imageView.hidden = false
+        imageAdded = true
+        picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
 }
