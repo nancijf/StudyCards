@@ -16,6 +16,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     let searchController = UISearchController(searchResultsController: nil)
     var searchPredicate: NSPredicate?
     
+    @IBOutlet weak var quizletButton: UIBarButtonItem!
+    
     @IBAction func runQuizlet(sender: UIBarButtonItem) {
 //        quizletController.searchQuizlet("cities")
     }
@@ -48,6 +50,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func setEditing(editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         navigationItem.rightBarButtonItem?.enabled = !editing
+        self.quizletButton.enabled = !editing
+        
     }
     
     override func viewWillAppear(animated: Bool) {

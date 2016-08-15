@@ -26,7 +26,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             return !questionTextView.text.isEmpty || !answerTextView.text.isEmpty
         }
     }
-    var wasCardSaved: Bool = false
+    var wasCardSaved: Bool = true
     var deck: Deck?
     var card: Card?
     var delegate: AddCardsViewControllerDelegate?
@@ -40,6 +40,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var answerTextView: NFTextView!
     @IBOutlet weak var questionTextView: NFTextView!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var photoButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,6 +57,10 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         switchButton.setTitle("Switch to Answer", forState: .Normal)
         answerTextView.hidden = true
         questionTextView.becomeFirstResponder()
+        
+        navigationItem.hidesBackButton = true
+        let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonTapped))
+        navigationItem.leftBarButtonItem = backButton
         
         if mode == .EditCard {
             if let imageURL = card?.imageURL {
@@ -83,18 +88,45 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             questionTextView.placeholderLabel.hidden = true
             answerTextView.placeholderLabel.hidden = true
         }
-        
+    }
+    
+    func backButtonTapped(sender: UIBarButtonItem) {
+        if !wasCardSaved {
+            let alert = UIAlertController(title: "Caution", message: "Changes were made to your card. Are you sure you want to cancel?", preferredStyle: .Alert)
+            let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in
+            }
+            let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+                self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
+                self.navigationController?.popViewControllerAnimated(true)
+            })
+            
+            alert.addAction(saveAction)
+            alert.addAction(cancelAction)
+            presentViewController(alert, animated: true, completion: nil)
+        } else {
+            self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
+            self.navigationController?.popViewControllerAnimated(true)
+        }
     }
     
     func deleteImage(sender: UIButton) {
-        imageView.hidden = true
-        imageAdded = false
+        let alert = UIAlertController(title: "Alert", message: "Do you want to permanently delete this image from the card?", preferredStyle: UIAlertControllerStyle.Alert)
+        let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in}
+        let okAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+            self.imageView.hidden = true
+            self.imageAdded = false
+            self.wasCardSaved = false
+        })
+        alert.addAction(cancelAction)
+        alert.addAction(okAction)
+        presentViewController(alert, animated: true, completion: nil)
     }
     
     func textViewDidChange(textView: UITextView) {
         if let nfTextView = textView as? NFTextView {
             nfTextView.placeholderLabel.hidden = !nfTextView.text.isEmpty
         }
+        wasCardSaved = false
     }
     
     func createFilePath(withFileName fileName: String) -> String {
@@ -173,7 +205,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func addPhoto(sender: UIButton) {
-        choosePhotoFromLibrary()
+        showPhotoMenu()
     }
     
     @IBAction func doneWasPressed(sender: AnyObject) {
@@ -217,6 +249,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
                 completion:nil)
             switchButton.setTitle("Switch to Question", forState: .Normal)
+            photoButton.hidden = true
             answerTextView.becomeFirstResponder()
 
         } else {
@@ -231,10 +264,10 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
                 completion: nil)
             switchButton.setTitle("Switch to Answer", forState: .Normal)
+            photoButton.hidden = false
             questionTextView.becomeFirstResponder()
         }
         isQuestionShowing = !isQuestionShowing
-        
     }
     
     func addTapped(sender: UIBarButtonItem) {
@@ -263,11 +296,19 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
         presentViewController(imagePicker, animated: true, completion: nil)
     }
     
+    func takePhotoWithCamera() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .Camera
+        imagePicker.delegate = self
+        presentViewController(imagePicker, animated: true, completion: nil)
+    }
+    
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         imageView.image = image
         imageView.hidden = false
         imageAdded = true
+        wasCardSaved = false
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -275,4 +316,16 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func showPhotoMenu() {
+        let alertController = UIAlertController(title: "Add Photo", message: "How would you like to import a photo?", preferredStyle: .Alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: { _ in self.takePhotoWithCamera() })
+        alertController.addAction(takePhotoAction)
+        
+        let chooseFromLibraryAction = UIAlertAction(title: "Choose From Library", style: .Default, handler: { _ in self.choosePhotoFromLibrary() })
+        alertController.addAction(chooseFromLibraryAction)
+        presentViewController(alertController, animated: true, completion: nil)
+    }
 }

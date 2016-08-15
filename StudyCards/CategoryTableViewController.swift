@@ -37,7 +37,7 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         self.navigationItem.rightBarButtonItem = actionBarButton
         
         self.navigationItem.setHidesBackButton(true, animated: false)
-        let newBackButton = UIBarButtonItem(title: "Back", style: .Plain, target: self, action: #selector(backButtonTapped))
+        let newBackButton = UIBarButtonItem(title: "< Back", style: .Plain, target: self, action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = newBackButton
         self.navigationController?.interactivePopGestureRecognizer!.enabled = false
     }

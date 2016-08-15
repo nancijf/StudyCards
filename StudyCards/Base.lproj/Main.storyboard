@@ -362,6 +362,7 @@
                         <outlet property="answerTextView" destination="pYG-3c-hGU" id="Lav-Ri-gBz"/>
                         <outlet property="doneButton" destination="Fej-Uy-DYL" id="Iyy-tb-INg"/>
                         <outlet property="imageView" destination="kum-eM-6sO" id="EYZ-Fi-90p"/>
+                        <outlet property="photoButton" destination="5HH-mm-oxF" id="Al2-WW-hmf"/>
                         <outlet property="questionTextView" destination="67F-PJ-Lyh" id="vc1-6a-CPY"/>
                         <outlet property="saveButton" destination="B5D-hj-87x" id="InX-b1-b33"/>
                         <outlet property="switchButton" destination="k7B-lZ-ddk" id="VyJ-7O-eRZ"/>
@@ -438,6 +439,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="quizletButton" destination="5k9-ei-nLx" id="Dbr-CE-o70"/>
                         <segue destination="83o-js-ZpY" kind="show" identifier="EditDeck" id="Og1-Gt-bXN"/>
                     </connections>
                 </tableViewController>
