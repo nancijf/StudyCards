@@ -75,9 +75,6 @@ class DetailViewController: UIViewController {
         answerLabel.hidden = true
         cardImage.hidden = true
         self.configureView()
-//        self.navigationItem.title = deck?.title
-//        testScore = UIBarButtonItem(title: "Score", style: .Plain, target: self, action: #selector(showScore))
-//        self.navigationItem.rightBarButtonItem = testScore
     }
     
     override func didReceiveMemoryWarning() {

@@ -72,7 +72,6 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
             }
         } else if mode == .EditDeck {
             if var updateDeck = self.deck?.asStruct() {
-                print("About to save categories: \(tempCategories)")
                 updateDeck.title = title
                 updateDeck.desc = description
                 updateDeck.categories = tempCategories
@@ -287,7 +286,6 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
     
     func categoryTableViewControllerDidFinishSelectingCategory(viewController: CategoryTableViewController, selectedCategories: NSMutableOrderedSet?) {
         tempCategories = selectedCategories
-//        print("Categories returned: \(tempCategories)")
         tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)
     }
     

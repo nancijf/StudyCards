@@ -78,7 +78,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             } else {
                 searchPredicate = NSPredicate(format: "title contains[c] %@", searchText)
             }
-            print(searchPredicate)
             self.fetchedResultsController.fetchRequest.predicate = searchPredicate
             
             do {
@@ -172,7 +171,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! CardPageViewController
                 controller.deck = deck as? Deck
                 if controller.deck?.cards?.count == 0 {
-                    print("there are no cards to display")
                     let alert = UIAlertController(title: "Alert", message: "There are no cards in this deck to display.", preferredStyle: .Alert)
                     let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
                     alert.addAction(okAction)
@@ -246,7 +244,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
-        print("Deck: \(deck)")
         cell.textLabel!.text = deck?.title
         if let cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
             cell.textLabel?.text = (cell.textLabel?.text)! + " (\(cardCount) Cards)"

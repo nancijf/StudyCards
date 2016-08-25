@@ -111,7 +111,13 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         let addCat = UIAlertAction(title: "Add", style: .Default, handler: { (action) -> Void in
             if let tempTextHolder = inputTextField?.text where tempTextHolder.characters.count > 0 {
                 let newCategory = CategoryStruct(name: tempTextHolder, decks: nil)
-                StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(newCategory)
+                let addedCategory = StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(newCategory)
+//                let rowToSelect: NSIndexPath = NSIndexPath(forRow: 0, inSection: 0)
+//                self.tableView.selectRowAtIndexPath(rowToSelect, animated: true, scrollPosition: UITableViewScrollPosition.None)
+//                self.tableView(self.tableView, didSelectRowAtIndexPath: rowToSelect)
+//                if let categoryObj = addedCategory {
+//                    self.selectedCategories?.addObject(categoryObj)
+//                }
             }
         })
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
@@ -151,7 +157,9 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
             inputTextField = textField
         }
         
-        presentViewController(editAlertController, animated: true, completion: nil)
+        dispatch_async(dispatch_get_main_queue()) { 
+            self.presentViewController(editAlertController, animated: true, completion: nil)
+        }
         
     }
     
@@ -257,6 +265,7 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         switch type {
             case .Insert:
                 tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+                self.tableView(self.tableView, didSelectRowAtIndexPath: newIndexPath!)
             case .Delete:
                 self.selectedCategories?.removeObject(anObject)
                 tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
@@ -273,37 +282,5 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
     }
 
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
