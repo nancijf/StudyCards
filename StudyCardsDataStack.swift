@@ -32,11 +32,7 @@ class StudyCardsDataStack {
         deckEntity?.cards = deck.cards
         
         // Save the context.
-        do {
-            try self.managedObjectContext?.save()
-        } catch {
-            abort()
-        }
+        self.saveContext()
         
         return deckEntity
     }
@@ -49,12 +45,9 @@ class StudyCardsDataStack {
         }
         
         categoryEntity?.name = category.name
+        categoryEntity?.decks = category.decks
         
-        do {
-            try self.managedObjectContext?.save()
-        } catch {
-            abort()
-        }
+        self.saveContext()
         
         return categoryEntity
     }
@@ -76,12 +69,7 @@ class StudyCardsDataStack {
         cardEntity?.deck = card.deck
         
         // Save the context.
-        do {
-            try self.managedObjectContext?.save()
-
-        } catch {
-            abort()
-        }
+        self.saveContext()
         
         return cardEntity
     }
@@ -93,12 +81,8 @@ class StudyCardsDataStack {
             self.managedObjectContext?.deleteObject(cardEntity)
             
             // Save the context.
-            do {
-                try self.managedObjectContext?.save()
+            self.saveContext()
                 
-            } catch {
-                abort()
-            }
         }
     }
     
@@ -110,12 +94,8 @@ class StudyCardsDataStack {
         }
         card?.iscorrect = isCorrect
         
-        do {
-            try self.managedObjectContext?.save()
+        self.saveContext()
             
-        } catch {
-            abort()
-        }
     }
     
     func fetchedResultsController(entityName: String, sortDescriptors: [NSSortDescriptor]? = nil, predicate: NSPredicate? = nil) -> NSFetchedResultsController? {
@@ -142,6 +122,20 @@ class StudyCardsDataStack {
         }
         
         return fetchedResultsController
+    }
+    
+    func saveContext () {
+        if let hasChanges = managedObjectContext?.hasChanges where hasChanges {
+            managedObjectContext?.performBlockAndWait({ 
+                do {
+                    try self.managedObjectContext?.save()
+                } catch {
+                    let nserror = error as NSError
+                    NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                    abort()
+                }
+            })
+        }
     }
     
 }

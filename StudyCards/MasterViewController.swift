@@ -70,12 +70,15 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        print("in updateSearchForSearchText")
-        print(searchController.searchBar.text)
         let searchBar = searchController.searchBar
         let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
         if let searchText = searchController.searchBar.text where searchText.characters.count > 1 {
-            searchPredicate = NSPredicate(format: "title contains[c] %@", searchText)
+            if scope == "Category" {
+                searchPredicate = NSPredicate(format: "SUBQUERY(categories, $category, $category.name contains[c] %@).@count > 0", searchText)
+            } else {
+                searchPredicate = NSPredicate(format: "title contains[c] %@", searchText)
+            }
+            print(searchPredicate)
             self.fetchedResultsController.fetchRequest.predicate = searchPredicate
             
             do {
@@ -114,7 +117,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                                     let resultsController = StudyCardsDataStack.sharedInstance.fetchedResultsController("Category", sortDescriptors: sortDescriptors, predicate: NSPredicate(format: "name == %@", category))
                                     
                                     guard let categoryObject = resultsController?.fetchedObjects?.first as? Category else {
-                                        let categoryToAdd = CategoryStruct(name: category)
+                                        let categoryToAdd = CategoryStruct(name: category, decks: nil)
                                         if let categoryObject = StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(categoryToAdd) {
                                             newCategories.addObject(categoryObject)                                        
                                         }
@@ -133,6 +136,17 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                                         }
                                     }
                                 }
+                                if let categories = deckObj.categories {
+                                    for category in categories {
+                                        if let category = category as? Category {
+                                            let tempDecks = category.decks?.mutableCopy() ?? NSMutableOrderedSet()
+                                            tempDecks.addObject(deckObj)
+                                            category.decks = tempDecks as? NSOrderedSet
+                                        }
+                                    }
+                                    StudyCardsDataStack.sharedInstance.saveContext()                                    
+                                }
+
                             }
                         }
                         
@@ -190,7 +204,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // MARK: - Table View
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-
             return self.fetchedResultsController.sections?.count ?? 0
     }
 
@@ -233,6 +246,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
+        print("Deck: \(deck)")
         cell.textLabel!.text = deck?.title
         if let cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
             cell.textLabel?.text = (cell.textLabel?.text)! + " (\(cardCount) Cards)"

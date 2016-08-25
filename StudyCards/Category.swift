@@ -13,7 +13,7 @@ import CoreData
 class Category: NSManagedObject {
     
     func asStruct() -> CategoryStruct {
-        return CategoryStruct(name: self.name)
+        return CategoryStruct(name: self.name, decks: self.decks)
     }
 
 }

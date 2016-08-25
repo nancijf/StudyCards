@@ -19,6 +19,7 @@ struct DeckStruct {
 
 struct CategoryStruct {
     var name: String?
+    var decks: NSOrderedSet?
 }
 
 struct CardStruct {

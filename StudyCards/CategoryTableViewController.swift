@@ -110,7 +110,7 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         let alertController = UIAlertController(title: "Add New Category", message: nil, preferredStyle: .Alert)
         let addCat = UIAlertAction(title: "Add", style: .Default, handler: { (action) -> Void in
             if let tempTextHolder = inputTextField?.text where tempTextHolder.characters.count > 0 {
-                let newCategory = CategoryStruct(name: tempTextHolder)
+                let newCategory = CategoryStruct(name: tempTextHolder, decks: nil)
                 StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(newCategory)
             }
         })
@@ -123,7 +123,9 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
             inputTextField = textField
         } 
         
-        presentViewController(alertController, animated: true, completion: nil)
+        dispatch_async(dispatch_get_main_queue()) { 
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
         
     }
     

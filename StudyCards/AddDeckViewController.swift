@@ -66,17 +66,34 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
         
         if mode == .AddDeck {
             let newDeck = DeckStruct(title: title, desc: description, testscore: 0.0, correctanswers: 0, categories: tempCategories, cards: nil)
-            StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
-        }
-        else if mode == .EditDeck {
+            let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
+            if let categories = tempCategories, deckObj = deckObj {
+                updateCategories(categories, deck: deckObj)
+            }
+        } else if mode == .EditDeck {
             if var updateDeck = self.deck?.asStruct() {
+                print("About to save categories: \(tempCategories)")
                 updateDeck.title = title
                 updateDeck.desc = description
                 updateDeck.categories = tempCategories
-                StudyCardsDataStack.sharedInstance.addOrEditDeckObject(updateDeck, deckObj: self.deck)
+                let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(updateDeck, deckObj: self.deck)
+                if let categories = tempCategories, deckObj = deckObj {
+                    updateCategories(categories, deck: deckObj)
+                }
             }
         }
         self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func updateCategories(categories: NSOrderedSet, deck: Deck) {
+        for category in categories {
+            if let category = category as? Category {
+                let tempDecks = category.decks?.mutableCopy() ?? NSMutableOrderedSet()
+                tempDecks.addObject(deck)
+                category.decks = tempDecks as? NSOrderedSet
+            }
+        }
+        StudyCardsDataStack.sharedInstance.saveContext()
     }
     
     // MARK: - Table view data source
@@ -270,47 +287,12 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
     
     func categoryTableViewControllerDidFinishSelectingCategory(viewController: CategoryTableViewController, selectedCategories: NSMutableOrderedSet?) {
         tempCategories = selectedCategories
+//        print("Categories returned: \(tempCategories)")
         tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)
     }
     
     func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?) {
         tableView.reloadSections(NSIndexSet(index: 3), withRowAnimation: .None)
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
 
 }
