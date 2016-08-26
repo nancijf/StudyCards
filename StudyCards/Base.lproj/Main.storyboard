@@ -243,7 +243,6 @@
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="pYG-3c-hGU" customClass="NFTextView" customModule="StudyCards" customModuleProvider="target">
                                 <rect key="frame" x="20" y="85" width="566" height="471"/>
-                                <color key="backgroundColor" red="0.85006707293194672" green="0.93442687562390314" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -328,7 +327,6 @@
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="67F-PJ-Lyh" customClass="NFTextView" customModule="StudyCards" customModuleProvider="target">
                                 <rect key="frame" x="35" y="85" width="536" height="461"/>
-                                <color key="backgroundColor" red="1" green="0.84781780782347416" blue="0.64630446431788635" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="sUT-bH-WcD">
                                         <variation key="heightClass=compact" constant="100"/>
@@ -505,7 +503,7 @@
                                 <rect key="frame" x="0.0" y="92" width="600" height="49"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OZw-hg-peq" id="60I-uV-jUr">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="48.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="49"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="we7-Ym-Thi" userLabel="TitleTextField">
@@ -562,7 +560,7 @@
                                 <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="H22-3N-P3Y" id="M0u-I1-wrh">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>

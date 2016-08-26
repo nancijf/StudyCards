@@ -16,11 +16,12 @@ enum DeckViewControllerMode: Int {
     case EditDeck
 }
 
-class AddDeckViewController: UITableViewController, CategoryTableViewControllerDelegate, AddCardsViewControllerDelegate {
+class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFieldDelegate, CategoryTableViewControllerDelegate, AddCardsViewControllerDelegate {
     
     var tempCategories: NSOrderedSet?
     var deck: Deck?
     var mode: DeckViewControllerMode?
+    var didMakeChanges: Bool = false
     
     enum TableViewSections: Int {
         case Title = 0
@@ -44,17 +45,29 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
         
         tempCategories = deck?.categories
         let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(saveData))
+        let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonPressed))
+        navigationItem.setHidesBackButton(true, animated: true)
         navigationItem.rightBarButtonItem = saveButton
+        navigationItem.leftBarButtonItem = backButton
+        
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-//        tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    }
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        didMakeChanges = true
+        return true
+    }
+    
+    func textViewDidChange(textView: UITextView) {
+        print("Text View changed")
+        didMakeChanges = true
     }
     
     func saveData() {
@@ -62,10 +75,10 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
 
         let title = titleCell.titleTextField.text
         let descriptionCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Description.rawValue)) as! DeckEditorTableViewCell
-        let description = descriptionCell.descTextView.text
+        let desc = descriptionCell.descTextView.text
         
         if mode == .AddDeck {
-            let newDeck = DeckStruct(title: title, desc: description, testscore: 0.0, correctanswers: 0, categories: tempCategories, cards: nil)
+            let newDeck = DeckStruct(title: title, desc: desc, testscore: 0.0, correctanswers: 0, categories: tempCategories, cards: nil)
             let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
             if let categories = tempCategories, deckObj = deckObj {
                 updateCategories(categories, deck: deckObj)
@@ -82,6 +95,31 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
             }
         }
         self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func backButtonPressed(sender: UIBarButtonItem) {
+        let titleCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Title.rawValue)) as! DeckEditorTableViewCell
+        let title = titleCell.titleTextField.text
+        let descriptionCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Description.rawValue)) as! DeckEditorTableViewCell
+        let desc = descriptionCell.descTextView.text
+        
+        didMakeChanges = didMakeChanges || (title != (deck?.title ?? "") || desc != (deck?.desc ?? ""))
+
+        if didMakeChanges {
+            let alert = UIAlertController(title: "Caution", message: "Do you want to save your changes?", preferredStyle: UIAlertControllerStyle.Alert)
+            let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+                self.saveData()
+            })
+            let cancelAction = UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
+                self.navigationController?.popViewControllerAnimated(true)
+            })
+            alert.addAction(saveAction)
+            alert.addAction(cancelAction)
+            presentViewController(alert, animated: true, completion: nil)
+
+        } else {
+            self.navigationController?.popViewControllerAnimated(true)
+        }
     }
     
     func updateCategories(categories: NSOrderedSet, deck: Deck) {
@@ -263,7 +301,7 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
             case AddButtonType.Category.rawValue:
                 if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let categoryViewController = storyboard?.instantiateViewControllerWithIdentifier("Category") as? CategoryTableViewController {
                     if mode == .EditDeck {
-                        let existingCategories = deck?.categories
+                        let existingCategories = tempCategories
                         categoryViewController.selectedCategories = existingCategories?.mutableCopy() as? NSMutableOrderedSet
                     }
                     categoryViewController.delegate = self
@@ -285,11 +323,15 @@ class AddDeckViewController: UITableViewController, CategoryTableViewControllerD
     // MARK: - CategoryTableViewControllerDelegate
     
     func categoryTableViewControllerDidFinishSelectingCategory(viewController: CategoryTableViewController, selectedCategories: NSMutableOrderedSet?) {
-        tempCategories = selectedCategories
+        if tempCategories != selectedCategories {
+            tempCategories = selectedCategories
+            didMakeChanges = true
+        }
         tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)
     }
     
     func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?) {
+        didMakeChanges = true
         tableView.reloadSections(NSIndexSet(index: 3), withRowAnimation: .None)
     }
 
