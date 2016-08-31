@@ -25,6 +25,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+        
         self.fetchedResultsController.delegate = self
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         

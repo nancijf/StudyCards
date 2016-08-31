@@ -32,30 +32,43 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+        controllerArray.removeAll()
+        
         if usingCardStruct {
-            controllerArray.removeAll()
             if let tempCards = tempCards {
-                for (idx, tempCard) in tempCards.enumerate() {
+                for tempCard in tempCards {
                     if let controller = cardViewControllerWithStruct(tempCard)  {
                         controllerArray.append(controller)
-//                        tempCard.ordinal = idx + 1
                     }
                 }
-                setViewControllers([controllerArray[currentIndex]], direction: .Forward, animated: true, completion: nil)
             }
-        } else {
-            if let cards = deck?.cards?.array as? [Card] {
-                for (idx, card) in cards.enumerate() {
-                    if let controller = cardViewControllerWith(card) {
-                        controllerArray.append(controller)
-                        card.ordinal = idx + 1
-                    }
+        } else if let cards = deck?.cards?.array as? [Card] {
+
+            for (idx, card) in cards.enumerate() {
+                if let controller = cardViewControllerWith(card) {
+                    controllerArray.append(controller)
+                    card.ordinal = idx + 1
                 }
-                setViewControllers([controllerArray[currentIndex]], direction: .Forward, animated: true, completion: nil)
+            }
+
+        } else {
+            let tempCard = CardStruct(question: "Tap a Deck to view Cards", answer: nil, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: nil, deck: nil)
+            if let controller = cardViewControllerWithStruct(tempCard) {
+                controllerArray.append(controller)
             }
         }
         
+        if controllerArray.count > 0 {
+            setViewControllers([controllerArray[currentIndex]], direction: .Forward, animated: true, completion: nil)
+        }
+        
         dataSource = self
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -85,7 +98,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             testScoreViewController.deck = deck
             self.navigationController?.pushViewController(testScoreViewController, animated: true)
         }
-
     }
     
     func saveTapped(sender: UIBarButtonItem) {
@@ -96,8 +108,8 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             let newCard = CardStruct(question: tempCard.question, answer: tempCard.answer, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: tempCard.imageURL, deck: deckEntity)
             StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
         }
-        if let navCotroller = self.navigationController {
-            navCotroller.popViewControllerAnimated(true)
+        if let navController = self.navigationController {
+            navController.popViewControllerAnimated(true)
         }
     }
     
@@ -122,8 +134,11 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         return nil
     }
     
+    // MARK: pageViewController Delegate calls
+    
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
         
+        print("in pagViewController Before")
         guard let viewControllerIndex = controllerArray.indexOf(viewController as! DetailViewController) else {
             return nil
         }
@@ -139,6 +154,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
         
+        print("in pagViewController After")
         guard let viewControllerIndex = controllerArray.indexOf(viewController as! DetailViewController) else {
             return nil
         }
