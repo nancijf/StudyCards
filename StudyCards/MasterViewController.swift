@@ -36,6 +36,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         tableView.tableHeaderView = searchController.searchBar
         searchController.searchBar.scopeButtonTitles = ["All", "Title", "Category"]
         self.tableView.contentOffset = CGPointMake(0, CGRectGetHeight(searchController.searchBar.frame))
+        
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
@@ -51,7 +52,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         super.setEditing(editing, animated: animated)
         navigationItem.rightBarButtonItem?.enabled = !editing
         self.quizletButton.enabled = !editing
-        
     }
     
     override func viewWillAppear(animated: Bool) {

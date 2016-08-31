@@ -412,7 +412,7 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <segue destination="vC3-pB-5Vb" kind="show" identifier="ShowDeck" id="2cg-Bw-jWi"/>
+                                    <segue destination="vC3-pB-5Vb" kind="showDetail" identifier="ShowDeck" id="OB6-Dw-FmR"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -592,7 +592,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="2cg-Bw-jWi"/>
-        <segue reference="OfU-r2-jwJ"/>
+        <segue reference="OB6-Dw-FmR"/>
+        <segue reference="Og1-Gt-bXN"/>
     </inferredMetricsTieBreakers>
 </document>
