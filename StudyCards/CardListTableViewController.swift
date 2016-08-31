@@ -96,18 +96,20 @@ class CardListTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let storyBoard = UIStoryboard(name: kStoryBoardID, bundle: nil)
-        let controller = storyBoard.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
-        if mode == .StructData {
-            controller?.tempCards = self.tempCards
-            controller?.usingCardStruct = true
-            controller?.tempCardTitle = tempCardTitle
-        } else {
-            controller?.deck = self.deck
-            controller?.usingCardStruct = false
+        if let navController = storyBoard.instantiateViewControllerWithIdentifier("DetailNavController") as? UINavigationController, controller = navController.topViewController as? CardPageViewController {
+            if mode == .StructData {
+                controller.tempCards = self.tempCards
+                controller.usingCardStruct = true
+                controller.tempCardTitle = tempCardTitle
+            } else {
+                controller.deck = self.deck
+                controller.usingCardStruct = false
+            }
+            controller.currentIndex = indexPath.row
+            controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+            controller.navigationItem.leftItemsSupplementBackButton = true
+            self.splitViewController?.showDetailViewController(navController, sender: self.splitViewController?.viewControllers.first)
         }
-        controller?.currentIndex = indexPath.row
-        self.navigationController?.pushViewController(controller!, animated: true)
-
     }
 
     /*

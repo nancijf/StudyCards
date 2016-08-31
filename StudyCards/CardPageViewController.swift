@@ -29,11 +29,13 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             
         return storyboard
     }()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+        self.navigationItem.setHidesBackButton(false, animated: true)
         controllerArray.removeAll()
         
         if usingCardStruct {
