@@ -35,7 +35,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         super.viewDidLoad()
         
         self.navigationController?.interactivePopGestureRecognizer?.enabled = false
-        self.navigationItem.setHidesBackButton(false, animated: true)
         controllerArray.removeAll()
         
         if usingCardStruct {
@@ -140,7 +139,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
         
-        print("in pagViewController Before")
         guard let viewControllerIndex = controllerArray.indexOf(viewController as! DetailViewController) else {
             return nil
         }
@@ -156,7 +154,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
         
-        print("in pagViewController After")
         guard let viewControllerIndex = controllerArray.indexOf(viewController as! DetailViewController) else {
             return nil
         }

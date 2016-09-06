@@ -12,15 +12,10 @@ import CoreData
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating, UISearchControllerDelegate {
 
     var detailViewController: CardPageViewController? = nil
-    var quizletController = QuizletController()
     let searchController = UISearchController(searchResultsController: nil)
     var searchPredicate: NSPredicate?
     
     @IBOutlet weak var quizletButton: UIBarButtonItem!
-    
-    @IBAction func runQuizlet(sender: UIBarButtonItem) {
-//        quizletController.searchQuizlet("cities")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

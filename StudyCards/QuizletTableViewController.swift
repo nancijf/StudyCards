@@ -8,41 +8,49 @@
 
 import UIKit
 
-class QuizletTableViewController: UITableViewController, UISearchBarDelegate {
+class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
     
     let quizletController = QuizletController()
     var quizletData = [QSetObject]()
     var qlCardData = [CardStruct]()
+    let searchController = UISearchController(searchResultsController: nil)
     
     let cellIdentifier = "qlCellIdentifier"
     
-    lazy var searchBar: UISearchBar =
-        {
-            let searchBarWidth = self.view.frame.width * 0.75
-            let searchBar = UISearchBar(frame: CGRectMake(0, 0, searchBarWidth, 20))
-            return searchBar
-    }()
+//    lazy var searchBar: UISearchBar =
+//        {
+//            let searchBarWidth = self.view.frame.width * 0.75
+//            let searchBar = UISearchBar(frame: CGRectMake(0, 0, searchBarWidth, 20))
+//            return searchBar
+//    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        searchBar.delegate = self
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchBar)
-        searchBar.placeholder = "Search Quizlet"
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.definesPresentationContext = true
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.placeholder = "Search Quizlet"
+        searchController.delegate = self
+        tableView.tableHeaderView = searchController.searchBar
+
         
-        searchBar.becomeFirstResponder()
+        searchController.searchBar.becomeFirstResponder()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        if let searchText = searchBar.text {
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        let searchBar = searchController.searchBar
+        if let searchText = searchController.searchBar.text where searchText.characters.count > 1 {
             if let escapedText = searchText.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
                 quizletController.searchQuizlet(escapedText, onSuccess: { (quizletData) in
                     dispatch_async(dispatch_get_main_queue(), {
@@ -52,18 +60,18 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate {
                 })
             }
         }
-        searchBar.resignFirstResponder()
+//        searchController.searchBar.resignFirstResponder()
     }
+
+    
 
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return quizletData.count
     }
 
@@ -96,41 +104,5 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate {
             })
         }
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
 
 }
