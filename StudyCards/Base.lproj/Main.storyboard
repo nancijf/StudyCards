@@ -15,7 +15,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="7bK-jq-Zjz" kind="relationship" relationship="rootViewController" id="tsl-Nk-0bq"/>
+                        <segue destination="3bS-k7-RuN" kind="relationship" relationship="rootViewController" id="tsl-Nk-0bq"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8fS-aE-onr" sceneMemberID="firstResponder"/>
@@ -172,17 +172,17 @@
             </objects>
             <point key="canvasLocation" x="-45" y="873"/>
         </scene>
-        <!--Quizlet Table View Controller-->
+        <!--Quizlet-->
         <scene sceneID="RWt-kS-yHh">
             <objects>
-                <tableViewController id="P3g-Ka-Os8" customClass="QuizletTableViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController automaticallyAdjustsScrollViewInsets="NO" id="P3g-Ka-Os8" customClass="QuizletTableViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="QAK-RS-wUA">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="qlCellIdentifier" textLabel="2HZ-wM-Ndy" detailTextLabel="M3s-Uk-ZJb" style="IBUITableViewCellStyleSubtitle" id="zuF-mf-mdO">
-                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zuF-mf-mdO" id="fbO-HX-f3F">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -211,8 +211,10 @@
                             <outlet property="delegate" destination="P3g-Ka-Os8" id="LeE-Cu-FNT"/>
                         </connections>
                     </tableView>
+                    <tabBarItem key="tabBarItem" title="Quizlet" id="9zN-yp-bgt"/>
                     <toolbarItems/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="FlE-g1-6jc" id="PbF-Gy-PVo"/>
                     </connections>
@@ -388,14 +390,14 @@
         <!--Master-->
         <scene sceneID="smW-Zh-WAh">
             <objects>
-                <tableViewController title="Master" clearsSelectionOnViewWillAppear="NO" id="7bK-jq-Zjz" customClass="MasterViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Master" automaticallyAdjustsScrollViewInsets="NO" clearsSelectionOnViewWillAppear="NO" id="7bK-jq-Zjz" customClass="MasterViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="r7i-6Z-zg0">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="Arm-wq-HPj" style="IBUITableViewCellStyleDefault" id="WCw-Qf-5nD">
-                                <rect key="frame" x="0.0" y="86" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="22" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WCw-Qf-5nD" id="37f-cq-3Eg">
                                     <rect key="frame" x="0.0" y="0.0" width="533" height="43.5"/>
@@ -422,28 +424,16 @@
                             <outlet property="delegate" destination="7bK-jq-Zjz" id="RA6-mI-bju"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8">
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="add" id="Stg-xc-62n">
-                                <connections>
-                                    <segue destination="83o-js-ZpY" kind="show" identifier="AddNewDeck" id="OfU-r2-jwJ"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Quizlet" id="5k9-ei-nLx">
-                                <connections>
-                                    <segue destination="P3g-Ka-Os8" kind="show" identifier="quizletSearch" id="5vU-cL-U48"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
-                    </navigationItem>
+                    <tabBarItem key="tabBarItem" title="Deck List" id="N14-3h-uZA"/>
+                    <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8"/>
                     <connections>
-                        <outlet property="quizletButton" destination="5k9-ei-nLx" id="Dbr-CE-o70"/>
                         <segue destination="83o-js-ZpY" kind="show" identifier="EditDeck" id="Og1-Gt-bXN"/>
+                        <segue destination="83o-js-ZpY" kind="show" identifier="AddNewDeck" id="der-Ya-gDB"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="691" y="-630"/>
+            <point key="canvasLocation" x="1503" y="-630"/>
         </scene>
         <!--Card List Table View Controller-->
         <scene sceneID="UZk-S8-qFz">
@@ -544,7 +534,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gZ1-Gj-K9M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1434" y="-630"/>
+            <point key="canvasLocation" x="2246" y="-630"/>
         </scene>
         <!--Category Table View Controller-->
         <scene sceneID="JvN-bu-gTK">
@@ -572,7 +562,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fe5-3i-LBG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2082" y="-631"/>
+            <point key="canvasLocation" x="2894" y="-631"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="r7l-gg-dq7">
@@ -589,9 +579,31 @@
             </objects>
             <point key="canvasLocation" x="-45" y="129"/>
         </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="y5A-gy-vV7">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="3bS-k7-RuN" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="nMq-YG-X71">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="dUg-Tb-A7f"/>
+                    </navigationItem>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="cpx-wI-vyu">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="7bK-jq-Zjz" kind="relationship" relationship="viewControllers" id="nFN-hq-vsb"/>
+                        <segue destination="P3g-Ka-Os8" kind="relationship" relationship="viewControllers" id="5xZ-mU-8AN"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YE8-Oy-Xoh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="691" y="-630"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="der-Ya-gDB"/>
         <segue reference="OB6-Dw-FmR"/>
-        <segue reference="Og1-Gt-bXN"/>
     </inferredMetricsTieBreakers>
 </document>

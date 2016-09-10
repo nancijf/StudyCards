@@ -15,29 +15,25 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     let searchController = UISearchController(searchResultsController: nil)
     var searchPredicate: NSPredicate?
     
-    @IBOutlet weak var quizletButton: UIBarButtonItem!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.navigationController?.interactivePopGestureRecognizer?.enabled = false
         
         self.fetchedResultsController.delegate = self
-        self.navigationItem.leftBarButtonItem = self.editButtonItem()
-        
-        searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = false
-        searchController.definesPresentationContext = true
-        searchController.searchBar.sizeToFit()
-        searchController.delegate = self
-        tableView.tableHeaderView = searchController.searchBar
-        searchController.searchBar.scopeButtonTitles = ["All", "Title", "Category"]
-        self.tableView.contentOffset = CGPointMake(0, CGRectGetHeight(searchController.searchBar.frame))
         
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
         }
+        
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.definesPresentationContext = false
+        searchController.searchBar.sizeToFit()
+        searchController.delegate = self
+        tableView.tableHeaderView = searchController.searchBar
+        searchController.searchBar.scopeButtonTitles = ["All", "Title", "Category"]
         
         if fetchedResultsController.fetchedObjects?.count == 0 {
             getJSONData("US_Presidents")
@@ -47,13 +43,21 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     override func setEditing(editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        navigationItem.rightBarButtonItem?.enabled = !editing
-        self.quizletButton.enabled = !editing
+        self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = !editing
     }
     
     override func viewWillAppear(animated: Bool) {
         self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
+
+        self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem()
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addDeck))
+        
+        self.tableView.contentOffset = CGPointMake(0, CGRectGetHeight(searchController.searchBar.frame))
+        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
+            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
+        }
+
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -61,9 +65,17 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         self.navigationController?.hidesBarsOnTap = false
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
+    
+    override func viewWillDisappear(animated: Bool) {
+        searchController.active = false
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func addDeck(sender: UIBarButtonItem) {
+        self.performSegueWithIdentifier("AddNewDeck", sender: nil)
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
@@ -163,16 +175,16 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "ShowDeck" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                let deck = self.fetchedResultsController.objectAtIndexPath(indexPath)
+                let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
                 
-                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! CardPageViewController
-                controller.deck = deck as? Deck
-                if controller.deck?.cards?.count == 0 {
+                if deck?.cards?.count == 0 {
                     let alert = UIAlertController(title: "Alert", message: "There are no cards in this deck to display.", preferredStyle: .Alert)
                     let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
                     alert.addAction(okAction)
                     presentViewController(alert, animated: true, completion: nil)
                 } else {
+                    let controller = (segue.destinationViewController as! UINavigationController).topViewController as! CardPageViewController
+                    controller.deck = deck
                     controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                     controller.navigationItem.leftItemsSupplementBackButton = true
                 }

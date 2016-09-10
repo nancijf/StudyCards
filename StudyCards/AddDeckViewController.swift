@@ -49,7 +49,6 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         navigationItem.setHidesBackButton(true, animated: true)
         navigationItem.rightBarButtonItem = saveButton
         navigationItem.leftBarButtonItem = backButton
-        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -86,7 +85,7 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         } else if mode == .EditDeck {
             if var updateDeck = self.deck?.asStruct() {
                 updateDeck.title = title
-                updateDeck.desc = description
+                updateDeck.desc = desc
                 updateDeck.categories = tempCategories
                 let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(updateDeck, deckObj: self.deck)
                 if let categories = tempCategories, deckObj = deckObj {
