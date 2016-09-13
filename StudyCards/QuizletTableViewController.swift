@@ -20,19 +20,17 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     override func viewDidLoad() {
         super.viewDidLoad()
         print("in qz viewdidload")
-        
+
         qzSearchController.searchResultsUpdater = self
         qzSearchController.dimsBackgroundDuringPresentation = false
-        qzSearchController.definesPresentationContext = false
+//        qzSearchController.definesPresentationContext = true
+//        qzSearchController.hidesNavigationBarDuringPresentation = true
         qzSearchController.searchBar.sizeToFit()
         qzSearchController.searchBar.placeholder = "Search Quizlet"
         qzSearchController.delegate = self
-        qzSearchController.hidesNavigationBarDuringPresentation = true
+        definesPresentationContext = false
         tableView.tableHeaderView = qzSearchController.searchBar
         
-//        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
-//            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
-//        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -40,26 +38,22 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
 
-//        if tableView.tableHeaderView == nil {
-//            tableView.tableHeaderView = qzSearchController.searchBar
-//        }
-        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
-            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
-        }
-//        self.tableView.setNeedsLayout()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
         print("in qz viewdidappear")
+        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
+            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
+        }
+
         qzSearchController.searchBar.becomeFirstResponder()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         print("in qz viewwilldisappear")
-        qzSearchController.searchBar.resignFirstResponder()
         qzSearchController.active = false
     }
 
@@ -67,8 +61,19 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         super.didReceiveMemoryWarning()
     }
     
+    func didPresentSearchController(searchController: UISearchController) {
+        print("presenting searchcontroller: \(self.tableView.contentInset)")
+        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
+            self.tableView.contentInset = UIEdgeInsetsMake(44, 0, tabBarHeight, 0)
+        }
+
+    }
+    
     func didDismissSearchController(searchController: UISearchController) {
         print("seachcontroller dismissed")
+        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
+            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
+        }
         searchController.searchBar.resignFirstResponder()
     }
     

@@ -94,7 +94,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     }
     
     func showScore() {
-
         if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let testScoreViewController = storyboard?.instantiateViewControllerWithIdentifier("ShowTestScores") as? TestScoreViewController {
             testScoreViewController.deck = deck
             self.navigationController?.pushViewController(testScoreViewController, animated: true)
@@ -109,9 +108,14 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             let newCard = CardStruct(question: tempCard.question, answer: tempCard.answer, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: tempCard.imageURL, deck: deckEntity)
             StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
         }
-        if let navController = self.navigationController {
-            navController.popViewControllerAnimated(true)
-        }
+        let alert = UIAlertController(title: "Alert", message: "This deck has been saved.", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        presentViewController(alert, animated: true, completion: { () -> Void in
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                alert.dismissViewControllerAnimated(true, completion: nil)
+            }
+        })
     }
     
     func cardViewControllerWith(card: Card) -> DetailViewController? {

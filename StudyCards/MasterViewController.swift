@@ -29,7 +29,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
-        searchController.definesPresentationContext = false
+        definesPresentationContext = false
+        
         searchController.searchBar.sizeToFit()
         searchController.delegate = self
         tableView.tableHeaderView = searchController.searchBar
@@ -53,17 +54,17 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addDeck))
         
-        self.tableView.contentOffset = CGPointMake(0, CGRectGetHeight(searchController.searchBar.frame))
-        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
-            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
-        }
-
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationController?.hidesBarsOnTap = false
         self.navigationController?.setNavigationBarHidden(false, animated: true)
+        
+        self.tableView.contentOffset = CGPointMake(0, CGRectGetHeight(searchController.searchBar.frame))
+        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
+            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -97,6 +98,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             }
         }
     }
+    
+    func didPresentSearchController(searchController: UISearchController) {
+        print("presenting searchcontroller: \(self.tableView.contentInset)")
+        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
+            self.tableView.contentInset = UIEdgeInsetsMake(88, 0, tabBarHeight, 0)
+        }
+    }
 
     func didDismissSearchController(searchController: UISearchController) {
         self.fetchedResultsController.fetchRequest.predicate = nil
@@ -107,7 +115,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         } catch {
             abort()
         }
-
+        
+        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
+            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
+        }
+        self.tableView.contentOffset = CGPointMake(0, CGRectGetHeight(searchController.searchBar.frame))
     }
 
     func getJSONData(file: String) {
@@ -181,7 +193,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                     let alert = UIAlertController(title: "Alert", message: "There are no cards in this deck to display.", preferredStyle: .Alert)
                     let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
                     alert.addAction(okAction)
-                    presentViewController(alert, animated: true, completion: nil)
+                    presentViewController(alert, animated: true, completion: { () -> Void in
+                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+                            alert.dismissViewControllerAnimated(true, completion: nil)
+                        }
+                    })
                 } else {
                     let controller = (segue.destinationViewController as! UINavigationController).topViewController as! CardPageViewController
                     controller.deck = deck
