@@ -17,6 +17,9 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var cardImage: UIImageView!
     @IBOutlet weak var checkbox: CardCheckBox!
     
+    let indexCard = IndexCard()
+    let defaults = NSUserDefaults.standardUserDefaults()
+    
     var deck: Deck?
     var isQuestionShowing: Bool = true
     var isUsingCardStruct: Bool = false
@@ -38,7 +41,6 @@ class DetailViewController: UIViewController {
     }
     
     func configureView() {
-        // Update the user interface for the detail item.
         if isUsingCardStruct {
             if let currentCard = self.tempCard {
                 questionLabel.text = currentCard.question
@@ -71,6 +73,13 @@ class DetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("in viewDidLoad")
+        
+        let fontSize = defaults.stringForKey("fontsize") ?? "17"
+        if let fontValue = Double(fontSize) {
+            answerLabel.font = answerLabel.font.fontWithSize(CGFloat(fontValue))
+            questionLabel.font = questionLabel.font.fontWithSize(CGFloat(fontValue))
+        }
         
         answerLabel.hidden = true
         cardImage.hidden = true

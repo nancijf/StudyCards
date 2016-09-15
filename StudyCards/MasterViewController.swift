@@ -100,7 +100,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     func didPresentSearchController(searchController: UISearchController) {
-        print("presenting searchcontroller: \(self.tableView.contentInset)")
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(88, 0, tabBarHeight, 0)
         }

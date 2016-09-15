@@ -13,6 +13,7 @@ import UIKit
 @IBDesignable
 class IndexCard: UIView {
     let topSpacing: CGFloat = 80.0
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     @IBInspectable var lineWidth: CGFloat = 1.0
     @IBInspectable var topLineWidth: CGFloat = 2.0
@@ -36,6 +37,12 @@ class IndexCard: UIView {
 
     override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
+        
+        let cardLines = defaults.boolForKey("cardlines") ?? true
+        if !cardLines {
+            topLineWidth = 0.0
+            withLines = false
+        }
         
         // top red line
         CGContextBeginPath(context)

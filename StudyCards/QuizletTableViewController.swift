@@ -19,12 +19,9 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("in qz viewdidload")
 
         qzSearchController.searchResultsUpdater = self
         qzSearchController.dimsBackgroundDuringPresentation = false
-//        qzSearchController.definesPresentationContext = true
-//        qzSearchController.hidesNavigationBarDuringPresentation = true
         qzSearchController.searchBar.sizeToFit()
         qzSearchController.searchBar.placeholder = "Search Quizlet"
         qzSearchController.delegate = self
@@ -43,7 +40,6 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
-        print("in qz viewdidappear")
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
         }
@@ -53,7 +49,6 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        print("in qz viewwilldisappear")
         qzSearchController.active = false
     }
 
@@ -62,7 +57,6 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     }
     
     func didPresentSearchController(searchController: UISearchController) {
-        print("presenting searchcontroller: \(self.tableView.contentInset)")
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(44, 0, tabBarHeight, 0)
         }
@@ -70,7 +64,6 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     }
     
     func didDismissSearchController(searchController: UISearchController) {
-        print("seachcontroller dismissed")
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
         }

@@ -33,6 +33,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     var addedCards: NSMutableOrderedSet?
     var ordinal: Int32 = 0
     var mode: AddCardViewControllerMode?
+    var autoSave: Bool = false
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     @IBOutlet weak var switchButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
@@ -48,6 +50,13 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         self.navigationItem.title = deck?.title
         let addBarButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addTapped))
         self.navigationItem.rightBarButtonItem = addBarButton
+        
+        let fontSize = defaults.stringForKey("fontsize") ?? "17"
+        if let fontValue = Double(fontSize) {
+            answerTextView.font = answerTextView.font?.fontWithSize(CGFloat(fontValue))
+            questionTextView.font = questionTextView.font?.fontWithSize(CGFloat(fontValue))
+        }
+        autoSave = defaults.boolForKey("autosave")
         
         questionTextView.placeholderText = "Enter question here..."
         answerTextView.placeholderText = "Enter answer here..."
@@ -91,7 +100,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     }
     
     func backButtonTapped(sender: UIBarButtonItem) {
-        if !wasCardSaved {
+        if !wasCardSaved && !autoSave {
             let alert = UIAlertController(title: "Caution", message: "Changes were made to your card. Are you sure you want to cancel?", preferredStyle: .Alert)
             let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in
             }
@@ -159,18 +168,19 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     @IBAction func saveButton(sender: AnyObject) {
         var alertMessage = ""
         if mode == .AddCard {
-            let imageURL = imageAdded ? saveImage(imageView.image) : nil
-            let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: imageURL, deck: deck)
-            card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
+            saveCard()
+//            let imageURL = imageAdded ? saveImage(imageView.image) : nil
+//            let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: imageURL, deck: deck)
+//            card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
             mode = .EditCard
             alertMessage = "Your new card has been saved."
         } else if mode == .EditCard {
-            if var updateCard = self.card?.asStruct() {
-                let imageURL = imageAdded ? saveImage(imageView.image) : nil
-                updateCard.imageURL = imageURL
-                updateCard.question = questionTextView.text
-                updateCard.answer = answerTextView.text
-                card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(updateCard, cardObj: self.card)
+            if let updateCard = self.card?.asStruct() {
+                saveCard(updateCard)
+//                updateCard.imageURL = imageAdded ? saveImage(imageView.image) : nil
+//                updateCard.question = questionTextView.text
+//                updateCard.answer = answerTextView.text
+//                card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(updateCard, cardObj: self.card)
                 alertMessage = "Changes to your card have been saved."
             }
         }
@@ -217,12 +227,14 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             }
             let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
                 if self.mode == .AddCard {
-                    let newCard = CardStruct(question: self.questionTextView.text, answer: self.answerTextView.text, hidden: false, iscorrect: false, wronganswers: 0, ordinal: self.ordinal, imageURL: nil, deck: self.deck)
+                    let imageURL = self.imageAdded ? self.saveImage(self.imageView.image) : nil
+                    let newCard = CardStruct(question: self.questionTextView.text, answer: self.answerTextView.text, hidden: false, iscorrect: false, wronganswers: 0, ordinal: self.ordinal, imageURL: imageURL, deck: self.deck)
                     self.card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
                 } else if self.mode == .EditCard {
                     if var updateCard = self.card?.asStruct() {
                         updateCard.question = self.questionTextView.text
                         updateCard.answer = self.answerTextView.text
+                        updateCard.imageURL = self.imageAdded ? self.saveImage(self.imageView.image) : nil
                         self.card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(updateCard, cardObj: self.card)
                     }
                 }
@@ -268,6 +280,22 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             questionTextView.becomeFirstResponder()
         }
         isQuestionShowing = !isQuestionShowing
+    }
+    
+    func saveCard(updateCard: CardStruct? = nil) {
+        if mode == .AddCard {
+            let imageURL = imageAdded ? saveImage(imageView.image) : nil
+            let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: imageURL, deck: deck)
+            card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
+            mode = .EditCard
+        } else if mode == .EditCard {
+            if var updateCard = self.card?.asStruct() {
+                updateCard.imageURL = imageAdded ? saveImage(imageView.image) : nil
+                updateCard.question = questionTextView.text
+                updateCard.answer = answerTextView.text
+                card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(updateCard, cardObj: self.card)
+            }
+        }
     }
     
     func addTapped(sender: UIBarButtonItem) {

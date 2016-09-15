@@ -13,6 +13,7 @@ import CoreData
 class StudyCardsDataStack {
     
     static let sharedInstance = StudyCardsDataStack()
+    
     private init() {}
     
     var managedObjectContext: NSManagedObjectContext?

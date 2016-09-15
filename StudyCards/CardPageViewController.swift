@@ -23,6 +23,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     var usingCardStruct = false
     var tempCardTitle: String?
     var testScore: UIBarButtonItem!
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     lazy var mainStoryBoard: UIStoryboard = {
         let storyboard: UIStoryboard = UIStoryboard(name: kStoryBoardID, bundle: nil)
@@ -56,8 +57,10 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
 
         } else {
             let tempCard = CardStruct(question: "Tap a Deck to view Cards", answer: nil, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: nil, deck: nil)
-            if let controller = cardViewControllerWithStruct(tempCard) {
-                controllerArray.append(controller)
+            for _ in 0...2 {
+                if let controller = cardViewControllerWithStruct(tempCard) {
+                    controllerArray.append(controller)
+                }
             }
         }
         
@@ -70,6 +73,8 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        let fontSize = defaults.stringForKey("fontsize")
+        print(fontSize)
     }
     
     override func viewDidAppear(animated: Bool) {
