@@ -13,8 +13,22 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
+    let defaults = NSUserDefaults.standardUserDefaults()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        if defaults.valueForKey("locked") == nil {
+            defaults.setValue(false, forKey: "locked")
+        }
+        if defaults.valueForKey("autosave") == nil {
+            defaults.setValue(false, forKey: "autosave")
+        }
+        if defaults.valueForKey("cardlines") == nil {
+            defaults.setValue(true, forKey: "cardlines")
+        }
+        if defaults.valueForKey("fontsize") == nil {
+            defaults.setValue("17", forKey: "autosave")
+        }
+
         // Override point for customization after application launch.
         let splitViewController = self.window!.rootViewController as! UISplitViewController
         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
