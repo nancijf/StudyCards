@@ -143,7 +143,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="705" y="873"/>
+            <point key="canvasLocation" x="781" y="861"/>
         </scene>
         <!--Test Score View Controller-->
         <scene sceneID="uhd-nE-k8Y">
@@ -161,7 +161,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3oe-QS-NY7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1359" y="871"/>
+            <point key="canvasLocation" x="1510" y="861"/>
         </scene>
         <!--Card Page View Controller-->
         <scene sceneID="NGR-M8-6Ks">
@@ -256,21 +256,9 @@
                                     <constraint firstAttribute="height" constant="44" id="yGT-2K-tEl"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem style="plain" id="La1-0q-sUZ">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Fej-Uy-DYL">
-                                            <rect key="frame" x="20" y="7" width="37" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Done">
-                                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            </state>
-                                            <connections>
-                                                <action selector="doneWasPressed:" destination="9BG-A8-ggU" eventType="touchUpInside" id="3Ct-jD-pIo"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
                                     <barButtonItem style="plain" id="c4e-bm-CsZ">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="B5D-hj-87x">
-                                            <rect key="frame" x="67" y="7" width="34" height="30"/>
+                                            <rect key="frame" x="20" y="7" width="34" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Save">
                                                 <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -282,7 +270,7 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" id="LLy-qk-ZRr">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="5HH-mm-oxF">
-                                            <rect key="frame" x="111" y="7" width="41" height="30"/>
+                                            <rect key="frame" x="64" y="7" width="41" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Photo"/>
                                             <connections>
@@ -292,7 +280,7 @@
                                     </barButtonItem>
                                     <barButtonItem style="plain" id="L20-vm-YHV">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bzv-8V-IEz">
-                                            <rect key="frame" x="162" y="7" width="53" height="30"/>
+                                            <rect key="frame" x="115" y="7" width="53" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Delete">
                                                 <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -362,7 +350,6 @@
                     </view>
                     <connections>
                         <outlet property="answerTextView" destination="pYG-3c-hGU" id="Lav-Ri-gBz"/>
-                        <outlet property="doneButton" destination="Fej-Uy-DYL" id="Iyy-tb-INg"/>
                         <outlet property="imageView" destination="kum-eM-6sO" id="EYZ-Fi-90p"/>
                         <outlet property="photoButton" destination="5HH-mm-oxF" id="Al2-WW-hmf"/>
                         <outlet property="questionTextView" destination="67F-PJ-Lyh" id="vc1-6a-CPY"/>
@@ -372,7 +359,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="laC-6S-YBZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1434" y="129"/>
+            <point key="canvasLocation" x="1510" y="117"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="Nki-YV-4Qg">
@@ -425,7 +412,7 @@
                             <outlet property="delegate" destination="7bK-jq-Zjz" id="RA6-mI-bju"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Deck List" id="N14-3h-uZA"/>
+                    <tabBarItem key="tabBarItem" title="Deck List" image="decklist" id="N14-3h-uZA"/>
                     <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8"/>
                     <connections>
                         <segue destination="83o-js-ZpY" kind="show" identifier="EditDeck" id="Og1-Gt-bXN"/>
@@ -478,7 +465,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zeW-P4-Vim" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="674" y="129"/>
+            <point key="canvasLocation" x="750" y="117"/>
         </scene>
         <!--Deck Editor-->
         <scene sceneID="BWH-Uu-0v4">
@@ -681,7 +668,7 @@
                             <outlet property="delegate" destination="ECw-8F-dNQ" id="uBq-3r-T7S"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Settings" id="yiE-dD-GfX"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="settingsicon" id="yiE-dD-GfX"/>
                     <connections>
                         <outlet property="autoSave" destination="hfs-V5-Wt5" id="zfB-20-jwD"/>
                         <outlet property="cardLines" destination="889-0s-X8K" id="b6P-QQ-krE"/>
@@ -761,6 +748,10 @@
             <point key="canvasLocation" x="691" y="-630"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="decklist" width="30" height="30"/>
+        <image name="settingsicon" width="30" height="30"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="der-Ya-gDB"/>
         <segue reference="OB6-Dw-FmR"/>

@@ -269,9 +269,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
-        cell.textLabel!.text = deck?.title
-        if let cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
-            cell.textLabel?.text = (cell.textLabel?.text)! + " (\(cardCount) Cards)"
+        if let currentTitle = deck?.title, cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
+//            cell.textLabel!.text = deck?.title
+//            if let cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
+            cell.textLabel?.text = currentTitle + " (\(cardCount) Cards)"
+            print(currentTitle)
+//            }
+        } else {
+            print(deck)
         }
     }
     

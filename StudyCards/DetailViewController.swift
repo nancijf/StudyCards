@@ -73,7 +73,6 @@ class DetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("in viewDidLoad")
         
         let fontSize = defaults.stringForKey("fontsize") ?? "17"
         if let fontValue = Double(fontSize) {

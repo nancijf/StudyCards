@@ -21,6 +21,8 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     var tempCategories: NSOrderedSet?
     var deck: Deck?
     var mode: DeckViewControllerMode?
+    var tempTitle: String?
+    var tempDesc: String?
     var didMakeChanges: Bool = false
     
     enum TableViewSections: Int {
@@ -44,6 +46,8 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         }
         
         tempCategories = deck?.categories
+        tempDesc = deck?.desc
+        tempTitle = deck?.title
         let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(saveData))
         let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonPressed))
         navigationItem.setHidesBackButton(true, animated: true)
@@ -61,31 +65,27 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         didMakeChanges = true
+        tempTitle = textField.text
         return true
     }
     
     func textViewDidChange(textView: UITextView) {
-        print("Text View changed")
         didMakeChanges = true
+        tempDesc = textView.text
     }
     
     func saveData() {
-        let titleCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Title.rawValue)) as! DeckEditorTableViewCell
-
-        let title = titleCell.titleTextField.text
-        let descriptionCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Description.rawValue)) as! DeckEditorTableViewCell
-        let desc = descriptionCell.descTextView.text
         
         if mode == .AddDeck {
-            let newDeck = DeckStruct(title: title, desc: desc, testscore: 0.0, correctanswers: 0, categories: tempCategories, cards: nil)
+            let newDeck = DeckStruct(title: tempTitle, desc: tempDesc, testscore: 0.0, correctanswers: 0, categories: tempCategories, cards: nil)
             let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
             if let categories = tempCategories, deckObj = deckObj {
                 updateCategories(categories, deck: deckObj)
             }
         } else if mode == .EditDeck {
             if var updateDeck = self.deck?.asStruct() {
-                updateDeck.title = title
-                updateDeck.desc = desc
+                updateDeck.title = tempTitle
+                updateDeck.desc = tempDesc
                 updateDeck.categories = tempCategories
                 let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(updateDeck, deckObj: self.deck)
                 if let categories = tempCategories, deckObj = deckObj {
@@ -97,10 +97,10 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     }
     
     func backButtonPressed(sender: UIBarButtonItem) {
-        let titleCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Title.rawValue)) as! DeckEditorTableViewCell
-        let title = titleCell.titleTextField.text
-        let descriptionCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Description.rawValue)) as! DeckEditorTableViewCell
-        let desc = descriptionCell.descTextView.text
+        let titleCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Title.rawValue)) as? DeckEditorTableViewCell
+        let title = titleCell?.titleTextField.text
+        let descriptionCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Description.rawValue)) as? DeckEditorTableViewCell
+        let desc = descriptionCell?.descTextView.text
         
         didMakeChanges = didMakeChanges || (title != (deck?.title ?? "") || desc != (deck?.desc ?? ""))
 
@@ -289,8 +289,9 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                 addCardsViewController.card = card
                 addCardsViewController.mode = .EditCard
                 addCardsViewController.delegate = self
-
-                self.navigationController?.pushViewController(addCardsViewController, animated: true)
+                let navController = UINavigationController(rootViewController: addCardsViewController)
+                addCardsViewController.navigationItem.title = "Add Card"
+                showDetailViewController(navController, sender: self)
             }
         }
     }
@@ -311,7 +312,13 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                     addCardsViewController.deck = deck as Deck?
                     addCardsViewController.mode = .AddCard
                     addCardsViewController.delegate = self
-                    self.navigationController?.pushViewController(addCardsViewController, animated: true)
+                    if splitViewController?.viewControllers.count > 1 {
+                        let navController = UINavigationController(rootViewController: addCardsViewController)
+                        addCardsViewController.navigationItem.title = "Add Card"
+                        showDetailViewController(navController, sender: self)
+                    } else {
+                        self.navigationController?.pushViewController(addCardsViewController, animated: true)
+                    }
                 }
             default:
                 return
@@ -319,7 +326,7 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         }
     }
     
-    // MARK: - CategoryTableViewControllerDelegate
+    // MARK: - CategoryTableViewControllerDelegate, AddCardsViewControllerDelegate
     
     func categoryTableViewControllerDidFinishSelectingCategory(viewController: CategoryTableViewController, selectedCategories: NSMutableOrderedSet?) {
         if tempCategories != selectedCategories {

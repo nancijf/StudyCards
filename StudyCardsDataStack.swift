@@ -71,6 +71,11 @@ class StudyCardsDataStack {
         
         // Save the context.
         self.saveContext()
+//        if let deckCards = card.deck?.cards {
+//            let cards = NSMutableOrderedSet(orderedSet: deckCards)
+//            cards.addObject(cardEntity!)
+//            
+//        }
         
         return cardEntity
     }

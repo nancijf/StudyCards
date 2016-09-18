@@ -38,8 +38,8 @@ class SettingsViewController: UITableViewController {
         let isAutoSave = defaults.boolForKey("autosave") ?? false
 
         cardLines.setOn(useLines, animated: true)
-        autoSave.setOn(isLocked, animated: true)
-        lockOrientation.setOn(isAutoSave, animated: true)
+        autoSave.setOn(isAutoSave, animated: true)
+        lockOrientation.setOn(isLocked, animated: true)
     }
 
     override func didReceiveMemoryWarning() {

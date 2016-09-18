@@ -74,7 +74,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         let fontSize = defaults.stringForKey("fontsize")
-        print(fontSize)
     }
     
     override func viewDidAppear(animated: Bool) {
