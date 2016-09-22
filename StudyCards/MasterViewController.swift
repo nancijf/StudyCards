@@ -26,6 +26,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
         }
+        splitViewController?.preferredDisplayMode = .AllVisible
         
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
@@ -53,7 +54,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
         self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addDeck))
-        
+        UITabBar.appearance().barTintColor = UIColor ( red: 0.7843, green: 0.7843, blue: 0.7843, alpha: 1.0 )
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -165,10 +166,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                                     }
                                     StudyCardsDataStack.sharedInstance.saveContext()                                    
                                 }
-
                             }
                         }
-                        
                     }
                 } catch let error as NSError {
                     print(error.localizedDescription)
@@ -270,14 +269,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
         if let currentTitle = deck?.title, cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
-//            cell.textLabel!.text = deck?.title
-//            if let cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
             cell.textLabel?.text = currentTitle + " (\(cardCount) Cards)"
-            print(currentTitle)
-//            }
-        } else {
-            print(deck)
-        }
+        } 
     }
     
     override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
