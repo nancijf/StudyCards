@@ -59,20 +59,6 @@ class BarGraphView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-//    lazy var orangeBar: UIView = {
-//        let view = UIView(frame: CGRectZero)
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        view.backgroundColor = UIColor.orangeColor()
-//        return view
-//    }()
-//    lazy var orangeLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "Spend"
-//        label.textColor = UIColor.blackColor()
-//        label.textAlignment = .Center
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        return label
-//    }()
     lazy var chartLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.blackColor()
@@ -121,10 +107,6 @@ class BarGraphView: UIView {
         blueStackView.translatesAutoresizingMaskIntoConstraints = false
         blueStackView.axis = .Vertical
         
-//        let orangeStackView = UIStackView(arrangedSubviews: [orangeBar, orangeLabel])
-//        orangeStackView.translatesAutoresizingMaskIntoConstraints = false
-//        orangeStackView.axis = .Vertical
-        
         let stackView = UIStackView(arrangedSubviews: [greenStackView, redStackView, blueStackView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .Horizontal
@@ -143,16 +125,9 @@ class BarGraphView: UIView {
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-100-[chartLabel]", options: [], metrics: metrics, views: views))
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-30-[chartLabel]", options: [], metrics: metrics, views: views))
 
-        
-//        greenStackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[greenBar]-20-[greenLabel]", options: [], metrics: metrics, views: views))
-//        redStackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[redBar]-20-[redLabel]", options: [], metrics: metrics, views: views))
-//        blueStackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[blueBar]-20-[blueLabel]", options: [], metrics: metrics, views: views))
-//        orangeStackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[orangeBar]-20-[orangeLabel]", options: [], metrics: metrics, views: views))
-        
         stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[greenBar(barWidth)]", options: [], metrics: metrics, views: views))
         stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[redBar(barWidth)]", options: [], metrics: metrics, views: views))
         stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[blueBar(barWidth)]", options: [], metrics: metrics, views: views))
-//        stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[orangeBar(barWidth)]", options: [], metrics: metrics, views: views))
         
         self.greenBarConstraint = NSLayoutConstraint(item: greenBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 2)
         stackView.addConstraint(self.greenBarConstraint!)
@@ -160,11 +135,6 @@ class BarGraphView: UIView {
         stackView.addConstraint(self.redBarConstraint!)
         self.blueBarConstraint = NSLayoutConstraint(item: blueBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 2)
         stackView.addConstraint(self.blueBarConstraint!)
-//        self.orangeBarConstraint = NSLayoutConstraint(item: orangeBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 2)
-//        stackView.addConstraint(self.orangeBarConstraint!)
-        
-//        self.addConstraint(NSLayoutConstraint(item: actionButton, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0))
-//        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[actionButton(100)]-10-|", options: [], metrics: nil, views: ["actionButton": actionButton]))
         
         self.updateConstraintsIfNeeded()
     }
@@ -182,7 +152,6 @@ class BarGraphView: UIView {
                 self.greenBarConstraint?.constant = 2
                 self.redBarConstraint?.constant = 2
                 self.blueBarConstraint?.constant = 2
-//                self.orangeBarConstraint?.constant = 2
                 
 //                self.updateConstraintsIfNeeded()
                 self.layoutIfNeeded()
@@ -196,7 +165,6 @@ class BarGraphView: UIView {
                 self.greenBarConstraint?.constant = CGFloat(correctHeight)
                 self.redBarConstraint?.constant = CGFloat(wrongHeight)
                 self.blueBarConstraint?.constant = 50
-//                self.orangeBarConstraint?.constant = 100
                 
 //                self.updateConstraintsIfNeeded()
                 self.layoutIfNeeded()
