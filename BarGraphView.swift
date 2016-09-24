@@ -12,7 +12,9 @@ import Foundation
 class BarGraphView: UIView {
     
     var deck: Deck?
-    var maxHeight = 300
+    var maxHeight = 225
+    var bottomPadding = 100
+    var bottomConstraint: NSLayoutConstraint?
     
     lazy var greenBar: UIView = {
         let view = UIView(frame: CGRectZero)
@@ -59,13 +61,13 @@ class BarGraphView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    lazy var chartLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor.blackColor()
-        label.textAlignment = .Center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+//    lazy var chartLabel: UILabel = {
+//        let label = UILabel()
+//        label.textColor = UIColor.blackColor()
+//        label.textAlignment = .Center
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        return label
+//    }()
     
     lazy var actionButton: UIButton = {
         let button = UIButton(type: .RoundedRect)
@@ -77,8 +79,8 @@ class BarGraphView: UIView {
     var greenBarConstraint: NSLayoutConstraint?
     var redBarConstraint: NSLayoutConstraint?
     var blueBarConstraint: NSLayoutConstraint?
-    var orangeBarConstraint: NSLayoutConstraint?
-    var chartLabelConstraints: NSLayoutConstraint?
+    var stackViewConstraint: NSLayoutConstraint?
+//    var chartLabelConstraints: NSLayoutConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -91,6 +93,8 @@ class BarGraphView: UIView {
     }
     
     private func commonInit() {
+        
+//        self.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
         
         backgroundColor = UIColor(red: 1.0, green: 0.9912, blue: 0.9546, alpha: 1.0)
         actionButton.addTarget(self, action: #selector(animate), forControlEvents: .TouchUpInside)
@@ -112,22 +116,23 @@ class BarGraphView: UIView {
         stackView.axis = .Horizontal
         stackView.alignment = .LastBaseline
         stackView.distribution = .EqualSpacing
+        stackView.spacing = 5
         
         self.addSubview(stackView)
-//        self.addSubview(actionButton)
-        self.addSubview(chartLabel)
         
-        let views = ["greenBar": greenBar, "redBar": redBar, "blueBar": blueBar, "stackView": stackView, "greenLabel": greenLabel, "redLabel": redLabel, "blueLabel": blueLabel, "chartLabel": chartLabel]
-        let metrics = ["bottomPadding": 100, "barSpacing": 50, "barWidth": 75]
+        let views = ["greenBar": greenBar, "redBar": redBar, "blueBar": blueBar, "stackView": stackView, "greenLabel": greenLabel, "redLabel": redLabel, "blueLabel": blueLabel]
+        let metrics = ["bottomPadding": bottomPadding, "barSpacing": 50, "barWidth": 200]
         
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-30-[stackView]-30-|", options: [], metrics: metrics, views: views))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[stackView]-bottomPadding-|", options: [], metrics: metrics, views: views))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-100-[chartLabel]", options: [], metrics: metrics, views: views))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-30-[chartLabel]", options: [], metrics: metrics, views: views))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[stackView]-|", options: [], metrics: metrics, views: views))
+        self.stackViewConstraint = NSLayoutConstraint(item: stackView, attribute: .Height, relatedBy: .LessThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 225)
+        self.addConstraint(stackViewConstraint!)
+        
+        self.bottomConstraint = NSLayoutConstraint(item: stackView, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .Bottom, multiplier: 1, constant: 0)
+        self.addConstraint(self.bottomConstraint!)
 
-        stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[greenBar(barWidth)]", options: [], metrics: metrics, views: views))
-        stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[redBar(barWidth)]", options: [], metrics: metrics, views: views))
-        stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[blueBar(barWidth)]", options: [], metrics: metrics, views: views))
+        stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[greenBar(<=barWidth)]", options: [], metrics: metrics, views: views))
+        stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[redBar(==greenBar)]", options: [], metrics: metrics, views: views))
+        stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[blueBar(==greenBar)]", options: [], metrics: metrics, views: views))
         
         self.greenBarConstraint = NSLayoutConstraint(item: greenBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 2)
         stackView.addConstraint(self.greenBarConstraint!)
@@ -141,36 +146,39 @@ class BarGraphView: UIView {
     
     func animate(button: UIButton) {
 
-        if let cardCount = self.deck?.cards?.count {
-            chartLabel.text = "Total Questions: \(cardCount)"
-        }
-        let correctHeight = (self.deck?.testscore)! * Float(self.maxHeight)
-        let wrongHeight = (1.0 - (self.deck?.testscore)!) * Float(self.maxHeight)
+        if let testScore = self.deck?.testscore {
+            let correctHeight = testScore * Float(self.maxHeight)
+            let wrongHeight = (1.0 - testScore) * Float(self.maxHeight)
+            self.greenBarConstraint?.constant = 2
+            self.redBarConstraint?.constant = 2
+            self.blueBarConstraint?.constant = 2
 
-        if button.titleLabel?.text == "Reset" {
-            UIView.animateWithDuration(5.0, delay: 0.2, options: [.CurveEaseInOut], animations: {
-                self.greenBarConstraint?.constant = 2
-                self.redBarConstraint?.constant = 2
-                self.blueBarConstraint?.constant = 2
-                
-//                self.updateConstraintsIfNeeded()
-                self.layoutIfNeeded()
-                }, completion: { done in
-                    self.actionButton.setTitle("Go", forState: .Normal)
+
+            if button.titleLabel?.text == "Reset" {
+                UIView.animateWithDuration(5.0, delay: 0.2, options: [.CurveEaseInOut], animations: {
+                    self.greenBarConstraint?.constant = 2
+                    self.redBarConstraint?.constant = 2
+                    self.blueBarConstraint?.constant = 2
                     
-            })
-        }
-        else {
-            UIView.animateWithDuration(5.0, delay: 0.2, usingSpringWithDamping: 0.5, initialSpringVelocity: 5.0, options: [.CurveEaseInOut], animations: {
-                self.greenBarConstraint?.constant = CGFloat(correctHeight)
-                self.redBarConstraint?.constant = CGFloat(wrongHeight)
-                self.blueBarConstraint?.constant = 50
-                
-//                self.updateConstraintsIfNeeded()
-                self.layoutIfNeeded()
-                }, completion: { done in
-                    self.actionButton.setTitle("Reset", forState: .Normal)
-            })
+        //                self.updateConstraintsIfNeeded()
+                    self.layoutIfNeeded()
+                    }, completion: { done in
+                        self.actionButton.setTitle("Go", forState: .Normal)
+                        
+                })
+            }
+            else {
+                UIView.animateWithDuration(5.0, delay: 0.2, usingSpringWithDamping: 0.5, initialSpringVelocity: 5.0, options: [.CurveEaseInOut], animations: {
+                    self.greenBarConstraint?.constant = CGFloat(correctHeight)
+                    self.redBarConstraint?.constant = CGFloat(wrongHeight)
+                    self.blueBarConstraint?.constant = 50
+                    
+        //                self.updateConstraintsIfNeeded()
+                    self.layoutIfNeeded()
+                    }, completion: { done in
+//                        self.actionButton.setTitle("Reset", forState: .Normal)
+                })
+            }
         }
     }
 }

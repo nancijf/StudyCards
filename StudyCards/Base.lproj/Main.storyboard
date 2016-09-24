@@ -10,7 +10,7 @@
         <!--Master-->
         <scene sceneID="pY4-Hu-kfo">
             <objects>
-                <navigationController title="Master" id="RMx-3f-FxP" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MasterNavController" title="Master" id="RMx-3f-FxP" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="Pmd-2v-anx">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -143,7 +143,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="781" y="861"/>
+            <point key="canvasLocation" x="828" y="861"/>
         </scene>
         <!--Test Score View Controller-->
         <scene sceneID="uhd-nE-k8Y">
@@ -156,8 +156,32 @@
                     <view key="view" contentMode="scaleToFill" id="0R2-n0-xDR">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ak2-DL-RUc">
+                                <rect key="frame" x="279" y="30" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VUN-8P-Gvc" customClass="BarGraphView" customModule="StudyCards" customModuleProvider="target">
+                                <rect key="frame" x="40" y="70" width="520" height="500"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="VUN-8P-Gvc" secondAttribute="trailing" constant="20" id="0O4-KO-1IV"/>
+                            <constraint firstItem="VUN-8P-Gvc" firstAttribute="top" secondItem="nna-oY-e4w" secondAttribute="bottom" constant="50" id="HGX-07-2MF"/>
+                            <constraint firstItem="ak2-DL-RUc" firstAttribute="centerX" secondItem="0R2-n0-xDR" secondAttribute="centerX" id="JXj-qS-vrv"/>
+                            <constraint firstItem="SFc-XW-ytD" firstAttribute="top" secondItem="VUN-8P-Gvc" secondAttribute="bottom" constant="30" id="cnI-09-bal"/>
+                            <constraint firstItem="ak2-DL-RUc" firstAttribute="top" secondItem="nna-oY-e4w" secondAttribute="bottom" constant="10" id="f7T-it-CJa"/>
+                            <constraint firstItem="VUN-8P-Gvc" firstAttribute="leading" secondItem="0R2-n0-xDR" secondAttribute="leadingMargin" constant="20" id="zSf-ww-ShR"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="barGraphView" destination="VUN-8P-Gvc" id="MxO-sj-wsf"/>
+                        <outlet property="chartlabel" destination="ak2-DL-RUc" id="OHe-R9-zmu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3oe-QS-NY7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -168,6 +192,9 @@
             <objects>
                 <pageViewController storyboardIdentifier="CardPageViewController" autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="cow-wC-7QC" customClass="CardPageViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="R1O-a9-I7g"/>
+                    <connections>
+                        <segue destination="EKU-6p-fwJ" kind="showDetail" id="35t-aj-Tgi"/>
+                    </connections>
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n4H-XM-58j" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -364,7 +391,7 @@
         <!--Split View Controller-->
         <scene sceneID="Nki-YV-4Qg">
             <objects>
-                <splitViewController id="H1p-Uh-vWS" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="SplitViewController" id="H1p-Uh-vWS" sceneMemberID="viewController">
                     <toolbarItems/>
                     <connections>
                         <segue destination="RMx-3f-FxP" kind="relationship" relationship="masterViewController" id="BlO-5A-QYV"/>
@@ -378,7 +405,7 @@
         <!--Master-->
         <scene sceneID="smW-Zh-WAh">
             <objects>
-                <tableViewController title="Master" clearsSelectionOnViewWillAppear="NO" id="7bK-jq-Zjz" customClass="MasterViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MasterViewController" title="Master" clearsSelectionOnViewWillAppear="NO" id="7bK-jq-Zjz" customClass="MasterViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="r7i-6Z-zg0">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -582,8 +609,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lock Orientation" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CGo-OQ-pio">
-                                                    <rect key="frame" x="8" y="11" width="127" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hide Cards Answered Correctly" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CGo-OQ-pio">
+                                                    <rect key="frame" x="8" y="11" width="241" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -727,7 +754,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="y5A-gy-vV7">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="3bS-k7-RuN" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarController" automaticallyAdjustsScrollViewInsets="NO" id="3bS-k7-RuN" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="nMq-YG-X71">

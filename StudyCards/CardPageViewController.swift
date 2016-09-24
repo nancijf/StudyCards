@@ -47,9 +47,12 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
                 }
             }
         } else if let cards = deck?.cards?.array as? [Card] {
+            let hideCorrect = defaults.boolForKey("locked")
 
             for (idx, card) in cards.enumerate() {
-                if let controller = cardViewControllerWith(card) {
+                if hideCorrect && card.iscorrect {
+                    continue
+                } else if let controller = cardViewControllerWith(card) {
                     controllerArray.append(controller)
                     card.ordinal = idx + 1
                 }
@@ -95,6 +98,13 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func encodeWithCoder(coder: NSCoder) {
+        if let deck = deck {
+            coder.encodeObject(deck, forKey: "deck")
+        }
+        encodeRestorableStateWithCoder(coder)
     }
     
     func showScore() {
