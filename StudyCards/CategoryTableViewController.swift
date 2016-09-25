@@ -112,12 +112,6 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
             if let tempTextHolder = inputTextField?.text where tempTextHolder.characters.count > 0 {
                 let newCategory = CategoryStruct(name: tempTextHolder, decks: nil)
                 let addedCategory = StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(newCategory)
-//                let rowToSelect: NSIndexPath = NSIndexPath(forRow: 0, inSection: 0)
-//                self.tableView.selectRowAtIndexPath(rowToSelect, animated: true, scrollPosition: UITableViewScrollPosition.None)
-//                self.tableView(self.tableView, didSelectRowAtIndexPath: rowToSelect)
-//                if let categoryObj = addedCategory {
-//                    self.selectedCategories?.addObject(categoryObj)
-//                }
             }
         })
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
