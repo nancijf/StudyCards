@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+
 let kCellIdentifier = "DeckEditorCell"
 
 enum DeckViewControllerMode: Int {
@@ -24,6 +25,8 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     var tempTitle: String?
     var tempDesc: String?
     var didMakeChanges: Bool = false
+    var deckEditorCell: DeckEditorTableViewCell?
+    
     
     enum TableViewSections: Int {
         case Title = 0
@@ -44,10 +47,11 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         } else {
             self.navigationItem.title = "Edit Deck"
         }
-        
+
         tempCategories = deck?.categories
         tempDesc = deck?.desc
         tempTitle = deck?.title
+        
         let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(saveData))
         let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonPressed))
         navigationItem.setHidesBackButton(true, animated: true)
@@ -63,11 +67,19 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         super.didReceiveMemoryWarning()
     }
     
+    func textFieldDidEndEditing(textField: UITextField) {
+        tempTitle = textField.text
+    }
+    
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         didMakeChanges = true
         tempTitle = textField.text
         return true
     }
+    
+//    func textViewDidBeginEditing(textView: UITextView) {
+//        print("editing title")
+//    }
     
     func textViewDidChange(textView: UITextView) {
         didMakeChanges = true
@@ -75,11 +87,11 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     }
     
     func saveData() {
-        
+        self.view.endEditing(true)
         if mode == .AddDeck {
             let newDeck = DeckStruct(title: tempTitle, desc: tempDesc, testscore: 0.0, correctanswers: 0, categories: tempCategories, cards: nil)
             let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
-            if let categories = tempCategories, deckObj = deckObj {
+            if let categories = tempCategories, let deckObj = deckObj {
                 updateCategories(categories, deck: deckObj)
             }
         } else if mode == .EditDeck {
@@ -88,7 +100,7 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                 updateDeck.desc = tempDesc
                 updateDeck.categories = tempCategories
                 let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(updateDeck, deckObj: self.deck)
-                if let categories = tempCategories, deckObj = deckObj {
+                if let categories = tempCategories, let deckObj = deckObj {
                     updateCategories(categories, deck: deckObj)
                 }
             }
@@ -167,9 +179,11 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
             case TableViewSections.Title.rawValue:
                 cell.descTextView.hidden = true
                 cell.titleTextField.text = self.deck?.title ?? ""
+//                cell.titleTextField.delegate = self
             case TableViewSections.Description.rawValue:
                 cell.titleTextField.hidden = true
                 cell.descTextView.text = self.deck?.desc ?? ""
+//                cell.descTextView.delegate = self
             case TableViewSections.Category.rawValue:
                 cell.descTextView.hidden = true
                 cell.titleTextField.enabled = false

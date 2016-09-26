@@ -45,26 +45,26 @@ class IndexCard: UIView {
         }
         
         // top red line
-        CGContextBeginPath(context)
-        CGContextSetStrokeColorWithColor(context, topLineColor.CGColor)
-        CGContextSetLineWidth(context, topLineWidth)
-        CGContextMoveToPoint(context, 0.0, topSpacing)
-        CGContextAddLineToPoint(context, rect.width, topSpacing)
-        CGContextStrokePath(context)
+        CGContextBeginPath(context!)
+        CGContextSetStrokeColorWithColor(context!, topLineColor.CGColor)
+        CGContextSetLineWidth(context!, topLineWidth)
+        CGContextMoveToPoint(context!, 0.0, topSpacing)
+        CGContextAddLineToPoint(context!, rect.width, topSpacing)
+        CGContextStrokePath(context!)
         
         // add blue lines if we want them
         if withLines {
             let deltaY: CGFloat = lineSpacing;
             let numberOfLines: Int = Int((rect.height - topSpacing) / deltaY)
-            CGContextBeginPath(context)
-            CGContextSetStrokeColorWithColor(context, lineColor.CGColor)
-            CGContextSetLineWidth(context, lineWidth)
+            CGContextBeginPath(context!)
+            CGContextSetStrokeColorWithColor(context!, lineColor.CGColor)
+            CGContextSetLineWidth(context!, lineWidth)
             for i in 1...numberOfLines {
                 let Y = CGFloat(i) * deltaY;
-                CGContextMoveToPoint(context, 0.0, topSpacing + Y)
-                CGContextAddLineToPoint(context, rect.width, topSpacing + Y)
+                CGContextMoveToPoint(context!, 0.0, topSpacing + Y)
+                CGContextAddLineToPoint(context!, rect.width, topSpacing + Y)
             }
-            CGContextStrokePath(context)
+            CGContextStrokePath(context!)
         }
         
         UIGraphicsEndImageContext()

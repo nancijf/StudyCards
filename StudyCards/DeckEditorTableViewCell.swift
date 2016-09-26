@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DeckEditorTableViewCell: UITableViewCell {
+class DeckEditorTableViewCell: UITableViewCell, UITextFieldDelegate, UITextViewDelegate {
 
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var descTextView: UITextView!
