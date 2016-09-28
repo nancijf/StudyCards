@@ -384,6 +384,7 @@
                         <outlet property="questionTextView" destination="67F-PJ-Lyh" id="vc1-6a-CPY"/>
                         <outlet property="saveButton" destination="B5D-hj-87x" id="InX-b1-b33"/>
                         <outlet property="switchButton" destination="k7B-lZ-ddk" id="VyJ-7O-eRZ"/>
+                        <outlet property="toolBar" destination="e5d-vO-9Yp" id="as1-I1-meh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="laC-6S-YBZ" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -38,11 +38,11 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var switchButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
-    @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var answerTextView: NFTextView!
     @IBOutlet weak var questionTextView: NFTextView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var photoButton: UIButton!
+    @IBOutlet weak var toolBar: UIToolbar!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,13 +66,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         switchButton.setTitle("Switch to Answer", forState: .Normal)
         answerTextView.hidden = true
         
-        let doneButtonView = UIToolbar()
-        doneButtonView.sizeToFit()
-        let doneItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: #selector(doneWithKeyboard))
-        doneButtonView.setItems([doneItem], animated: true)
-        questionTextView.inputAccessoryView = doneButtonView
-        
-        questionTextView.becomeFirstResponder()
+        subscribeToKeyboardNotifications()
+        createKeyboardDoneButton(questionTextView)
         
         navigationItem.hidesBackButton = true
         let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonTapped))
@@ -106,8 +101,42 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         }
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(true)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func subscribeToKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillHide), name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
     func doneWithKeyboard() {
-        questionTextView.resignFirstResponder()
+        if isQuestionShowing {
+            questionTextView.resignFirstResponder()
+        } else {
+            answerTextView.resignFirstResponder()
+        }
+    }
+    
+    func createKeyboardDoneButton(currentView: NFTextView) {
+        let doneButtonView = UINavigationBar()
+        doneButtonView.sizeToFit()
+        doneButtonView.barTintColor = UIColor.lightGrayColor()
+        doneButtonView.tintColor = UIColor.blackColor()
+        let navItem = UINavigationItem()
+        navItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(doneWithKeyboard))
+        doneButtonView.pushNavigationItem(navItem, animated: true)
+        currentView.inputAccessoryView = doneButtonView
+        currentView.becomeFirstResponder()
+    }
+    
+    func keyboardWillShow() {
+        toolBar.hidden = true
+    }
+    
+    func keyboardWillHide() {
+        toolBar.hidden = false
     }
     
     func backButtonTapped(sender: UIBarButtonItem) {
@@ -249,7 +278,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 completion:nil)
             switchButton.setTitle("Switch to Question", forState: .Normal)
             photoButton.hidden = true
-            answerTextView.becomeFirstResponder()
+            createKeyboardDoneButton(answerTextView)
 
         } else {
 
@@ -264,7 +293,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 completion: nil)
             switchButton.setTitle("Switch to Answer", forState: .Normal)
             photoButton.hidden = false
-            questionTextView.becomeFirstResponder()
+            createKeyboardDoneButton(questionTextView)
         }
         isQuestionShowing = !isQuestionShowing
     }
