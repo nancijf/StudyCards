@@ -303,9 +303,16 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                 addCardsViewController.card = card
                 addCardsViewController.mode = .EditCard
                 addCardsViewController.delegate = self
-                let navController = UINavigationController(rootViewController: addCardsViewController)
-                addCardsViewController.navigationItem.title = "Add Card"
-                showDetailViewController(navController, sender: self)
+                if splitViewController?.viewControllers.count > 1 {
+                    let navController = UINavigationController(rootViewController: addCardsViewController)
+                    addCardsViewController.navigationItem.title = "Add Card"
+                    showDetailViewController(navController, sender: self)
+                } else {
+                    self.navigationController?.pushViewController(addCardsViewController, animated: true)
+                }
+//                let navController = UINavigationController(rootViewController: addCardsViewController)
+//                addCardsViewController.navigationItem.title = "Add Card"
+//                showDetailViewController(navController, sender: self)
             }
         }
     }
@@ -314,10 +321,10 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         switch sender.tag {
             case AddButtonType.Category.rawValue:
                 if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let categoryViewController = storyboard?.instantiateViewControllerWithIdentifier("Category") as? CategoryTableViewController {
-                    if mode == .EditDeck {
-                        let existingCategories = tempCategories
-                        categoryViewController.selectedCategories = existingCategories?.mutableCopy() as? NSMutableOrderedSet
+                    if let existingCategories = tempCategories {
+                        categoryViewController.selectedCategories = existingCategories.mutableCopy() as? NSMutableOrderedSet
                     }
+
                     categoryViewController.delegate = self
                     self.navigationController?.pushViewController(categoryViewController, animated: true)
                 }

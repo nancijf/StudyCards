@@ -65,6 +65,13 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         imageView.hidden = true
         switchButton.setTitle("Switch to Answer", forState: .Normal)
         answerTextView.hidden = true
+        
+        let doneButtonView = UIToolbar()
+        doneButtonView.sizeToFit()
+        let doneItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: #selector(doneWithKeyboard))
+        doneButtonView.setItems([doneItem], animated: true)
+        questionTextView.inputAccessoryView = doneButtonView
+        
         questionTextView.becomeFirstResponder()
         
         navigationItem.hidesBackButton = true
@@ -91,12 +98,16 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                     imageView.addSubview(deleteImageButton)
                 }
             }
-
+            
             questionTextView.text = card?.question
             answerTextView.text = card?.answer
             questionTextView.placeholderLabel.hidden = true
             answerTextView.placeholderLabel.hidden = true
         }
+    }
+    
+    func doneWithKeyboard() {
+        questionTextView.resignFirstResponder()
     }
     
     func backButtonTapped(sender: UIBarButtonItem) {
@@ -195,7 +206,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     @IBAction func saveButton(sender: AnyObject) {
         saveCard()
         let alert = UIAlertController(title: "Alert", message: "Your card has been saved.", preferredStyle: UIAlertControllerStyle.Alert)
-//        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         presentViewController(alert, animated: true, completion: { () -> Void in
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue()) {

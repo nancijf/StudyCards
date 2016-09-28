@@ -111,7 +111,10 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         let addCat = UIAlertAction(title: "Add", style: .Default, handler: { (action) -> Void in
             if let tempTextHolder = inputTextField?.text where tempTextHolder.characters.count > 0 {
                 let newCategory = CategoryStruct(name: tempTextHolder, decks: nil)
-                let addedCategory = StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(newCategory)
+                if let addedCategory = StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(newCategory) {
+                    self.selectedCategories?.addObject(addedCategory)
+                    self.tableView.reloadData()
+                }
             }
         })
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
@@ -126,7 +129,6 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         dispatch_async(dispatch_get_main_queue()) { 
             self.presentViewController(alertController, animated: true, completion: nil)
         }
-        
     }
     
     func editCategory(selectedCategory: Category) {
@@ -224,7 +226,7 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
     // MARK: - Fetched results controller
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
-        let sortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "name", ascending: true)]
+        let sortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
         guard let frc = StudyCardsDataStack.sharedInstance.fetchedResultsController("Category", sortDescriptors: sortDescriptors, predicate: nil) else {
             abort()
         }
