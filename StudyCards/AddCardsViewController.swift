@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 protocol AddCardsViewControllerDelegate: class {
     func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?)
@@ -345,10 +346,13 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
     }
     
     func takePhotoWithCamera() {
-        let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .Camera
-        imagePicker.delegate = self
-        presentViewController(imagePicker, animated: true, completion: nil)
+        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+            let imagePicker = UIImagePickerController()
+            imagePicker.sourceType = .Camera
+            imagePicker.cameraCaptureMode = .Photo
+            imagePicker.delegate = self
+            presentViewController(imagePicker, animated: true, completion: nil)
+        }
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
@@ -364,13 +368,43 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func checkPhotoLibraryPermission() {
+        let status = PHPhotoLibrary.authorizationStatus()
+        switch status {
+            case .Denied:
+                print("PL Access denied")
+            case .Authorized:
+                print("PL Permission granted")
+            case .Restricted:
+                print("PL permission restricted")
+            case .NotDetermined:
+                print("PL permission not determined")
+        }
+        let status2 = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+        switch status2 {
+            case .Denied:
+                print("Camera Access denied")
+            case .Authorized:
+                print("Camera Permission granted")
+            case .Restricted:
+                print("Camera permission restricted")
+            case .NotDetermined:
+                print("Camera permission not determined")
+        }
+        print("Photolibrary status: \(status)")
+        print("Camera status: \(status2)")
+    }
+    
     func showPhotoMenu() {
+        checkPhotoLibraryPermission()
         let alertController = UIAlertController(title: "Add Photo", message: "How would you like to import a photo?", preferredStyle: .Alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         alertController.addAction(cancelAction)
         
-        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: { _ in self.takePhotoWithCamera() })
-        alertController.addAction(takePhotoAction)
+        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+            let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: { _ in self.takePhotoWithCamera() })
+            alertController.addAction(takePhotoAction)
+        }
         
         let chooseFromLibraryAction = UIAlertAction(title: "Choose From Library", style: .Default, handler: { _ in self.choosePhotoFromLibrary() })
         alertController.addAction(chooseFromLibraryAction)
