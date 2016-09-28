@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Photos
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
@@ -28,6 +29,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         if defaults.valueForKey("fontsize") == nil {
             defaults.setValue("17", forKey: "autosave")
         }
+        
+        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+            let cameraStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+            switch cameraStatus {
+            case .NotDetermined:
+                AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo) { granted in
+                    if granted {
+                        let canUseCamera = true
+                    }
+                }
+            default:
+                break
+            }
+        }
+        
+        let plStatus = PHPhotoLibrary.authorizationStatus()
+        switch plStatus {
+        case .NotDetermined:
+            PHPhotoLibrary.requestAuthorization({ (status) in
+                switch status {
+                case .Authorized:
+                    let canUsePhotoLibrary = true
+                default:
+                    break
+                }
+            })
+        default:
+            break
+        }
 
         // Override point for customization after application launch.
         let splitViewController = self.window!.rootViewController as! UISplitViewController
@@ -37,6 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // pass managedObjectContext to StudyCardsDataStack CoreData abstraction layer
         StudyCardsDataStack.sharedInstance.managedObjectContext = self.managedObjectContext
+        
+        
 
         return true
     }

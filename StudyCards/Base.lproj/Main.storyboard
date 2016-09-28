@@ -380,6 +380,7 @@
                     <connections>
                         <outlet property="answerTextView" destination="pYG-3c-hGU" id="Lav-Ri-gBz"/>
                         <outlet property="imageView" destination="kum-eM-6sO" id="EYZ-Fi-90p"/>
+                        <outlet property="photoBarButtonItem" destination="LLy-qk-ZRr" id="xyX-yr-tBp"/>
                         <outlet property="photoButton" destination="5HH-mm-oxF" id="Al2-WW-hmf"/>
                         <outlet property="questionTextView" destination="67F-PJ-Lyh" id="vc1-6a-CPY"/>
                         <outlet property="saveButton" destination="B5D-hj-87x" id="InX-b1-b33"/>

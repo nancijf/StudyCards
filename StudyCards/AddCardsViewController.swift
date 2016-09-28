@@ -44,6 +44,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var photoButton: UIButton!
     @IBOutlet weak var toolBar: UIToolbar!
+    @IBOutlet weak var photoBarButtonItem: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -342,17 +343,23 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .PhotoLibrary
         imagePicker.delegate = self
-        presentViewController(imagePicker, animated: true, completion: nil)
+//        if UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Pad {
+            imagePicker.modalPresentationStyle = .Popover
+//            presentViewController(imagePicker, animated: true, completion: nil)//4
+            imagePicker.popoverPresentationController?.sourceView = self.view
+            imagePicker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Any
+            imagePicker.popoverPresentationController?.barButtonItem = self.photoBarButtonItem
+        //        } else {
+            presentViewController(imagePicker, animated: true, completion: nil)
+//        }
     }
     
     func takePhotoWithCamera() {
-        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
-            let imagePicker = UIImagePickerController()
-            imagePicker.sourceType = .Camera
-            imagePicker.cameraCaptureMode = .Photo
-            imagePicker.delegate = self
-            presentViewController(imagePicker, animated: true, completion: nil)
-        }
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .Camera
+        imagePicker.cameraCaptureMode = .Photo
+        imagePicker.delegate = self
+        presentViewController(imagePicker, animated: true, completion: nil)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
@@ -368,46 +375,40 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func checkPhotoLibraryPermission() {
-        let status = PHPhotoLibrary.authorizationStatus()
-        switch status {
-            case .Denied:
-                print("PL Access denied")
-            case .Authorized:
-                print("PL Permission granted")
-            case .Restricted:
-                print("PL permission restricted")
-            case .NotDetermined:
-                print("PL permission not determined")
-        }
-        let status2 = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
-        switch status2 {
-            case .Denied:
-                print("Camera Access denied")
-            case .Authorized:
-                print("Camera Permission granted")
-            case .Restricted:
-                print("Camera permission restricted")
-            case .NotDetermined:
-                print("Camera permission not determined")
-        }
-        print("Photolibrary status: \(status)")
-        print("Camera status: \(status2)")
-    }
-    
     func showPhotoMenu() {
-        checkPhotoLibraryPermission()
-        let alertController = UIAlertController(title: "Add Photo", message: "How would you like to import a photo?", preferredStyle: .Alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        alertController.addAction(cancelAction)
+        var canUseCamera: Bool = false
+        var canUsePhotoLibrary: Bool = false
         
         if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+            let cameraStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+            switch cameraStatus {
+            case .Authorized:
+                canUseCamera = true
+            default:
+                break
+            }
+        }
+        
+        let plStatus = PHPhotoLibrary.authorizationStatus()
+        switch plStatus {
+        case .Authorized:
+            canUsePhotoLibrary = true
+        default:
+            break
+        }
+        
+        let alertController = UIAlertController(title: "Add Photo", message: "Import Photo", preferredStyle: .Alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        if canUseCamera {
             let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: { _ in self.takePhotoWithCamera() })
             alertController.addAction(takePhotoAction)
         }
-        
-        let chooseFromLibraryAction = UIAlertAction(title: "Choose From Library", style: .Default, handler: { _ in self.choosePhotoFromLibrary() })
-        alertController.addAction(chooseFromLibraryAction)
+        if canUsePhotoLibrary {
+            let chooseFromLibraryAction = UIAlertAction(title: "Choose From Library", style: .Default, handler: { _ in self.choosePhotoFromLibrary() })
+            alertController.addAction(chooseFromLibraryAction)
+        }
+
         presentViewController(alertController, animated: true, completion: nil)
     }
 }
