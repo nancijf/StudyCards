@@ -165,29 +165,37 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VUN-8P-Gvc" customClass="BarGraphView" customModule="StudyCards" customModuleProvider="target">
-                                <frame key="frameInset" minX="40" minY="70" width="520" height="500"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VUN-8P-Gvc" customClass="BarGraphView" customModule="StudyCards" customModuleProvider="target">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ucq-Xp-IUg">
+                                <frame key="frameInset" minX="279" minY="59" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="VUN-8P-Gvc" secondAttribute="trailing" constant="20" id="0O4-KO-1IV"/>
                             <constraint firstItem="VUN-8P-Gvc" firstAttribute="top" secondItem="nna-oY-e4w" secondAttribute="bottom" constant="50" id="HGX-07-2MF"/>
                             <constraint firstItem="ak2-DL-RUc" firstAttribute="centerX" secondItem="0R2-n0-xDR" secondAttribute="centerX" id="JXj-qS-vrv"/>
+                            <constraint firstItem="Ucq-Xp-IUg" firstAttribute="top" secondItem="ak2-DL-RUc" secondAttribute="bottom" constant="8" id="Wno-8D-jXT"/>
                             <constraint firstItem="SFc-XW-ytD" firstAttribute="top" secondItem="VUN-8P-Gvc" secondAttribute="bottom" constant="30" id="cnI-09-bal"/>
                             <constraint firstItem="ak2-DL-RUc" firstAttribute="top" secondItem="nna-oY-e4w" secondAttribute="bottom" constant="10" id="f7T-it-CJa"/>
+                            <constraint firstItem="Ucq-Xp-IUg" firstAttribute="centerX" secondItem="ak2-DL-RUc" secondAttribute="centerX" id="vAJ-HO-iL6"/>
                             <constraint firstItem="VUN-8P-Gvc" firstAttribute="leading" secondItem="0R2-n0-xDR" secondAttribute="leadingMargin" constant="20" id="zSf-ww-ShR"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="barGraphView" destination="VUN-8P-Gvc" id="MxO-sj-wsf"/>
+                        <outlet property="cardsViewedLabel" destination="Ucq-Xp-IUg" id="yVI-ae-0dJ"/>
                         <outlet property="chartlabel" destination="ak2-DL-RUc" id="OHe-R9-zmu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3oe-QS-NY7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1510" y="861"/>
+            <point key="canvasLocation" x="1509.5999999999999" y="860.41979010494754"/>
         </scene>
         <!--Card Page View Controller-->
         <scene sceneID="NGR-M8-6Ks">
@@ -419,11 +427,11 @@
                                 <rect key="frame" x="0.0" y="86" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WCw-Qf-5nD" id="37f-cq-3Eg">
-                                    <frame key="frameInset" width="308" height="43.5"/>
+                                    <frame key="frameInset" width="308" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Arm-wq-HPj">
-                                            <frame key="frameInset" minX="15" width="293" height="43.5"/>
+                                            <frame key="frameInset" minX="15" width="293" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

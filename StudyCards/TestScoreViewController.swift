@@ -15,24 +15,19 @@ class TestScoreViewController: UIViewController {
     var animationRan: Bool = false
     var totalViewed: Int?
     
-//    lazy var barGraphView: BarGraphView = {
-//        let newView = BarGraphView(frame: self.view.bounds)
-//        newView.deck = self.deck
-//        
-//        return newView
-//    }()
-
     @IBOutlet weak var chartlabel: UILabel!
     @IBOutlet weak var barGraphView: BarGraphView!
+    @IBOutlet weak var cardsViewedLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let totalQuestions = deck?.cards?.count, let totalViewed = totalViewed {
+            chartlabel.text = "Total Cards: \(totalQuestions)"
+            cardsViewedLabel.text = "Total Cards Viewed: \(totalViewed)"
+        }
         barGraphView.deck = deck
         barGraphView.totalViewed = totalViewed
-        if let totalQuestions = deck?.cards?.count {
-            chartlabel.text = "Total Questions: \(totalQuestions)"
-        }
     }
     
     override func viewDidAppear(animated: Bool) {

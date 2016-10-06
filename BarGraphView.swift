@@ -62,14 +62,6 @@ class BarGraphView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-//    lazy var chartLabel: UILabel = {
-//        let label = UILabel()
-//        label.textColor = UIColor.blackColor()
-//        label.textAlignment = .Center
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        return label
-//    }()
-    
     lazy var actionButton: UIButton = {
         let button = UIButton(type: .RoundedRect)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -81,7 +73,6 @@ class BarGraphView: UIView {
     var redBarConstraint: NSLayoutConstraint?
     var blueBarConstraint: NSLayoutConstraint?
     var stackViewConstraint: NSLayoutConstraint?
-//    var chartLabelConstraints: NSLayoutConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -94,8 +85,6 @@ class BarGraphView: UIView {
     }
     
     private func commonInit() {
-        
-//        self.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
         
         backgroundColor = UIColor(red: 1.0, green: 0.9912, blue: 0.9546, alpha: 1.0)
         actionButton.addTarget(self, action: #selector(animate), forControlEvents: .TouchUpInside)
@@ -148,6 +137,11 @@ class BarGraphView: UIView {
     func animate(button: UIButton) {
 
         if let testScore = self.deck?.testscore, let totalCorrect = self.deck?.correctanswers {
+            if let correctAnswers = deck?.correctanswers {
+                greenLabel.text = "\(correctAnswers) Correct"
+                let incorrect = (deck?.cards?.count)! - Int(correctAnswers)
+                redLabel.text = "\(incorrect) Incorrect"
+            }
             let correctHeight = testScore * Float(self.maxHeight)
             let wrongHeight = (1.0 - testScore) * Float(self.maxHeight)
             let correctPercentHeight = (Float(totalCorrect)/Float(totalViewed!)) * Float(self.maxHeight)
