@@ -49,10 +49,11 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
     
     func backButtonTapped(sender: UIBarButtonItem) {
         if didMakeChanges {
-            let alert = UIAlertController(title: "Caution", message: "Changes were made to your selected categories. Are you sure you want to cancel?", preferredStyle: .Alert)
+            let alert = UIAlertController(title: "Caution", message: "Changes were made to your selected categories. Do you want to save them?", preferredStyle: .Alert)
             let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in
             }
             let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+                self.delegate?.categoryTableViewControllerDidFinishSelectingCategory(self, selectedCategories: self.selectedCategories)
                 self.navigationController?.popViewControllerAnimated(true)
             })
             

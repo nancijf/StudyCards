@@ -146,9 +146,10 @@ class BarGraphView: UIView {
     
     func animate(button: UIButton) {
 
-        if let testScore = self.deck?.testscore {
-            let correctHeight = testScore * Float(self.maxHeight)
+        if let testScore = self.deck?.testscore, let totalCorrect = self.deck?.correctanswers {
+            let correctHeight = Float(totalCorrect)/100.0 * Float(self.maxHeight)
             let wrongHeight = (1.0 - testScore) * Float(self.maxHeight)
+            let correctPercentHeight = (testScore) * Float(self.maxHeight)
             self.greenBarConstraint?.constant = 2
             self.redBarConstraint?.constant = 2
             self.blueBarConstraint?.constant = 2
@@ -160,7 +161,6 @@ class BarGraphView: UIView {
                     self.redBarConstraint?.constant = 2
                     self.blueBarConstraint?.constant = 2
                     
-        //                self.updateConstraintsIfNeeded()
                     self.layoutIfNeeded()
                     }, completion: { done in
                         self.actionButton.setTitle("Go", forState: .Normal)
@@ -171,9 +171,7 @@ class BarGraphView: UIView {
                 UIView.animateWithDuration(5.0, delay: 0.2, usingSpringWithDamping: 0.5, initialSpringVelocity: 5.0, options: [.CurveEaseInOut], animations: {
                     self.greenBarConstraint?.constant = CGFloat(correctHeight)
                     self.redBarConstraint?.constant = CGFloat(wrongHeight)
-                    self.blueBarConstraint?.constant = 50
-                    
-        //                self.updateConstraintsIfNeeded()
+                    self.blueBarConstraint?.constant = CGFloat(correctPercentHeight)
                     self.layoutIfNeeded()
                     }, completion: { done in
 //                        self.actionButton.setTitle("Reset", forState: .Normal)
