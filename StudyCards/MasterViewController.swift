@@ -152,7 +152,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                                 if let cards = dictionary["deck"]?["cards"] as? [[String: AnyObject]] {
                                     for card: [String: AnyObject] in cards {
                                         if let question = card["card"]?["question"] as? String, let answer = card["card"]?["answer"] as? String {
-                                            let newCard = CardStruct(question: question, answer: answer, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: nil, deck: deckObj)
+                                            let newCard = CardStruct(question: question, answer: answer, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: nil, deck: deckObj)
                                             StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
                                         }
                                     }

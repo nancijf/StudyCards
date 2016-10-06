@@ -17,6 +17,7 @@ extension Card {
     @NSManaged var question: String?
     @NSManaged var answer: String?
     @NSManaged var hidden: Bool
+    @NSManaged var cardviewed: Bool
     @NSManaged var iscorrect: Bool
     @NSManaged var wronganswers: Int32
     @NSManaged var ordinal: Int32

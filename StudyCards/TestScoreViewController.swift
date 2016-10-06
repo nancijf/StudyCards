@@ -13,6 +13,7 @@ class TestScoreViewController: UIViewController {
     
     var deck: Deck?
     var animationRan: Bool = false
+    var totalViewed: Int?
     
 //    lazy var barGraphView: BarGraphView = {
 //        let newView = BarGraphView(frame: self.view.bounds)
@@ -28,7 +29,7 @@ class TestScoreViewController: UIViewController {
         super.viewDidLoad()
         
         barGraphView.deck = deck
-        
+        barGraphView.totalViewed = totalViewed
         if let totalQuestions = deck?.cards?.count {
             chartlabel.text = "Total Questions: \(totalQuestions)"
         }

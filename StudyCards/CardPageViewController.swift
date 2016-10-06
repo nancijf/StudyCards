@@ -59,7 +59,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             }
 
         } else {
-            let tempCard = CardStruct(question: "Tap a Deck to view Cards", answer: nil, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: nil, deck: nil)
+            let tempCard = CardStruct(question: "Tap a Deck to view Cards", answer: nil, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: nil, deck: nil)
             for _ in 0...2 {
                 if let controller = cardViewControllerWithStruct(tempCard) {
                     controllerArray.append(controller)
@@ -100,15 +100,17 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         // Dispose of any resources that can be recreated.
     }
     
-    override func encodeWithCoder(coder: NSCoder) {
-        if let deck = deck {
-            coder.encodeObject(deck, forKey: "deck")
-        }
-        encodeRestorableStateWithCoder(coder)
-    }
-    
     func showScore() {
         if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let testScoreViewController = storyboard?.instantiateViewControllerWithIdentifier("ShowTestScores") as? TestScoreViewController {
+            if let cards = deck?.cards?.array as? [Card] {
+                var totalViewed = 0
+                for card in cards {
+                    if card.cardviewed {
+                        totalViewed += 1
+                    }
+                }
+                testScoreViewController.totalViewed = totalViewed
+            }
             testScoreViewController.deck = deck
             self.navigationController?.pushViewController(testScoreViewController, animated: true)
         }
@@ -119,7 +121,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
 
         let deckEntity = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
         for tempCard in tempCards! {
-            let newCard = CardStruct(question: tempCard.question, answer: tempCard.answer, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: tempCard.imageURL, deck: deckEntity)
+            let newCard = CardStruct(question: tempCard.question, answer: tempCard.answer, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: tempCard.imageURL, deck: deckEntity)
             StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
         }
         let alert = UIAlertController(title: "Alert", message: "This deck has been saved.", preferredStyle: UIAlertControllerStyle.Alert)

@@ -26,6 +26,7 @@ struct CardStruct {
     var question: String?
     var answer: String?
     var hidden: Bool
+    var cardviewed: Bool
     var iscorrect: Bool
     var wronganswers: Int32
     var ordinal: Int32

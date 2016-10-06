@@ -12,6 +12,7 @@ import Foundation
 class BarGraphView: UIView {
     
     var deck: Deck?
+    var totalViewed: Int?
     var maxHeight = 225
     var bottomPadding = 100
     var bottomConstraint: NSLayoutConstraint?
@@ -147,9 +148,9 @@ class BarGraphView: UIView {
     func animate(button: UIButton) {
 
         if let testScore = self.deck?.testscore, let totalCorrect = self.deck?.correctanswers {
-            let correctHeight = Float(totalCorrect)/100.0 * Float(self.maxHeight)
+            let correctHeight = testScore * Float(self.maxHeight)
             let wrongHeight = (1.0 - testScore) * Float(self.maxHeight)
-            let correctPercentHeight = (testScore) * Float(self.maxHeight)
+            let correctPercentHeight = (Float(totalCorrect)/Float(totalViewed!)) * Float(self.maxHeight)
             self.greenBarConstraint?.constant = 2
             self.redBarConstraint?.constant = 2
             self.blueBarConstraint?.constant = 2

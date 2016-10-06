@@ -57,7 +57,7 @@ class QuizletController: NSObject {
                                 } else {
                                     self.imageURL = nil
                                 }
-                                let tempCard = CardStruct(question: question, answer: answer, hidden: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: self.imageURL, deck: nil)
+                                let tempCard = CardStruct(question: question, answer: answer, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: self.imageURL, deck: nil)
                                 self.tempCards.append(tempCard)
                             }
                         }

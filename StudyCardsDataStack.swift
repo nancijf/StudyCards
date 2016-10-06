@@ -64,6 +64,7 @@ class StudyCardsDataStack {
         cardEntity?.answer = card.answer
         cardEntity?.ordinal = card.ordinal
         cardEntity?.hidden = card.hidden
+        cardEntity?.cardviewed = card.cardviewed
         cardEntity?.iscorrect = card.iscorrect
         cardEntity?.wronganswers = card.wronganswers
         cardEntity?.imageURL = card.imageURL
@@ -97,6 +98,12 @@ class StudyCardsDataStack {
         
         self.saveContext()
             
+    }
+    
+    func updateCardView(card: Card?, cardviewed: Bool) {
+        card?.cardviewed = cardviewed
+        
+        self.saveContext()
     }
     
     func fetchedResultsController(entityName: String, sortDescriptors: [NSSortDescriptor]? = nil, predicate: NSPredicate? = nil) -> NSFetchedResultsController? {

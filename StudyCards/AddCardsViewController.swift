@@ -303,7 +303,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     func saveCard() {
         if mode == .AddCard {
             let imageURL = imageAdded ? saveImage(imageView.image) : nil
-            let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: imageURL, deck: deck)
+            let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: imageURL, deck: deck)
             card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
             mode = .EditCard
         } else if mode == .EditCard {

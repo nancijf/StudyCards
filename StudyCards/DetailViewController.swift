@@ -82,6 +82,12 @@ class DetailViewController: UIViewController {
         
         answerLabel.hidden = true
         cardImage.hidden = true
+        if let wasViewed = card?.cardviewed {
+            if !wasViewed {
+                StudyCardsDataStack.sharedInstance.updateCardView(card, cardviewed: true)
+            }
+        }
+
         self.configureView()
     }
     
