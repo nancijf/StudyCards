@@ -47,10 +47,11 @@ class DetailViewController: UIViewController {
                 answerLabel.text = currentCard.answer
                 cardCounter.text = String(currentCard.ordinal)
                 if let image = currentCard.imageURL {
-                        if let data = NSData(contentsOfURL: NSURL(string: image)!) {
-                            cardImage.hidden = false
-                            cardImage.image = UIImage(data: data)
-                        }
+                    if let data = NSData(contentsOfURL: NSURL(string: image)!) {
+                        cardImage.hidden = false
+                        cardImage.image = UIImage(data: data)
+                        self.tempCard?.image = cardImage.image
+                    }
                 }
             }
         } else {
@@ -62,7 +63,11 @@ class DetailViewController: UIViewController {
                     checkbox.selected = true
                 }
                 if let image = currentCard.imageURL {
-                    if let data = NSData(contentsOfURL: NSURL(string: image)!) {
+                    var imagePath = image
+                    if !image.containsString("://") {
+                        imagePath = "file://" + createFilePath(withFileName: image)
+                    }
+                    if let data = NSData(contentsOfURL: NSURL(string: imagePath)!) {
                         cardImage.hidden = false
                         cardImage.image = UIImage(data: data)
                     }
@@ -97,6 +102,14 @@ class DetailViewController: UIViewController {
     
     override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
         self.view.setNeedsDisplay()
+    }
+    
+    func createFilePath(withFileName fileName: String) -> String {
+        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        let docs: String = paths[0]
+        let fullPath = docs + "/" + fileName
+        
+        return fullPath
     }
     
     @IBAction func counterView(sender: AnyObject) {

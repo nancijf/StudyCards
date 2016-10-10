@@ -77,10 +77,6 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         return true
     }
     
-//    func textViewDidBeginEditing(textView: UITextView) {
-//        print("editing title")
-//    }
-    
     func textViewDidChange(textView: UITextView) {
         didMakeChanges = true
         tempDesc = textView.text
@@ -178,11 +174,11 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         switch indexPath.section {
             case TableViewSections.Title.rawValue:
                 cell.descTextView.hidden = true
-                cell.titleTextField.text = self.deck?.title ?? ""
+                cell.titleTextField.text = tempTitle ?? ""
 //                cell.titleTextField.delegate = self
             case TableViewSections.Description.rawValue:
                 cell.titleTextField.hidden = true
-                cell.descTextView.text = self.deck?.desc ?? ""
+                cell.descTextView.text = tempDesc ?? ""
 //                cell.descTextView.delegate = self
             case TableViewSections.Category.rawValue:
                 cell.descTextView.hidden = true
@@ -310,9 +306,6 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                 } else {
                     self.navigationController?.pushViewController(addCardsViewController, animated: true)
                 }
-//                let navController = UINavigationController(rootViewController: addCardsViewController)
-//                addCardsViewController.navigationItem.title = "Add Card"
-//                showDetailViewController(navController, sender: self)
             }
         }
     }

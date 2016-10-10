@@ -343,15 +343,11 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .PhotoLibrary
         imagePicker.delegate = self
-//        if UIDevice.currentDevice().userInterfaceIdiom == UIUserInterfaceIdiom.Pad {
-            imagePicker.modalPresentationStyle = .Popover
-//            presentViewController(imagePicker, animated: true, completion: nil)//4
-            imagePicker.popoverPresentationController?.sourceView = self.view
-            imagePicker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Any
-            imagePicker.popoverPresentationController?.barButtonItem = self.photoBarButtonItem
-        //        } else {
-            presentViewController(imagePicker, animated: true, completion: nil)
-//        }
+        imagePicker.modalPresentationStyle = .Popover
+        imagePicker.popoverPresentationController?.sourceView = self.view
+        imagePicker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Any
+        imagePicker.popoverPresentationController?.barButtonItem = self.photoBarButtonItem
+        presentViewController(imagePicker, animated: true, completion: nil)
     }
     
     func takePhotoWithCamera() {

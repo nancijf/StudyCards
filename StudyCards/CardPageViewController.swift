@@ -120,9 +120,15 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         let newDeck = DeckStruct(title: tempCardTitle, desc: nil, testscore: 0.0, correctanswers: 0, categories: nil, cards: nil)
 
         let deckEntity = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
-        for tempCard in tempCards! {
-            let newCard = CardStruct(question: tempCard.question, answer: tempCard.answer, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: tempCard.imageURL, deck: deckEntity)
-            StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
+        for var tempCard in tempCards! {
+            var imageName = tempCard.imageURL
+            if let image = tempCard.image {
+                imageName = saveImage(image)
+            }
+            tempCard.imageURL = imageName
+            tempCard.deck = deckEntity
+//            let newCard = CardStruct(question: tempCard.question, answer: tempCard.answer, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: imageName, deck: deckEntity)
+            StudyCardsDataStack.sharedInstance.addOrEditCardObject(tempCard)
         }
         let alert = UIAlertController(title: "Alert", message: "This deck has been saved.", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
@@ -132,6 +138,33 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
                 alert.dismissViewControllerAnimated(true, completion: nil)
             }
         })
+    }
+    
+    func saveImage(image: UIImage?) -> String? {
+        guard let image = image, data = UIImageJPEGRepresentation(image, 1.0) else {
+            return ""
+        }
+        
+        let fileName = createUniqueFileName()
+        let fullPath = createFilePath(withFileName: fileName)
+        let _ = data.writeToFile(fullPath, atomically: true)
+        
+        return fileName
+    }
+    
+    func createUniqueFileName() -> String {
+        let uuid = CFUUIDCreateString(nil, CFUUIDCreate(nil)) as String
+        let uniqueFileName = "card-image-" + uuid + ".jpg"
+        
+        return uniqueFileName
+    }
+    
+    func createFilePath(withFileName fileName: String) -> String {
+        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        let docs: String = paths[0]
+        let fullPath = docs + "/" + fileName
+        
+        return fullPath
     }
     
     func cardViewControllerWith(card: Card) -> DetailViewController? {
@@ -162,14 +195,18 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         guard let viewControllerIndex = controllerArray.indexOf(viewController as! DetailViewController) else {
             return nil
         }
-        
-        var previousIndex = viewControllerIndex - 1
-       
-        if previousIndex < 0 {
-            previousIndex = controllerArray.count - 1
+        if controllerArray.count == 1 {
+            return nil
+        } else {
+            var previousIndex = viewControllerIndex - 1
+            
+            if previousIndex < 0 {
+                previousIndex = controllerArray.count - 1
+            }
+            
+            return controllerArray[previousIndex]            
         }
         
-        return controllerArray[previousIndex]
     }
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
@@ -178,13 +215,17 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             return nil
         }
         
-        var nextIndex = viewControllerIndex + 1
-        
-        if nextIndex >= controllerArray.count {
-            nextIndex = 0
+        if controllerArray.count == 1 {
+            return nil
+        } else {
+            var nextIndex = viewControllerIndex + 1
+            
+            if nextIndex >= controllerArray.count {
+                nextIndex = 0
+            }
+            
+            return controllerArray[nextIndex]
         }
-        
-        return controllerArray[nextIndex]
     }
 
 }

@@ -106,9 +106,11 @@ class StudyCardsDataStack {
         self.saveContext()
     }
     
-    func fetchedResultsController(entityName: String, sortDescriptors: [NSSortDescriptor]? = nil, predicate: NSPredicate? = nil) -> NSFetchedResultsController? {
+    func fetchedResultsController(entityName: String?, sortDescriptors: [NSSortDescriptor]? = nil, predicate: NSPredicate? = nil) -> NSFetchedResultsController? {
         
         var fetchedResultsController: NSFetchedResultsController?
+        
+        guard let entityName = entityName else { return nil }
         
         let fetchRequest = NSFetchRequest()
         // Edit the entity name as appropriate.

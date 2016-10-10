@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct DeckStruct {
     var title: String?
@@ -32,6 +33,29 @@ struct CardStruct {
     var ordinal: Int32
     var imageURL: String?
     var deck: Deck?
+    var image: UIImage? = nil
+    
+    init(
+        question: String?,
+        answer: String?,
+        hidden: Bool,
+        cardviewed: Bool,
+        iscorrect: Bool,
+        wronganswers: Int32,
+        ordinal: Int32,
+        imageURL: String?,
+        deck: Deck?)
+    {
+        self.question = question
+        self.answer = answer
+        self.hidden = hidden
+        self.cardviewed = cardviewed
+        self.iscorrect = iscorrect
+        self.wronganswers = wronganswers
+        self.ordinal = ordinal
+        self.imageURL = imageURL
+        self.deck = deck
+    }
 }
 
 struct ImageStruct {
