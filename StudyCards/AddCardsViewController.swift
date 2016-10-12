@@ -158,6 +158,13 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             if !wasCardSaved {
                 let alert = UIAlertController(title: "Caution", message: "Changes were made to your card. Do you want to save it?", preferredStyle: .Alert)
                 let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in
+                    if self.splitViewController?.viewControllers.count > 1 {
+                        let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
+                        let navController = UINavigationController(rootViewController: detailViewController!)
+                        self.showDetailViewController(navController, sender: self)
+                    } else {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
                 }
                 let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
                     self.saveCard()
