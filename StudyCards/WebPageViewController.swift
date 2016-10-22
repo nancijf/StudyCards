@@ -14,11 +14,16 @@ class WebPageViewController: UIViewController {
         super.viewDidLoad()
 
         qzWebView.loadRequest(NSURLRequest(URL: NSURL(string: "https://quizlet.com/")!))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(doneAction(_:)))
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func doneAction(sender: UIBarButtonItem) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBOutlet weak var qzWebView: UIWebView!

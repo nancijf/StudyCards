@@ -705,7 +705,7 @@
                                         <rect key="frame" x="0.0" y="240" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FUo-Hq-3tb" id="iRg-A8-TTW">
-                                            <frame key="frameInset" width="375" height="43"/>
+                                            <frame key="frameInset" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="flZ-7c-EDF">
@@ -715,7 +715,7 @@
                                                         <color key="titleColor" red="0.25882352941176467" green="0.3411764705882353" blue="0.70196078431372544" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
                                                     <connections>
-                                                        <segue destination="8sc-5G-q84" kind="showDetail" identifier="QZWebPage" id="Hcn-y6-VAI"/>
+                                                        <segue destination="Yqc-Km-abQ" kind="presentation" identifier="QZWebPage" id="Hcn-y6-VAI"/>
                                                     </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Imported Decks" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k8u-vj-c11">
@@ -761,7 +761,7 @@
             </objects>
             <point key="canvasLocation" x="2245.5999999999999" y="-1327.2863568215894"/>
         </scene>
-        <!--Web Page View Controller-->
+        <!--Quizlet.com-->
         <scene sceneID="QeX-f1-H2q">
             <objects>
                 <viewController id="8sc-5G-q84" customClass="WebPageViewController" customModule="StudyCards" customModuleProvider="target" sceneMemberID="viewController">
@@ -786,6 +786,7 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Quizlet.com" id="iB5-IR-geg"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="qzWebView" destination="giw-BK-7VQ" id="EbX-Md-GPv"/>
@@ -793,7 +794,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IiJ-3T-jKg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2976.8000000000002" y="-1327.2863568215894"/>
+            <point key="canvasLocation" x="3916" y="-1327.2863568215894"/>
         </scene>
         <!--Category Table View Controller-->
         <scene sceneID="JvN-bu-gTK">
@@ -862,6 +863,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YE8-Oy-Xoh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="691" y="-630"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="PEz-Cl-UCg">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Yqc-Km-abQ" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="qyg-HV-zWm">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="8sc-5G-q84" kind="relationship" relationship="rootViewController" id="LhP-hu-EOz"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0qs-yJ-tR3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2976.8000000000002" y="-1327.2863568215894"/>
         </scene>
     </scenes>
     <resources>
