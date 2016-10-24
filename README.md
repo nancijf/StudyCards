@@ -13,3 +13,9 @@ Features:
 -	Search your list of decks by either name or category
 -	Test your knowledge by reviewing the cards and check correct for all questions answered correctly
 -	Setting page let’s you hide the questions you answered correctly so you can focus on what you need to review
+
+
+Devices:
+  Runs on iPhone and iPad iOS 9.2+
+  Written in Swift 2.3
+  
