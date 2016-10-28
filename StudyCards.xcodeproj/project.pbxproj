@@ -10,6 +10,7 @@
 		B8085DB31DB56A3F009E35DD /* WebPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8085DB21DB56A3F009E35DD /* WebPageViewController.swift */; };
 		B829712D1CD55A7D00509E1E /* QuizletController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B829712C1CD55A7D00509E1E /* QuizletController.swift */; };
 		B829712F1CD6A05D00509E1E /* QuizletTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B829712E1CD6A05D00509E1E /* QuizletTableViewController.swift */; };
+		B8346F5B1DC3FC0300809407 /* ImportCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8346F5A1DC3FC0300809407 /* ImportCards.swift */; };
 		B84223511CBBBC1000B7A29D /* IndexCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84223501CBBBC1000B7A29D /* IndexCard.swift */; };
 		B8538F9F1CB1CD02008F4AB5 /* US_Capitol_Cities.json in Resources */ = {isa = PBXBuildFile; fileRef = B8538F9E1CB1CD02008F4AB5 /* US_Capitol_Cities.json */; };
 		B8538FA11CB1CF49008F4AB5 /* US_Presidents.json in Resources */ = {isa = PBXBuildFile; fileRef = B8538FA01CB1CF49008F4AB5 /* US_Presidents.json */; };
@@ -58,6 +59,7 @@
 		B8085DB21DB56A3F009E35DD /* WebPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebPageViewController.swift; sourceTree = "<group>"; };
 		B829712C1CD55A7D00509E1E /* QuizletController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizletController.swift; sourceTree = "<group>"; };
 		B829712E1CD6A05D00509E1E /* QuizletTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizletTableViewController.swift; sourceTree = "<group>"; };
+		B8346F5A1DC3FC0300809407 /* ImportCards.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportCards.swift; sourceTree = "<group>"; };
 		B83AD9361DB7CE6C0090ED87 /* StudyCards.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StudyCards.entitlements; sourceTree = "<group>"; };
 		B84223501CBBBC1000B7A29D /* IndexCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndexCard.swift; sourceTree = "<group>"; };
 		B8538F9E1CB1CD02008F4AB5 /* US_Capitol_Cities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = US_Capitol_Cities.json; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 			children = (
 				B83AD9361DB7CE6C0090ED87 /* StudyCards.entitlements */,
 				B8DA51641D5A756E0081C377 /* BarGraphView.swift */,
+				B8346F5A1DC3FC0300809407 /* ImportCards.swift */,
 				B872BB7E1C78A98C0019DED3 /* AppDelegate.swift */,
 				B8ECC7441C81F95D00503727 /* StudyCardsDataStack.swift */,
 				B872BBC61C7924D50019DED3 /* AddDeckViewController.swift */,
@@ -346,6 +349,7 @@
 				B872BBC01C78B1B00019DED3 /* Image.swift in Sources */,
 				B872BBBE1C78B1B00019DED3 /* Card.swift in Sources */,
 				B8E7F9D71CBA787200FF2A20 /* CardListTableViewController.swift in Sources */,
+				B8346F5B1DC3FC0300809407 /* ImportCards.swift in Sources */,
 				B872BBBD1C78B1B00019DED3 /* Card+CoreDataProperties.swift in Sources */,
 				B872BBC71C7924D50019DED3 /* AddDeckViewController.swift in Sources */,
 				B8ECC7471C820A8B00503727 /* ViewModels.swift in Sources */,

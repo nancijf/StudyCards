@@ -33,6 +33,9 @@ class CardListTableViewController: UITableViewController {
         }
         self.tableView.estimatedRowHeight = 40
         self.tableView.rowHeight = UITableViewAutomaticDimension
+        if mode == .StructData {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(importTapped))
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -58,7 +61,10 @@ class CardListTableViewController: UITableViewController {
         }
     }
     
-
+    func importTapped(sender: UIBarButtonItem) {
+        ImportCards.saveCards(tempCards, tempCardTitle: tempCardTitle, viewController: self)
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
