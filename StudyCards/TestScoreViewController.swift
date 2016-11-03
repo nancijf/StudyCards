@@ -48,9 +48,11 @@ class TestScoreViewController: UIViewController {
         if traitCollection.verticalSizeClass == .Compact {
             barGraphView.stackViewConstraint?.constant = 225
             barGraphView.maxHeight = 210
+//            barGraphView.stackViewConstant = 225
         } else {
             barGraphView.stackViewConstraint?.constant = 350
             barGraphView.maxHeight = 335
+//            barGraphView.stackViewConstant = 350
         }
         if animationRan {
             self.barGraphView.animate(self.barGraphView.actionButton)

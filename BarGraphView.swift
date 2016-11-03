@@ -16,6 +16,7 @@ class BarGraphView: UIView {
     var maxHeight = 225
     var bottomPadding = 100
     var bottomConstraint: NSLayoutConstraint?
+    var stackViewConstant: Int = 225
     
     lazy var greenBar: UIView = {
         let view = UIView(frame: CGRectZero)
@@ -86,8 +87,8 @@ class BarGraphView: UIView {
     
     private func commonInit() {
         
-        backgroundColor = UIColor(red: 1.0, green: 0.9912, blue: 0.9546, alpha: 1.0)
-        actionButton.addTarget(self, action: #selector(animate), forControlEvents: .TouchUpInside)
+//        backgroundColor = UIColor(red: 1.0, green: 0.9912, blue: 0.9546, alpha: 1.0)
+//        actionButton.addTarget(self, action: #selector(animate), forControlEvents: .TouchUpInside)
         
         let greenStackView = UIStackView(arrangedSubviews: [greenBar, greenLabel])
         greenStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -111,7 +112,7 @@ class BarGraphView: UIView {
         self.addSubview(stackView)
         
         let views = ["greenBar": greenBar, "redBar": redBar, "blueBar": blueBar, "stackView": stackView, "greenLabel": greenLabel, "redLabel": redLabel, "blueLabel": blueLabel]
-        let metrics = ["bottomPadding": bottomPadding, "barSpacing": 50, "barWidth": 200]
+        let metrics = ["bottomPadding": bottomPadding, "barSpacing": 50, "barWidth": 400]
         
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[stackView]-|", options: [], metrics: metrics, views: views))
         self.stackViewConstraint = NSLayoutConstraint(item: stackView, attribute: .Height, relatedBy: .LessThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 225)
@@ -149,20 +150,18 @@ class BarGraphView: UIView {
             self.redBarConstraint?.constant = 2
             self.blueBarConstraint?.constant = 2
 
-
-            if button.titleLabel?.text == "Reset" {
-                UIView.animateWithDuration(5.0, delay: 0.2, options: [.CurveEaseInOut], animations: {
-                    self.greenBarConstraint?.constant = 2
-                    self.redBarConstraint?.constant = 2
-                    self.blueBarConstraint?.constant = 2
-                    
-                    self.layoutIfNeeded()
-                    }, completion: { done in
-                        self.actionButton.setTitle("Go", forState: .Normal)
-                        
-                })
-            }
-            else {
+//            if button.titleLabel?.text == "Reset" {
+//                UIView.animateWithDuration(5.0, delay: 0.2, options: [.CurveEaseInOut], animations: {
+//                    self.greenBarConstraint?.constant = 2
+//                    self.redBarConstraint?.constant = 2
+//                    self.blueBarConstraint?.constant = 2
+//                    
+//                    self.layoutIfNeeded()
+//                    }, completion: { done in
+//                        self.actionButton.setTitle("Go", forState: .Normal)
+//                })
+//            }
+//            else {
                 UIView.animateWithDuration(5.0, delay: 0.2, usingSpringWithDamping: 0.5, initialSpringVelocity: 5.0, options: [.CurveEaseInOut], animations: {
                     self.greenBarConstraint?.constant = CGFloat(correctHeight)
                     self.redBarConstraint?.constant = CGFloat(wrongHeight)
@@ -171,7 +170,7 @@ class BarGraphView: UIView {
                     }, completion: { done in
 //                        self.actionButton.setTitle("Reset", forState: .Normal)
                 })
-            }
+//            }
         }
     }
 }
