@@ -88,7 +88,6 @@ class BarGraphView: UIView {
     private func commonInit() {
         
 //        backgroundColor = UIColor(red: 1.0, green: 0.9912, blue: 0.9546, alpha: 1.0)
-//        actionButton.addTarget(self, action: #selector(animate), forControlEvents: .TouchUpInside)
         
         let greenStackView = UIStackView(arrangedSubviews: [greenBar, greenLabel])
         greenStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -106,8 +105,9 @@ class BarGraphView: UIView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .Horizontal
         stackView.alignment = .LastBaseline
-        stackView.distribution = .EqualSpacing
-        stackView.spacing = 5
+        
+        stackView.distribution = .FillEqually
+        stackView.spacing = 20
         
         self.addSubview(stackView)
         
@@ -115,7 +115,7 @@ class BarGraphView: UIView {
         let metrics = ["bottomPadding": bottomPadding, "barSpacing": 50, "barWidth": 400]
         
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[stackView]-|", options: [], metrics: metrics, views: views))
-        self.stackViewConstraint = NSLayoutConstraint(item: stackView, attribute: .Height, relatedBy: .LessThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 225)
+        self.stackViewConstraint = NSLayoutConstraint(item: stackView, attribute: .Height, relatedBy: .LessThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 300)
         self.addConstraint(stackViewConstraint!)
         
         self.bottomConstraint = NSLayoutConstraint(item: stackView, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .Bottom, multiplier: 1, constant: 0)
@@ -124,7 +124,6 @@ class BarGraphView: UIView {
         stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[greenBar(<=barWidth)]", options: [], metrics: metrics, views: views))
         stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[redBar(==greenBar)]", options: [], metrics: metrics, views: views))
         stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[blueBar(==greenBar)]", options: [], metrics: metrics, views: views))
-        
         self.greenBarConstraint = NSLayoutConstraint(item: greenBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 2)
         stackView.addConstraint(self.greenBarConstraint!)
         self.redBarConstraint = NSLayoutConstraint(item: redBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 2)
@@ -150,27 +149,12 @@ class BarGraphView: UIView {
             self.redBarConstraint?.constant = 2
             self.blueBarConstraint?.constant = 2
 
-//            if button.titleLabel?.text == "Reset" {
-//                UIView.animateWithDuration(5.0, delay: 0.2, options: [.CurveEaseInOut], animations: {
-//                    self.greenBarConstraint?.constant = 2
-//                    self.redBarConstraint?.constant = 2
-//                    self.blueBarConstraint?.constant = 2
-//                    
-//                    self.layoutIfNeeded()
-//                    }, completion: { done in
-//                        self.actionButton.setTitle("Go", forState: .Normal)
-//                })
-//            }
-//            else {
                 UIView.animateWithDuration(5.0, delay: 0.2, usingSpringWithDamping: 0.5, initialSpringVelocity: 5.0, options: [.CurveEaseInOut], animations: {
                     self.greenBarConstraint?.constant = CGFloat(correctHeight)
                     self.redBarConstraint?.constant = CGFloat(wrongHeight)
                     self.blueBarConstraint?.constant = CGFloat(correctPercentHeight)
                     self.layoutIfNeeded()
-                    }, completion: { done in
-//                        self.actionButton.setTitle("Reset", forState: .Normal)
-                })
-//            }
+                    }, completion: nil)
         }
     }
 }
