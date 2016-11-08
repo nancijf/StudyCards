@@ -36,6 +36,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     var mode: AddCardViewControllerMode?
     var autoSave: Bool = false
     let defaults = NSUserDefaults.standardUserDefaults()
+    let photoImageView = UIImageView()
+    let qTextView = NFTextView()
     
     @IBOutlet weak var switchButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
@@ -67,6 +69,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         imageView.hidden = true
         switchButton.setTitle("Switch to Answer", forState: .Normal)
         answerTextView.hidden = true
+//        questionTextView.hidden = true
         
         subscribeToKeyboardNotifications()
         createKeyboardDoneButton(questionTextView)
@@ -106,6 +109,15 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(true)
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func createViews() {
+        photoImageView.frame = CGRect(x: 40.0, y: 20.0, width: 300, height: 300)
+        self.view.addSubview(photoImageView)
+        qTextView.frame = CGRect(x: 40.0, y: 20.0, width: 300, height: 300)
+        qTextView.placeholderText = "Enter question here..."
+        qTextView.delegate = self
+        self.view.addSubview(qTextView)
     }
     
     func subscribeToKeyboardNotifications() {
@@ -252,24 +264,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         })
     }
     
-    func createUniqueFileName() -> String {
-        let uuid = CFUUIDCreateString(nil, CFUUIDCreate(nil)) as String
-        let uniqueFileName = "card-image-" + uuid + ".jpg"
-        
-        return uniqueFileName
-    }
-    
-    func saveImage(image: UIImage?) -> String? {
-        guard let image = image, data = UIImageJPEGRepresentation(image, 1.0) else {
-            return ""
-        }
-
-        let fileName = createUniqueFileName()
-        let fullPath = createFilePath(withFileName: fileName)
-        let _ = data.writeToFile(fullPath, atomically: true)
-        
-        return fileName
-    }
     
     @IBAction func addPhoto(sender: UIButton) {
         showPhotoMenu()
@@ -309,13 +303,13 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     
     func saveCard() {
         if mode == .AddCard {
-            let imageURL = imageAdded ? saveImage(imageView.image) : nil
+            let imageURL = imageAdded ? ImportCards.saveImage(imageView.image) : nil
             let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: imageURL, deck: deck)
             card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
             mode = .EditCard
         } else if mode == .EditCard {
             if var updateCard = self.card?.asStruct() {
-                updateCard.imageURL = imageAdded ? saveImage(imageView.image) : nil
+                updateCard.imageURL = imageAdded ? ImportCards.saveImage(imageView.image) : nil
                 updateCard.question = questionTextView.text
                 updateCard.answer = answerTextView.text
                 card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(updateCard, cardObj: self.card)
