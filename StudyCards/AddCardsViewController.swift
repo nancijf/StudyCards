@@ -62,17 +62,18 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         }
         autoSave = defaults.boolForKey("autosave") ?? false
         
-        questionTextView.placeholderText = "Enter question here..."
+//        questionTextView.placeholderText = "Enter question here..."
         answerTextView.placeholderText = "Enter answer here..."
-        questionTextView.delegate = self
+//        questionTextView.delegate = self
         answerTextView.delegate = self
-        imageView.hidden = true
+//        imageView.hidden = true
         switchButton.setTitle("Switch to Answer", forState: .Normal)
         answerTextView.hidden = true
-//        questionTextView.hidden = true
+        questionTextView.hidden = true
+        createViews()
         
         subscribeToKeyboardNotifications()
-        createKeyboardDoneButton(questionTextView)
+//        createKeyboardDoneButton(questionTextView)
         
         navigationItem.hidesBackButton = true
         let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonTapped))
@@ -86,20 +87,20 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 }
                 if let data = NSData(contentsOfURL: NSURL(string: imagePath)!) {
                     imageAdded = true
-                    imageView.hidden = false
-                    imageView.image = UIImage(data: data)
-                    imageView.userInteractionEnabled = true
-                    let deleteImageButton = UIButton(frame: imageView.bounds)
+//                    imageView.hidden = false
+                    photoImageView.image = UIImage(data: data)
+                    photoImageView.userInteractionEnabled = true
+                    let deleteImageButton = UIButton(frame: photoImageView.bounds)
                     deleteImageButton.addTarget(self, action: #selector(AddCardsViewController.deleteImage(_:)), forControlEvents: .TouchUpInside)
                     deleteImageButton.setTitle("X", forState: .Normal)
                     deleteImageButton.setTitleColor(UIColor.redColor(), forState: .Normal)
                     deleteImageButton.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
                     deleteImageButton.titleLabel?.font = UIFont.boldSystemFontOfSize(50)
-                    imageView.addSubview(deleteImageButton)
+                    photoImageView.addSubview(deleteImageButton)
                 }
             }
             
-            questionTextView.text = card?.question
+            qTextView.text = card?.question
             answerTextView.text = card?.answer
             questionTextView.placeholderLabel.hidden = true
             answerTextView.placeholderLabel.hidden = true
@@ -112,12 +113,32 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     }
     
     func createViews() {
-        photoImageView.frame = CGRect(x: 40.0, y: 20.0, width: 300, height: 300)
+        photoImageView.frame = CGRect.zero
+        photoImageView.translatesAutoresizingMaskIntoConstraints = false
+        photoImageView.contentMode = UIViewContentMode.ScaleAspectFit
+        photoImageView.sizeToFit()
+
         self.view.addSubview(photoImageView)
-        qTextView.frame = CGRect(x: 40.0, y: 20.0, width: 300, height: 300)
+        qTextView.frame = CGRect.zero
+        qTextView.translatesAutoresizingMaskIntoConstraints = false
         qTextView.placeholderText = "Enter question here..."
+        qTextView.font = UIFont.systemFontOfSize(22)
+        qTextView.sizeToFit()
+        
         qTextView.delegate = self
         self.view.addSubview(qTextView)
+        qTextView.topAnchor.constraintEqualToAnchor(topLayoutGuide.bottomAnchor).active = true
+        qTextView.leftAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.leftAnchor).active = true
+        qTextView.rightAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.rightAnchor).active = true
+        qTextView.heightAnchor.constraintGreaterThanOrEqualToConstant(100).active = true
+        
+        photoImageView.bottomAnchor.constraintEqualToAnchor(bottomLayoutGuide.topAnchor, constant: -50).active = true
+        photoImageView.topAnchor.constraintEqualToAnchor(qTextView.bottomAnchor).active = true
+        photoImageView.leftAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.leftAnchor).active = true
+        photoImageView.rightAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.rightAnchor).active = true
+        photoImageView.heightAnchor.constraintGreaterThanOrEqualToConstant(200).active = true
+        self.updateViewConstraints()
+        createKeyboardDoneButton(qTextView)
     }
     
     func subscribeToKeyboardNotifications() {
@@ -127,7 +148,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     
     func doneWithKeyboard() {
         if isQuestionShowing {
-            questionTextView.resignFirstResponder()
+//            questionTextView.resignFirstResponder()
+            qTextView.resignFirstResponder()
         } else {
             answerTextView.resignFirstResponder()
         }
@@ -361,10 +383,12 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
-        imageView.image = image
-        imageView.hidden = false
+//        imageView.image = image
+//        imageView.hidden = false
+        photoImageView.image = image
         imageAdded = true
         wasCardSaved = false
+        self.updateViewConstraints()
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
     
