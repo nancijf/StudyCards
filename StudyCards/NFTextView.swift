@@ -20,8 +20,10 @@ class NFTextView: UITextView {
         let placeholderLabel = UILabel()
         if let pointSize = self.font?.pointSize {
             placeholderLabel.font = UIFont.italicSystemFontOfSize(pointSize)
-            placeholderLabel.frame.origin = CGPointMake(5, pointSize / 2)
+            placeholderLabel.frame.origin = CGPointMake(10, pointSize / 2)
         }
+        placeholderLabel.font = UIFont.italicSystemFontOfSize(20)
+        placeholderLabel.frame.origin = CGPointMake(10, 10)
         placeholderLabel.textColor = UIColor(white: 0, alpha: 0.3)
         placeholderLabel.hidden = !self.text.isEmpty
         

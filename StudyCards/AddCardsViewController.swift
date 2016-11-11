@@ -24,7 +24,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     var imageAdded: Bool = false
     var doesCardContainText: Bool {
         get {
-            return !questionTextView.text.isEmpty || !answerTextView.text.isEmpty
+            return !qTextView.text.isEmpty || !answerTextView.text.isEmpty
         }
     }
     var wasCardSaved: Bool = true
@@ -42,8 +42,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var switchButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var answerTextView: NFTextView!
-    @IBOutlet weak var questionTextView: NFTextView!
-    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var photoButton: UIButton!
     @IBOutlet weak var toolBar: UIToolbar!
     @IBOutlet weak var photoBarButtonItem: UIBarButtonItem!
@@ -56,24 +54,20 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         self.navigationItem.rightBarButtonItem = addBarButton
         
         let fontSize = defaults.stringForKey("fontsize") ?? "17"
-        if let fontValue = Double(fontSize) {
-            answerTextView.font = answerTextView.font?.fontWithSize(CGFloat(fontValue))
-            questionTextView.font = questionTextView.font?.fontWithSize(CGFloat(fontValue))
-        }
         autoSave = defaults.boolForKey("autosave") ?? false
         
-//        questionTextView.placeholderText = "Enter question here..."
         answerTextView.placeholderText = "Enter answer here..."
-//        questionTextView.delegate = self
         answerTextView.delegate = self
-//        imageView.hidden = true
         switchButton.setTitle("Switch to Answer", forState: .Normal)
         answerTextView.hidden = true
-        questionTextView.hidden = true
         createViews()
+        if let fontValue = Double(fontSize) {
+            answerTextView.font = answerTextView.font?.fontWithSize(CGFloat(fontValue))
+            qTextView.font = qTextView.font?.fontWithSize(CGFloat(fontValue))
+        }
+        qTextView.hidden = false
         
         subscribeToKeyboardNotifications()
-//        createKeyboardDoneButton(questionTextView)
         
         navigationItem.hidesBackButton = true
         let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonTapped))
@@ -87,7 +81,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 }
                 if let data = NSData(contentsOfURL: NSURL(string: imagePath)!) {
                     imageAdded = true
-//                    imageView.hidden = false
                     photoImageView.image = UIImage(data: data)
                     photoImageView.userInteractionEnabled = true
                     let deleteImageButton = UIButton(frame: photoImageView.bounds)
@@ -102,8 +95,9 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             
             qTextView.text = card?.question
             answerTextView.text = card?.answer
-            questionTextView.placeholderLabel.hidden = true
+            qTextView.placeholderLabel.hidden = true
             answerTextView.placeholderLabel.hidden = true
+            self.updateViewConstraints()
         }
     }
     
@@ -116,9 +110,9 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         photoImageView.frame = CGRect.zero
         photoImageView.translatesAutoresizingMaskIntoConstraints = false
         photoImageView.contentMode = UIViewContentMode.ScaleAspectFit
-        photoImageView.sizeToFit()
 
         self.view.addSubview(photoImageView)
+        
         qTextView.frame = CGRect.zero
         qTextView.translatesAutoresizingMaskIntoConstraints = false
         qTextView.placeholderText = "Enter question here..."
@@ -130,13 +124,13 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         qTextView.topAnchor.constraintEqualToAnchor(topLayoutGuide.bottomAnchor).active = true
         qTextView.leftAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.leftAnchor).active = true
         qTextView.rightAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.rightAnchor).active = true
-        qTextView.heightAnchor.constraintGreaterThanOrEqualToConstant(100).active = true
+        qTextView.bottomAnchor.constraintEqualToAnchor(photoImageView.topAnchor, constant: -10).active = true
+        qTextView.heightAnchor.constraintGreaterThanOrEqualToConstant(50).active = true
         
         photoImageView.bottomAnchor.constraintEqualToAnchor(bottomLayoutGuide.topAnchor, constant: -50).active = true
         photoImageView.topAnchor.constraintEqualToAnchor(qTextView.bottomAnchor).active = true
         photoImageView.leftAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.leftAnchor).active = true
         photoImageView.rightAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.rightAnchor).active = true
-        photoImageView.heightAnchor.constraintGreaterThanOrEqualToConstant(200).active = true
         self.updateViewConstraints()
         createKeyboardDoneButton(qTextView)
     }
@@ -148,7 +142,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     
     func doneWithKeyboard() {
         if isQuestionShowing {
-//            questionTextView.resignFirstResponder()
             qTextView.resignFirstResponder()
         } else {
             answerTextView.resignFirstResponder()
@@ -232,7 +225,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         let alert = UIAlertController(title: "Alert", message: "Do you want to permanently delete this image from the card?", preferredStyle: UIAlertControllerStyle.Alert)
         let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in}
         let okAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-            self.imageView.hidden = true
+            self.photoImageView.hidden = true
             self.imageAdded = false
             self.wasCardSaved = false
         })
@@ -295,8 +288,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         if (isQuestionShowing) {
 
             // hide Question - show Answer
-            imageView.hidden = true
-            UIView.transitionFromView(questionTextView,
+            photoImageView.hidden = true
+            UIView.transitionFromView(qTextView,
                 toView: answerTextView,
                 duration: 1.0,
                 options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
@@ -309,30 +302,30 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
 
             // hide Answer - show Question
             if imageAdded {
-                imageView.hidden = false
+                photoImageView.hidden = false
             }
             UIView.transitionFromView(answerTextView,
-                toView: questionTextView,
+                toView: qTextView,
                 duration: 1.0,
                 options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
                 completion: nil)
             switchButton.setTitle("Switch to Answer", forState: .Normal)
             photoButton.hidden = false
-            createKeyboardDoneButton(questionTextView)
+            createKeyboardDoneButton(qTextView)
         }
         isQuestionShowing = !isQuestionShowing
     }
     
     func saveCard() {
         if mode == .AddCard {
-            let imageURL = imageAdded ? ImportCards.saveImage(imageView.image) : nil
-            let newCard = CardStruct(question: questionTextView.text, answer: answerTextView.text, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: imageURL, deck: deck)
+            let imageURL = imageAdded ? ImportCards.saveImage(photoImageView.image) : nil
+            let newCard = CardStruct(question: qTextView.text, answer: answerTextView.text, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: imageURL, deck: deck)
             card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
             mode = .EditCard
         } else if mode == .EditCard {
             if var updateCard = self.card?.asStruct() {
-                updateCard.imageURL = imageAdded ? ImportCards.saveImage(imageView.image) : nil
-                updateCard.question = questionTextView.text
+                updateCard.imageURL = imageAdded ? ImportCards.saveImage(photoImageView.image) : nil
+                updateCard.question = qTextView.text
                 updateCard.answer = answerTextView.text
                 card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(updateCard, cardObj: self.card)
             }
@@ -346,11 +339,11 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         }
         mode = .AddCard
         card = nil
-        questionTextView.text = ""
+        qTextView.text = ""
         answerTextView.text = ""
-        questionTextView.placeholderLabel.hidden = false
+        qTextView.placeholderLabel.hidden = false
         answerTextView.placeholderLabel.hidden = false
-        imageView.hidden = true
+        photoImageView.hidden = true
         imageAdded = false
         if !isQuestionShowing {
             counterView(switchButton)

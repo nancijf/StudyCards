@@ -27,6 +27,9 @@ class DetailViewController: UIViewController {
     var tempCard: CardStruct?
     var tempCardTitle: String?
     var isCorrect: Bool = false
+    var qLabel = UILabel()
+    var aLabel = UILabel()
+    var imageView = UIImageView()
     
     @IBAction func checkmarkTapped(sender: UIButton) {
         sender.selected = !sender.selected
@@ -43,20 +46,20 @@ class DetailViewController: UIViewController {
     func configureView() {
         if isUsingCardStruct {
             if let currentCard = self.tempCard {
-                questionLabel.text = currentCard.question
+                qLabel.text = currentCard.question
                 answerLabel.text = currentCard.answer
                 cardCounter.text = String(currentCard.ordinal)
                 if let image = currentCard.imageURL {
                     if let data = NSData(contentsOfURL: NSURL(string: image)!) {
-                        cardImage.hidden = false
-                        cardImage.image = UIImage(data: data)
-                        self.tempCard?.image = cardImage.image
+                        imageView.hidden = false
+                        imageView.image = UIImage(data: data)
+                        self.tempCard?.image = imageView.image
                     }
                 }
             }
         } else {
             if let currentCard = self.card {
-                questionLabel.text = currentCard.question
+                qLabel.text = currentCard.question
                 answerLabel.text = currentCard.answer
                 cardCounter.text = String(currentCard.ordinal)
                 if card?.iscorrect == true {
@@ -68,8 +71,8 @@ class DetailViewController: UIViewController {
                         imagePath = "file://" + createFilePath(withFileName: image)
                     }
                     if let data = NSData(contentsOfURL: NSURL(string: imagePath)!) {
-                        cardImage.hidden = false
-                        cardImage.image = UIImage(data: data)
+                        imageView.hidden = false
+                        imageView.image = UIImage(data: data)
                     }
                 }
             }
@@ -80,13 +83,14 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         
         let fontSize = defaults.stringForKey("fontsize") ?? "17"
+        
+        createViews()
         if let fontValue = Double(fontSize) {
             answerLabel.font = answerLabel.font.fontWithSize(CGFloat(fontValue))
-            questionLabel.font = questionLabel.font.fontWithSize(CGFloat(fontValue))
+            qLabel.font = questionLabel.font.fontWithSize(CGFloat(fontValue))
         }
-        
         answerLabel.hidden = true
-        cardImage.hidden = true
+        imageView.hidden = true
         if let wasViewed = card?.cardviewed {
             if !wasViewed {
                 StudyCardsDataStack.sharedInstance.updateCardView(card, cardviewed: true)
@@ -102,6 +106,32 @@ class DetailViewController: UIViewController {
     
     override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
         self.view.setNeedsDisplay()
+    }
+    
+    func createViews() {
+        imageView.frame = CGRect.zero
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = UIViewContentMode.ScaleAspectFit
+        
+        self.view.addSubview(imageView)
+        
+        qLabel.frame = CGRect.zero
+        qLabel.translatesAutoresizingMaskIntoConstraints = false
+        qLabel.font = UIFont.systemFontOfSize(22)
+        qLabel.sizeToFit()
+        
+        self.view.addSubview(qLabel)
+        qLabel.topAnchor.constraintEqualToAnchor(topLayoutGuide.bottomAnchor).active = true
+        qLabel.leftAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.leftAnchor).active = true
+        qLabel.rightAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.rightAnchor).active = true
+        qLabel.bottomAnchor.constraintEqualToAnchor(imageView.topAnchor, constant: -10).active = true
+        qLabel.heightAnchor.constraintGreaterThanOrEqualToConstant(50).active = true
+        
+        imageView.bottomAnchor.constraintEqualToAnchor(bottomLayoutGuide.topAnchor, constant: -50).active = true
+        imageView.topAnchor.constraintEqualToAnchor(qLabel.bottomAnchor).active = true
+        imageView.leftAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.leftAnchor).active = true
+        imageView.rightAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.rightAnchor).active = true
+        self.updateViewConstraints()
     }
     
     func createFilePath(withFileName fileName: String) -> String {

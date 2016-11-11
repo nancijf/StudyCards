@@ -83,7 +83,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         if let title = tempCardTitle {
             self.navigationItem.title = title
             let saveButton = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(saveTapped))
-//            let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(saveTapped))
             self.navigationItem.rightBarButtonItem = saveButton
         } else {
             self.navigationItem.title = deck?.title
@@ -119,7 +118,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     func saveTapped(sender: UIBarButtonItem) {
         ImportCards.saveCards(tempCards, tempCardTitle: tempCardTitle, viewController: self)
     }
-    
     
     func cardViewControllerWith(card: Card) -> DetailViewController? {
         if let cardViewController = mainStoryBoard.instantiateViewControllerWithIdentifier(kViewControllerID) as? DetailViewController {
