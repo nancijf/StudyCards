@@ -89,6 +89,7 @@ class DetailViewController: UIViewController {
             answerLabel.font = answerLabel.font.fontWithSize(CGFloat(fontValue))
             qLabel.font = questionLabel.font.fontWithSize(CGFloat(fontValue))
         }
+        questionLabel.hidden = true
         answerLabel.hidden = true
         imageView.hidden = true
         if let wasViewed = card?.cardviewed {
@@ -146,8 +147,8 @@ class DetailViewController: UIViewController {
         if (isQuestionShowing) {
             
             // hide Question - show Answer
-            cardImage.hidden = true
-            UIView.transitionFromView(questionLabel,
+            imageView.hidden = true
+            UIView.transitionFromView(qLabel,
                                       toView: answerLabel,
                                       duration: 1.0,
                                       options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
@@ -156,11 +157,11 @@ class DetailViewController: UIViewController {
             
             // hide Answer - show Question
             UIView.transitionFromView(answerLabel,
-                                      toView: questionLabel,
+                                      toView: qLabel,
                                       duration: 1.0,
                                       options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
                                       completion: nil)
-            cardImage.hidden = false
+            imageView.hidden = false
         }
         isQuestionShowing = !isQuestionShowing
         
