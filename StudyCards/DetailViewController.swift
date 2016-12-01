@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class DetailViewController: UIViewController {
     
     @IBOutlet weak var questionLabel: UILabel!
@@ -16,6 +15,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var cardCounter: UITextField!
     @IBOutlet weak var cardImage: UIImageView!
     @IBOutlet weak var checkbox: CardCheckBox!
+    @IBOutlet weak var cardStakView: UIStackView!
     
     let indexCard = IndexCard()
     let defaults = NSUserDefaults.standardUserDefaults()
@@ -119,8 +119,8 @@ class DetailViewController: UIViewController {
         if (isQuestionShowing) {
             
             // hide Question - show Answer
-            cardImage.hidden = true
-            UIView.transitionFromView(questionLabel,
+//            cardImage.hidden = true
+            UIView.transitionFromView(cardStakView,
                                       toView: answerLabel,
                                       duration: 1.0,
                                       options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
@@ -129,7 +129,7 @@ class DetailViewController: UIViewController {
             
             // hide Answer - show Question
             UIView.transitionFromView(answerLabel,
-                                      toView: questionLabel,
+                                      toView: cardStakView,
                                       duration: 1.0,
                                       options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
                                       completion: nil)

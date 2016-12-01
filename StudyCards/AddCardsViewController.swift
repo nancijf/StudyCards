@@ -36,8 +36,32 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     var mode: AddCardViewControllerMode?
     var autoSave: Bool = false
     let defaults = NSUserDefaults.standardUserDefaults()
-    let photoImageView = UIImageView()
-    let qTextView = NFTextView()
+
+    
+    lazy var photoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.frame = CGRect.zero
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = UIViewContentMode.ScaleAspectFit
+
+        return imageView
+    }()
+    lazy var qTextView: NFTextView = {
+        let textView = NFTextView()
+        textView.frame = CGRect.zero
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.placeholderText = "Enter question here..."
+        textView.font = UIFont.systemFontOfSize(22)
+//        textView.sizeToFit()
+        textView.delegate = self
+
+        return textView
+    }()
+    lazy var cardStackView: UIStackView = {
+        let stackView = UIStackView()
+
+        return stackView
+    }()
     
     @IBOutlet weak var switchButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
@@ -83,13 +107,13 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                     imageAdded = true
                     photoImageView.image = UIImage(data: data)
                     photoImageView.userInteractionEnabled = true
-                    let deleteImageButton = UIButton(frame: photoImageView.bounds)
-                    deleteImageButton.addTarget(self, action: #selector(AddCardsViewController.deleteImage(_:)), forControlEvents: .TouchUpInside)
-                    deleteImageButton.setTitle("X", forState: .Normal)
-                    deleteImageButton.setTitleColor(UIColor.redColor(), forState: .Normal)
-                    deleteImageButton.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-                    deleteImageButton.titleLabel?.font = UIFont.boldSystemFontOfSize(50)
-                    photoImageView.addSubview(deleteImageButton)
+//                    let deleteImageButton = UIButton(frame: photoImageView.bounds)
+//                    deleteImageButton.addTarget(self, action: #selector(AddCardsViewController.deleteImage(_:)), forControlEvents: .TouchUpInside)
+//                    deleteImageButton.setTitle("X", forState: .Normal)
+//                    deleteImageButton.setTitleColor(UIColor.redColor(), forState: .Normal)
+//                    deleteImageButton.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+//                    deleteImageButton.titleLabel?.font = UIFont.boldSystemFontOfSize(50)
+//                    photoImageView.addSubview(deleteImageButton)
                 }
             }
             
@@ -107,30 +131,25 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     }
     
     func createViews() {
-        photoImageView.frame = CGRect.zero
-        photoImageView.translatesAutoresizingMaskIntoConstraints = false
-        photoImageView.contentMode = UIViewContentMode.ScaleAspectFit
 
-        self.view.addSubview(photoImageView)
+        cardStackView = UIStackView(arrangedSubviews: [qTextView, photoImageView])
+        cardStackView.translatesAutoresizingMaskIntoConstraints = false
+        cardStackView.axis = .Vertical
+        cardStackView.distribution = .FillProportionally
+        cardStackView.alignment = .Fill
+        cardStackView.spacing = 10
+        cardStackView.contentMode = .ScaleAspectFit
         
-        qTextView.frame = CGRect.zero
-        qTextView.translatesAutoresizingMaskIntoConstraints = false
-        qTextView.placeholderText = "Enter question here..."
-        qTextView.font = UIFont.systemFontOfSize(22)
-        qTextView.sizeToFit()
+        qTextView.heightAnchor.constraintGreaterThanOrEqualToConstant(20).active = true
+        qTextView.topAnchor.constraintEqualToAnchor(cardStackView.topAnchor, constant: 10).active = true
+
+        self.view.addSubview(cardStackView)
         
-        qTextView.delegate = self
-        self.view.addSubview(qTextView)
-        qTextView.topAnchor.constraintEqualToAnchor(topLayoutGuide.bottomAnchor).active = true
-        qTextView.leftAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.leftAnchor).active = true
-        qTextView.rightAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.rightAnchor).active = true
-        qTextView.bottomAnchor.constraintEqualToAnchor(photoImageView.topAnchor, constant: -10).active = true
-        qTextView.heightAnchor.constraintGreaterThanOrEqualToConstant(50).active = true
-        
-        photoImageView.bottomAnchor.constraintEqualToAnchor(bottomLayoutGuide.topAnchor, constant: -50).active = true
-        photoImageView.topAnchor.constraintEqualToAnchor(qTextView.bottomAnchor).active = true
-        photoImageView.leftAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.leftAnchor).active = true
-        photoImageView.rightAnchor.constraintEqualToAnchor(view.layoutMarginsGuide.rightAnchor).active = true
+        cardStackView.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: 60).active = true
+        cardStackView.leftAnchor.constraintEqualToAnchor(view.leftAnchor, constant: 20).active = true
+        cardStackView.rightAnchor.constraintEqualToAnchor(view.rightAnchor, constant: -20).active = true
+        cardStackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -40).active = true
+
         self.updateViewConstraints()
         createKeyboardDoneButton(qTextView)
     }
@@ -288,8 +307,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         if (isQuestionShowing) {
 
             // hide Question - show Answer
-            photoImageView.hidden = true
-            UIView.transitionFromView(qTextView,
+//            photoImageView.hidden = true
+            UIView.transitionFromView(cardStackView,
                 toView: answerTextView,
                 duration: 1.0,
                 options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
@@ -301,11 +320,11 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         } else {
 
             // hide Answer - show Question
-            if imageAdded {
-                photoImageView.hidden = false
-            }
+//            if imageAdded {
+//                photoImageView.hidden = false
+//            }
             UIView.transitionFromView(answerTextView,
-                toView: qTextView,
+                toView: cardStackView,
                 duration: 1.0,
                 options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
                 completion: nil)
@@ -376,13 +395,11 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
-//        imageView.image = image
-//        imageView.hidden = false
         photoImageView.image = image
         imageAdded = true
         wasCardSaved = false
-        self.updateViewConstraints()
         picker.dismissViewControllerAnimated(true, completion: nil)
+        self.updateViewConstraints()
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
