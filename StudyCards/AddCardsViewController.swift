@@ -107,13 +107,13 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                     imageAdded = true
                     photoImageView.image = UIImage(data: data)
                     photoImageView.userInteractionEnabled = true
-//                    let deleteImageButton = UIButton(frame: photoImageView.bounds)
-//                    deleteImageButton.addTarget(self, action: #selector(AddCardsViewController.deleteImage(_:)), forControlEvents: .TouchUpInside)
-//                    deleteImageButton.setTitle("X", forState: .Normal)
-//                    deleteImageButton.setTitleColor(UIColor.redColor(), forState: .Normal)
-//                    deleteImageButton.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-//                    deleteImageButton.titleLabel?.font = UIFont.boldSystemFontOfSize(50)
-//                    photoImageView.addSubview(deleteImageButton)
+                    let deleteImageButton = UIButton(frame: photoImageView.bounds)
+                    deleteImageButton.addTarget(self, action: #selector(AddCardsViewController.deleteImage(_:)), forControlEvents: .TouchUpInside)
+                    deleteImageButton.setTitle("X", forState: .Normal)
+                    deleteImageButton.setTitleColor(UIColor.redColor(), forState: .Normal)
+                    deleteImageButton.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+                    deleteImageButton.titleLabel?.font = UIFont.boldSystemFontOfSize(50)
+                    photoImageView.addSubview(deleteImageButton)
                 }
             }
             
@@ -148,7 +148,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         cardStackView.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: 60).active = true
         cardStackView.leftAnchor.constraintEqualToAnchor(view.leftAnchor, constant: 20).active = true
         cardStackView.rightAnchor.constraintEqualToAnchor(view.rightAnchor, constant: -20).active = true
-        cardStackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -40).active = true
+        cardStackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -50).active = true
 
         self.updateViewConstraints()
         createKeyboardDoneButton(qTextView)
