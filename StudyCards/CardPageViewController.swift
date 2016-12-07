@@ -90,8 +90,8 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             self.navigationItem.rightBarButtonItem = testScore
         }
 
-        self.navigationController?.hidesBarsOnTap = true
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+//        self.navigationController?.hidesBarsOnTap = true
+//        self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
 
     override func didReceiveMemoryWarning() {

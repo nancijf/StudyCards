@@ -55,7 +55,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addDeck))
         UITabBar.appearance().barTintColor = UIColor ( red: 0.7843, green: 0.7843, blue: 0.7843, alpha: 1.0 )
-
     }
     
     override func viewDidAppear(animated: Bool) {

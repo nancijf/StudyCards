@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             defaults.setValue(true, forKey: "cardlines")
         }
         if defaults.valueForKey("fontsize") == nil {
-            defaults.setValue("17", forKey: "autosave")
+            defaults.setValue("17", forKey: "fontsize")
         }
         
         if UIImagePickerController.isSourceTypeAvailable(.Camera) {

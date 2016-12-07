@@ -57,6 +57,10 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         navigationItem.setHidesBackButton(true, animated: true)
         navigationItem.rightBarButtonItem = saveButton
         navigationItem.leftBarButtonItem = backButton
+//        if let split = self.splitViewController {
+//            splitViewController?.preferredDisplayMode = .AllVisible
+//        }
+
     }
     
     override func viewWillAppear(animated: Bool) {

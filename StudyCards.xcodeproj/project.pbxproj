@@ -156,10 +156,10 @@
 		B872BB7D1C78A98C0019DED3 /* StudyCards */ = {
 			isa = PBXGroup;
 			children = (
+				B872BB7E1C78A98C0019DED3 /* AppDelegate.swift */,
 				B83AD9361DB7CE6C0090ED87 /* StudyCards.entitlements */,
 				B8DA51641D5A756E0081C377 /* BarGraphView.swift */,
 				B8346F5A1DC3FC0300809407 /* ImportCards.swift */,
-				B872BB7E1C78A98C0019DED3 /* AppDelegate.swift */,
 				B8ECC7441C81F95D00503727 /* StudyCardsDataStack.swift */,
 				B872BBC61C7924D50019DED3 /* AddDeckViewController.swift */,
 				B8D2B24C1C9D86AA003C9BEE /* NFTextView.swift */,
