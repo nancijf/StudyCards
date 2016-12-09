@@ -56,7 +56,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
                     card.ordinal = idx + 1
                 }
             }
-
         } else {
             let tempCard = CardStruct(question: "Tap a Deck to view Cards", answer: nil, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: nil, deck: nil)
             for _ in 0...2 {
