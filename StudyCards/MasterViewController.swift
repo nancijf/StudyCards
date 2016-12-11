@@ -22,10 +22,15 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
         self.fetchedResultsController.delegate = self
         
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        self.tableView.estimatedRowHeight = 44.0; // set to whatever your "average" cell height is
+        
         if let split = self.splitViewController {
             let controllers = split.viewControllers
             self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
             splitViewController?.preferredDisplayMode = .AllVisible
+            self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem()
+            self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addDeck))
         }
         
         searchController.searchResultsUpdater = self
@@ -268,8 +273,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
-        if let currentTitle = deck?.title, cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
+        if let currentTitle = deck?.title, let cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
             cell.textLabel?.text = currentTitle + " (\(cardCount) Cards)"
+            cell.detailTextLabel?.text = deck?.desc
         } 
     }
     
