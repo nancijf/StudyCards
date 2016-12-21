@@ -43,6 +43,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         imageView.frame = CGRect.zero
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
+        imageView.layer.zPosition = 0
 
         return imageView
     }()
@@ -52,7 +53,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.placeholderText = "Enter question here..."
         textView.font = UIFont.systemFontOfSize(22)
-//        textView.sizeToFit()
+        textView.textContainer.maximumNumberOfLines = 0
+        textView.layer.zPosition = 1
         textView.delegate = self
 
         return textView
@@ -118,6 +120,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             }
             
             qTextView.text = card?.question
+            qTextView.sizeToFit()
             answerTextView.text = card?.answer
             qTextView.placeholderLabel.hidden = true
             answerTextView.placeholderLabel.hidden = true
@@ -135,13 +138,13 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         cardStackView = UIStackView(arrangedSubviews: [qTextView, photoImageView])
         cardStackView.translatesAutoresizingMaskIntoConstraints = false
         cardStackView.axis = .Vertical
-        cardStackView.distribution = .FillProportionally
+        cardStackView.distribution = .Fill
         cardStackView.alignment = .Fill
         cardStackView.spacing = 10
         cardStackView.contentMode = .ScaleAspectFit
         
-        qTextView.heightAnchor.constraintGreaterThanOrEqualToConstant(20).active = true
-        qTextView.topAnchor.constraintEqualToAnchor(cardStackView.topAnchor, constant: 10).active = true
+//        qTextView.heightAnchor.constraintGreaterThanOrEqualToConstant(20).active = true
+//        qTextView.topAnchor.constraintEqualToAnchor(cardStackView.topAnchor, constant: 20).active = true
 
         self.view.addSubview(cardStackView)
         
@@ -307,7 +310,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         if (isQuestionShowing) {
 
             // hide Question - show Answer
-//            photoImageView.hidden = true
             UIView.transitionFromView(cardStackView,
                 toView: answerTextView,
                 duration: 1.0,
@@ -320,9 +322,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         } else {
 
             // hide Answer - show Question
-//            if imageAdded {
-//                photoImageView.hidden = false
-//            }
             UIView.transitionFromView(answerTextView,
                 toView: cardStackView,
                 duration: 1.0,

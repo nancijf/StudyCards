@@ -188,7 +188,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     // MARK: - Segues
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "ShowDeck" {
+        if segue.identifier == "ShowCardList" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
                 
@@ -203,10 +203,14 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                         }
                     })
                 } else {
-                    let controller = (segue.destinationViewController as! UINavigationController).topViewController as! CardPageViewController
+//                    let controller = storyBoard.instantiateViewControllerWithIdentifier("CardListTableViewController") as? CardListTableViewController
+//                    controller?.deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
+//                    self.navigationController?.pushViewController(controller!, animated: true)
+
+                    let controller = segue.destinationViewController as! CardListTableViewController
                     controller.deck = deck
-                    controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-                    controller.navigationItem.leftItemsSupplementBackButton = true
+//                    controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+//                    controller.navigationItem.leftItemsSupplementBackButton = true
                 }
             }
         } else if segue.identifier == "AddNewDeck" {
@@ -220,7 +224,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
-        if identifier == "ShowDeck" {
+        if identifier == "ShowCardList" {
             if tableView.editing {
                 return false
             }
@@ -279,12 +283,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         } 
     }
     
-    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let controller = storyBoard.instantiateViewControllerWithIdentifier("CardListTableViewController") as? CardListTableViewController
-        controller?.deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
-        self.navigationController?.pushViewController(controller!, animated: true)
-    }
+//    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+//        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+//        let controller = storyBoard.instantiateViewControllerWithIdentifier("CardListTableViewController") as? CardListTableViewController
+//        controller?.deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
+//        self.navigationController?.pushViewController(controller!, animated: true)
+//    }
     
     // MARK: - Fetched results controller
     
