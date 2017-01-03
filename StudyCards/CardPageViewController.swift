@@ -72,10 +72,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         dataSource = self
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        let fontSize = defaults.stringForKey("fontsize")
-    }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -89,8 +85,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             self.navigationItem.rightBarButtonItem = testScore
         }
 
-//        self.navigationController?.hidesBarsOnTap = true
-//        self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
 
     override func didReceiveMemoryWarning() {

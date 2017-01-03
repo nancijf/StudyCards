@@ -30,7 +30,7 @@ class QuizletController: NSObject {
     
     func retrieveSets(setID: Int, onSuccess: SuccessBlock2) {
         let urlPath = baseURL + getSet + String(setID) + "?\(clientID)" + "&whitespace=1"
-        print(urlPath)
+//        print(urlPath)
         guard let endpoint = NSURL(string: urlPath) else {
             print("Error creating endpoint")
             return
@@ -52,9 +52,13 @@ class QuizletController: NSObject {
                     self.tempCards.removeAll()
                     for term in terms {
                         if let termDict = term as? [String: AnyObject] {
-                            if let question = termDict["term"] as? String, let answer = termDict["definition"] as? String {
+                            if var question = termDict["term"] as? String, var answer = termDict["definition"] as? String {
                                 if let imageData = termDict["image"] as? [String: AnyObject] {
                                     self.imageURL = imageData["url"] as? String
+                                    if answer.isEmpty && !question.isEmpty {
+                                        answer = question
+                                        question = ""
+                                    }
                                 } else {
                                     self.imageURL = nil
                                 }

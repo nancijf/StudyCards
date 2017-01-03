@@ -18,16 +18,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         if defaults.valueForKey("locked") == nil {
-            defaults.setValue(false, forKey: "locked")
+            defaults.setBool(false, forKey: "locked")
         }
         if defaults.valueForKey("autosave") == nil {
-            defaults.setValue(false, forKey: "autosave")
+            defaults.setBool(false, forKey: "autosave")
         }
         if defaults.valueForKey("cardlines") == nil {
-            defaults.setValue(true, forKey: "cardlines")
+            defaults.setBool(true, forKey: "cardlines")
         }
         if defaults.valueForKey("fontsize") == nil {
-            defaults.setValue("17", forKey: "fontsize")
+            if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+                defaults.setFloat(20.0, forKey: "fontsize")
+            } else {
+                defaults.setFloat(17.0, forKey: "fontsize")
+            }
+        }
+        if defaults.valueForKey("shakeToShuffle") == nil {
+            defaults.setValue(false, forKey: "shakeToShuffle")
         }
         
         if UIImagePickerController.isSourceTypeAvailable(.Camera) {

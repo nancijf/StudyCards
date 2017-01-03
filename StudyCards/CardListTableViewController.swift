@@ -21,6 +21,8 @@ class CardListTableViewController: UITableViewController {
     var tempCards: [CardStruct]?
     var mode: CardListControllerMode?
     var tempCardTitle: String?
+    var isShuffleOn: Bool = true
+    let defaults = NSUserDefaults.standardUserDefaults()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +38,8 @@ class CardListTableViewController: UITableViewController {
         if mode == .StructData {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(importTapped))
         }
+        
+        isShuffleOn = defaults.boolForKey("shakeToShuffle") ?? true
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -54,10 +58,12 @@ class CardListTableViewController: UITableViewController {
     }
     
     override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
-        if motion == .MotionShake && mode != .StructData {
-            let shuffled = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(cards!)
-            cards = shuffled as? [Card]
-            tableView.reloadData()
+        if isShuffleOn {
+            if motion == .MotionShake && mode != .StructData {
+                let shuffled = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(cards!)
+                cards = shuffled as? [Card]
+                tableView.reloadData()
+            }
         }
     }
     

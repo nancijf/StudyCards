@@ -57,9 +57,6 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         navigationItem.setHidesBackButton(true, animated: true)
         navigationItem.rightBarButtonItem = saveButton
         navigationItem.leftBarButtonItem = backButton
-//        if let split = self.splitViewController {
-//            splitViewController?.preferredDisplayMode = .AllVisible
-//        }
 
     }
     
@@ -179,11 +176,9 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
             case TableViewSections.Title.rawValue:
                 cell.descTextView.hidden = true
                 cell.titleTextField.text = tempTitle ?? ""
-//                cell.titleTextField.delegate = self
             case TableViewSections.Description.rawValue:
                 cell.titleTextField.hidden = true
                 cell.descTextView.text = tempDesc ?? ""
-//                cell.descTextView.delegate = self
             case TableViewSections.Category.rawValue:
                 cell.descTextView.hidden = true
                 cell.titleTextField.enabled = false
@@ -195,8 +190,15 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                 cell.titleTextField.enabled = false
                 if deck?.cards?.count > 0 {
                     if let card = deck?.cards?[indexPath.item] as? Card {
-                        cell.titleTextField.text = card.question
-                    }
+                        let row = String(indexPath.row + 1)
+                        if card.question == "" {
+                            cell.titleTextField.text = "\(row). (No question text)"
+                        } else {
+                            if let question = card.question {
+                                cell.titleTextField.text = "\(row). \(question)"
+                            }
+                        }
+                     }
                 }
             default:
                 break

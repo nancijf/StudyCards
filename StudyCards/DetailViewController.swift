@@ -28,6 +28,11 @@ class DetailViewController: UIViewController {
     var tempCardTitle: String?
     var isCorrect: Bool = false
     
+    var fontSize: CGFloat {
+        let fontSize = defaults.floatForKey("fontsize") ?? 17.0
+        return CGFloat(fontSize)
+    }
+    
     @IBAction func checkmarkTapped(sender: UIButton) {
         sender.selected = !sender.selected
         if card?.iscorrect == true {
@@ -82,12 +87,8 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let fontSize = defaults.stringForKey("fontsize") ?? "17"
-        
-        if let fontValue = Double(fontSize) {
-            answerLabel.font = answerLabel.font.fontWithSize(CGFloat(fontValue))
-            questionLabel.font = questionLabel.font.fontWithSize(CGFloat(fontValue))
-        }
+        answerLabel.font = UIFont.systemFontOfSize(CGFloat(fontSize))
+        questionLabel.font = UIFont.systemFontOfSize(CGFloat(fontSize))
         answerLabel.hidden = true
         cardImage.hidden = true
         if let wasViewed = card?.cardviewed {
@@ -119,7 +120,6 @@ class DetailViewController: UIViewController {
         if (isQuestionShowing) {
             
             // hide Question - show Answer
-//            cardImage.hidden = true
             UIView.transitionFromView(cardStakView,
                                       toView: answerLabel,
                                       duration: 1.0,
@@ -133,7 +133,6 @@ class DetailViewController: UIViewController {
                                       duration: 1.0,
                                       options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
                                       completion: nil)
-            cardImage.hidden = false
         }
         isQuestionShowing = !isQuestionShowing
         

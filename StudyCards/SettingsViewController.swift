@@ -17,6 +17,7 @@ class SettingsViewController: UITableViewController {
     @IBOutlet weak var lockOrientation: UISwitch!
     @IBOutlet weak var autoSave: UISwitch!
     @IBOutlet weak var cardLines: UISwitch!
+    @IBOutlet weak var shakeToShuffle: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,20 +27,27 @@ class SettingsViewController: UITableViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        fontSizeLabel.text = defaults.stringForKey("fontsize") ?? "17"
-        if let fontValue = fontSizeLabel?.text {
-            fontSizeStepper.value = Double(fontValue)!
+        var fontValue = 17
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+            fontValue = defaults.integerForKey("fontsize") ?? 20
+        } else {
+            fontValue = defaults.integerForKey("fontsize") ?? 17
         }
+        fontSizeLabel.text = String(fontValue)
+        fontSizeStepper.value = Double(fontValue)
+
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
         
         let useLines = defaults.boolForKey("cardlines") ?? false
         let isLocked = defaults.boolForKey("locked") ?? false
         let isAutoSave = defaults.boolForKey("autosave") ?? false
+        let isShuffleOn = defaults.boolForKey("shakeToShuffle") ?? false
 
         cardLines.setOn(useLines, animated: true)
         autoSave.setOn(isAutoSave, animated: true)
         lockOrientation.setOn(isLocked, animated: true)
+        shakeToShuffle.setOn(isShuffleOn, animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,9 +67,13 @@ class SettingsViewController: UITableViewController {
         defaults.setValue(cardLines.on, forKey: "cardlines")
     }
     
+    @IBAction func shuffleOnOff(sender: UISwitch) {
+        defaults.setValue(shakeToShuffle.on, forKey: "shakeToShuffle")
+    }
+    
     @IBAction func stepperValueChanged(sender: UIStepper) {
         fontSizeLabel.text = Int(fontSizeStepper.value).description
         fontSizeLabel.font = fontSizeLabel.font.fontWithSize(CGFloat(fontSizeStepper.value))
-        defaults.setValue(fontSizeLabel.text, forKey: "fontsize")
+        defaults.setFloat(Float(fontSizeStepper.value), forKey: "fontsize")
     }
 }

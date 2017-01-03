@@ -9,6 +9,14 @@
 import UIKit
 
 class NFTextView: UITextView {
+    
+    let defaults = NSUserDefaults.standardUserDefaults()
+    
+    var fontSize: CGFloat {
+        let fontSize = defaults.floatForKey("fontsize") ?? 17.0
+        return CGFloat(fontSize)
+    }
+
     var placeholderText: String = "" {
         didSet {
             self.placeholderLabel.text = placeholderText
@@ -18,11 +26,7 @@ class NFTextView: UITextView {
     
     lazy var placeholderLabel: UILabel = {
         let placeholderLabel = UILabel()
-        if let pointSize = self.font?.pointSize {
-            placeholderLabel.font = UIFont.italicSystemFontOfSize(pointSize)
-            placeholderLabel.frame.origin = CGPointMake(10, pointSize / 2)
-        }
-        placeholderLabel.font = UIFont.italicSystemFontOfSize(20)
+        placeholderLabel.font = UIFont.italicSystemFontOfSize(self.fontSize)
         placeholderLabel.frame.origin = CGPointMake(10, 10)
         placeholderLabel.textColor = UIColor(white: 0, alpha: 0.3)
         placeholderLabel.hidden = !self.text.isEmpty
