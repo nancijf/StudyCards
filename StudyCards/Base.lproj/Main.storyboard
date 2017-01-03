@@ -500,12 +500,6 @@
                                                 <outlet property="delegate" destination="83o-js-ZpY" id="cDF-ct-Nzj"/>
                                             </connections>
                                         </textField>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vR4-8X-xk9" userLabel="nqTextField">
-                                            <rect key="frame" x="18" y="17" width="564" height="30"/>
-                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                        </textField>
                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="JSO-p5-2cU" userLabel="DescTextView">
                                             <rect key="frame" x="13" y="8" width="574" height="37"/>
                                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -520,11 +514,8 @@
                                         <constraint firstItem="we7-Ym-Thi" firstAttribute="leading" secondItem="60I-uV-jUr" secondAttribute="leadingMargin" constant="10" id="2Qw-LB-aOq"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="JSO-p5-2cU" secondAttribute="trailing" constant="5" id="IV5-gj-Dsx"/>
                                         <constraint firstItem="we7-Ym-Thi" firstAttribute="trailing" secondItem="60I-uV-jUr" secondAttribute="trailingMargin" constant="-10" id="SGm-1L-h97"/>
-                                        <constraint firstAttribute="bottom" secondItem="vR4-8X-xk9" secondAttribute="bottom" constant="4" id="TaW-mY-OgM"/>
-                                        <constraint firstAttribute="trailing" secondItem="vR4-8X-xk9" secondAttribute="trailing" constant="-10" id="W0P-ez-j2H"/>
                                         <constraint firstItem="JSO-p5-2cU" firstAttribute="leading" secondItem="60I-uV-jUr" secondAttribute="leadingMargin" constant="5" id="WRg-fe-S7a"/>
                                         <constraint firstItem="JSO-p5-2cU" firstAttribute="bottom" secondItem="60I-uV-jUr" secondAttribute="bottomMargin" constant="4" id="g7b-C0-iS9"/>
-                                        <constraint firstItem="vR4-8X-xk9" firstAttribute="leading" secondItem="60I-uV-jUr" secondAttribute="leading" constant="10" id="jfh-Am-GQa"/>
                                         <constraint firstItem="JSO-p5-2cU" firstAttribute="top" secondItem="60I-uV-jUr" secondAttribute="topMargin" id="r1h-Vg-0zO"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="we7-Ym-Thi" secondAttribute="bottom" constant="4" id="wgT-vD-arA"/>
                                     </constraints>
