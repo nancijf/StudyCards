@@ -49,6 +49,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             let hideCorrect = defaults.boolForKey("locked")
 
             for (idx, card) in cards.enumerate() {
+                print("Building card \(idx)")
                 if hideCorrect && card.iscorrect {
                     continue
                 } else if let controller = cardViewControllerWith(card) {
@@ -68,7 +69,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         if controllerArray.count > 0 {
             setViewControllers([controllerArray[currentIndex]], direction: .Forward, animated: true, completion: nil)
         }
-        
         dataSource = self
     }
     
@@ -84,7 +84,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             testScore = UIBarButtonItem(title: "Score", style: .Plain, target: self, action: #selector(showScore))
             self.navigationItem.rightBarButtonItem = testScore
         }
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -151,7 +150,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             
             return controllerArray[previousIndex]            
         }
-        
+        self.view.updateConstraints()
     }
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
@@ -171,6 +170,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             
             return controllerArray[nextIndex]
         }
+        self.view.updateConstraints()
     }
 
 }

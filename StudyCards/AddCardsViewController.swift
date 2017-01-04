@@ -38,6 +38,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     var autoSave: Bool = false
     let defaults = NSUserDefaults.standardUserDefaults()
     var landscape: Bool = false
+    var activityIndicator: UIActivityIndicatorView?
     
     var textHeightAnchor: NSLayoutConstraint?
     var textBottomAnchor1: NSLayoutConstraint?
@@ -421,7 +422,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         }
         wasCardSaved = false
     }
-
 }
 
 extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -446,11 +446,22 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        self.activityIndicator = UIActivityIndicatorView(frame: self.view.bounds)
+        self.activityIndicator!.backgroundColor = UIColor(white: 1.0, alpha: 0.5)
+        self.activityIndicator!.center = self.view.center
+        self.activityIndicator!.hidesWhenStopped = true
+        self.activityIndicator!.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        self.view.addSubview(self.activityIndicator!)
+        self.activityIndicator!.startAnimating()
+        
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         photoImageView.image = image
         imageAdded = true
         wasCardSaved = false
-        picker.dismissViewControllerAnimated(true, completion: {( done) in self.updateViews()})
+        picker.dismissViewControllerAnimated(true, completion: {(done) in
+            self.activityIndicator?.stopAnimating()
+            self.updateViews()
+        })
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {

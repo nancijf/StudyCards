@@ -82,6 +82,8 @@ class DetailViewController: UIViewController {
                 }
             }
         }
+        self.view.setNeedsUpdateConstraints()
+        self.view.updateConstraintsIfNeeded()
     }
 
     override func viewDidLoad() {

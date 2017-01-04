@@ -192,7 +192,7 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                     if let card = deck?.cards?[indexPath.item] as? Card {
                         let row = String(indexPath.row + 1)
                         if card.question == "" {
-                            cell.titleTextField.text = "\(row). (No question text)"
+                            cell.titleTextField.text = "\(row). (No question)"
                         } else {
                             if let question = card.question {
                                 cell.titleTextField.text = "\(row). \(question)"
