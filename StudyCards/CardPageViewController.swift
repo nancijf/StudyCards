@@ -49,7 +49,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             let hideCorrect = defaults.boolForKey("locked")
 
             for (idx, card) in cards.enumerate() {
-                print("Building card \(idx)")
+//                print("Building card \(idx)")
                 if hideCorrect && card.iscorrect {
                     continue
                 } else if let controller = cardViewControllerWith(card) {

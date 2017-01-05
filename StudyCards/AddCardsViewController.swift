@@ -57,6 +57,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
         imageView.layer.zPosition = 0
+        imageView.backgroundColor = UIColor.lightGrayColor()
 
         return imageView
     }()
@@ -155,17 +156,16 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     }
     
     func updateViews() {
+//        print("called updateViews()")
         if let imageWidth = photoImageView.image?.size.width, let imageHeight = photoImageView.image?.size.height where imageWidth > imageHeight {
             let scale = imageHeight / imageWidth
             landscapeImageContraint = photoImageView.heightAnchor.constraintEqualToAnchor(photoImageView.widthAnchor, multiplier: scale)
         }
-        
         landscapeImageContraint?.active = (self.traitCollection.verticalSizeClass != .Compact && photoImageView.image != nil)
         textTopAnchor?.constant = self.traitCollection.verticalSizeClass == .Compact ? 60.0 : self.topInset
         
         if photoImageView.image != nil {
             textHeightAnchor?.constant = qTextView.contentSize.height + (fontSize + 10)
-            textHeightAnchor?.active = true
             textBottomAnchor1?.active = true
             textBottomAnchor2?.active = false
             imageTopAnchor?.active = true
@@ -175,6 +175,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             imageTopAnchor?.active = false
         }
 
+//        self.view.setNeedsLayout()
         self.view.setNeedsUpdateConstraints()
         self.view.updateConstraintsIfNeeded()
     }
@@ -296,6 +297,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in}
         let okAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
             self.photoImageView.hidden = true
+            self.photoImageView.image = nil
             self.imageAdded = false
             self.wasCardSaved = false
             self.updateViews()
@@ -304,7 +306,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         alert.addAction(okAction)
         presentViewController(alert, animated: true, completion: nil)
     }
-    
+
     func textViewDidChange(textView: UITextView) {
         if let nfTextView = textView as? NFTextView {
             nfTextView.placeholderLabel.hidden = !nfTextView.text.isEmpty
@@ -456,6 +458,7 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
         
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         photoImageView.image = image
+        photoImageView.hidden = false
         imageAdded = true
         wasCardSaved = false
         picker.dismissViewControllerAnimated(true, completion: {(done) in
@@ -463,7 +466,7 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
             self.updateViews()
         })
     }
-    
+
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
         dismissViewControllerAnimated(true, completion: nil)
     }
