@@ -15,6 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     var window: UIWindow?
     let defaults = NSUserDefaults.standardUserDefaults()
+    var isCameraAvailable: Bool = false
+    var isPhotoLibAvailable: Bool = false
+
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         if defaults.valueForKey("locked") == nil {
@@ -43,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             case .NotDetermined:
                 AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo) { granted in
                     if granted {
-                        let canUseCamera = true
+                        self.isCameraAvailable = true
                     }
                 }
             default:
@@ -57,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             PHPhotoLibrary.requestAuthorization({ (status) in
                 switch status {
                 case .Authorized:
-                    let canUsePhotoLibrary = true
+                    self.isPhotoLibAvailable = true
                 default:
                     break
                 }

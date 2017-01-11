@@ -150,7 +150,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             
             return controllerArray[previousIndex]            
         }
-        self.view.updateConstraints()
     }
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
@@ -170,7 +169,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             
             return controllerArray[nextIndex]
         }
-        self.view.updateConstraints()
     }
 
 }

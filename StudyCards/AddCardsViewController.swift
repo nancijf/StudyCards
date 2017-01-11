@@ -10,6 +10,10 @@ import UIKit
 import Foundation
 import Photos
 
+let imageExtra: CGFloat = 70.0
+let topInsetForLandscape: CGFloat = 60.0
+let boundingRightLeftInset: CGFloat = 50.0
+
 protocol AddCardsViewControllerDelegate: class {
     func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?)
 }
@@ -37,14 +41,10 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     var mode: AddCardViewControllerMode?
     var autoSave: Bool = false
     let defaults = NSUserDefaults.standardUserDefaults()
-    var landscape: Bool = false
-    var activityIndicator: UIActivityIndicatorView?
     
     var textHeightAnchor: NSLayoutConstraint?
-    var textBottomAnchor1: NSLayoutConstraint?
-    var textBottomAnchor2: NSLayoutConstraint?
-    var imageTopAnchor: NSLayoutConstraint?
-    var landscapeImageContraint: NSLayoutConstraint?
+    var textBottomAnchor: NSLayoutConstraint?
+    var imageHeightConstraint: NSLayoutConstraint?
     var textTopAnchor: NSLayoutConstraint?
     
     let leftRightInset: CGFloat = 20.0
@@ -56,7 +56,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         imageView.frame = CGRect.zero
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
-        imageView.layer.zPosition = 0
         imageView.backgroundColor = UIColor.lightGrayColor()
 
         return imageView
@@ -67,6 +66,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.textContainer.maximumNumberOfLines = 100
         textView.textContainer.lineBreakMode = .ByWordWrapping
+        textView.backgroundColor = UIColor.yellowColor()
 
         return textView
     }()
@@ -142,10 +142,12 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                     photoImageView.addSubview(deleteImageButton)
                     updateViews()
                 }
-            } else {
+            }
+            else {
                 updateViews()
             }
-        } else {
+        }
+        else {
             updateViews()
         }
     }
@@ -154,46 +156,47 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         super.viewWillDisappear(true)
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
-    
+
     func updateViews() {
-//        print("called updateViews()")
-        if let imageWidth = photoImageView.image?.size.width, let imageHeight = photoImageView.image?.size.height where imageWidth > imageHeight {
-            let scale = imageHeight / imageWidth
-            landscapeImageContraint = photoImageView.heightAnchor.constraintEqualToAnchor(photoImageView.widthAnchor, multiplier: scale)
-        }
-        landscapeImageContraint?.active = (self.traitCollection.verticalSizeClass != .Compact && photoImageView.image != nil)
-        textTopAnchor?.constant = self.traitCollection.verticalSizeClass == .Compact ? 60.0 : self.topInset
+        let topInset = self.traitCollection.verticalSizeClass == .Compact ? topInsetForLandscape : self.topInset
+        textTopAnchor?.constant = topInset
         
         if photoImageView.image != nil {
-            textHeightAnchor?.constant = qTextView.contentSize.height + (fontSize + 10)
-            textBottomAnchor1?.active = true
-            textBottomAnchor2?.active = false
-            imageTopAnchor?.active = true
+            let textViewHeight = qTextView.boundingHeight(inView: view, withPadding: fontSize)
+            let imageH = view.frame.size.height - (topInset + textViewHeight + imageExtra)
+
+            textHeightAnchor?.constant = textViewHeight
+            textHeightAnchor?.active = true
+            imageHeightConstraint?.constant = imageH
+            imageHeightConstraint?.active = true
+            textHeightAnchor?.active = true
+            textBottomAnchor?.active = false
         } else {
-            textBottomAnchor1?.active = false
-            textBottomAnchor2?.active = true
-            imageTopAnchor?.active = false
+            imageHeightConstraint?.active = false
+            textBottomAnchor?.active = true
+            textHeightAnchor?.active = false
         }
 
-//        self.view.setNeedsLayout()
-        self.view.setNeedsUpdateConstraints()
-        self.view.updateConstraintsIfNeeded()
+        view.setNeedsUpdateConstraints()
+        view.updateConstraintsIfNeeded()
     }
     
     func createViews() {
         
         view.addSubview(qTextView)
         view.addSubview(photoImageView)
-        
+        let topInset = self.traitCollection.verticalSizeClass == .Compact ? topInsetForLandscape : self.topInset
         textTopAnchor = qTextView.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: topInset)
         textTopAnchor?.active = true
+        
         qTextView.leftAnchor.constraintEqualToAnchor(view.leftAnchor, constant: leftRightInset).active = true
         qTextView.rightAnchor.constraintEqualToAnchor(view.rightAnchor, constant: -leftRightInset).active = true
-        textBottomAnchor1 = qTextView.bottomAnchor.constraintEqualToAnchor(photoImageView.topAnchor, constant: -15)
-        textBottomAnchor2 = qTextView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -bottomInset)
+        
+        textBottomAnchor = qTextView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -bottomInset)
         textHeightAnchor = qTextView.heightAnchor.constraintEqualToConstant(qTextView.contentSize.height + (fontSize + 10))
-
-        imageTopAnchor = photoImageView.topAnchor.constraintEqualToAnchor(qTextView.bottomAnchor, constant: 15)
+        
+        imageHeightConstraint = photoImageView.heightAnchor.constraintEqualToConstant(0)
+        
         photoImageView.leftAnchor.constraintEqualToAnchor(view.leftAnchor, constant: leftRightInset).active = true
         photoImageView.rightAnchor.constraintEqualToAnchor(view.rightAnchor, constant: -leftRightInset).active = true
         photoImageView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -bottomInset).active = true
@@ -201,9 +204,22 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         createKeyboardDoneButton(qTextView)
     }
     
-    override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
-        landscapeImageContraint?.active = (self.traitCollection.verticalSizeClass != .Compact && photoImageView.image != nil)
-        textTopAnchor?.constant = self.traitCollection.verticalSizeClass == .Compact ? 60.0 : self.topInset
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+
+        let boundingSize = CGSize(width: size.width - boundingRightLeftInset, height: CGFloat.max)
+        let textViewHeight = qTextView.boundingHeight(boundingSize: boundingSize, withPadding: fontSize)
+        let topInset = (size.width > size.height && self.traitCollection.userInterfaceIdiom != .Pad) ? topInsetForLandscape : self.topInset
+        let imageH = size.height - (topInset + textViewHeight + imageExtra)
+        self.imageHeightConstraint?.constant = imageH
+        self.textHeightAnchor?.constant = textViewHeight
+        self.textTopAnchor?.constant = topInset
+
+        coordinator.animateAlongsideTransition({ (coordinator) in
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
+            }, completion: nil)
+        
     }
     
     func subscribeToKeyboardNotifications() {
@@ -310,7 +326,10 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     func textViewDidChange(textView: UITextView) {
         if let nfTextView = textView as? NFTextView {
             nfTextView.placeholderLabel.hidden = !nfTextView.text.isEmpty
-            updateViews()
+            self.view.layoutIfNeeded()
+            if imageHeightConstraint?.active ?? false {
+                updateViews()
+            }
         }
         wasCardSaved = false
     }
@@ -352,7 +371,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             }
         })
     }
-    
     
     @IBAction func addPhoto(sender: UIButton) {
         showPhotoMenu()
@@ -448,21 +466,12 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        self.activityIndicator = UIActivityIndicatorView(frame: self.view.bounds)
-        self.activityIndicator!.backgroundColor = UIColor(white: 1.0, alpha: 0.5)
-        self.activityIndicator!.center = self.view.center
-        self.activityIndicator!.hidesWhenStopped = true
-        self.activityIndicator!.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        self.view.addSubview(self.activityIndicator!)
-        self.activityIndicator!.startAnimating()
-        
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         photoImageView.image = image
         photoImageView.hidden = false
         imageAdded = true
         wasCardSaved = false
         picker.dismissViewControllerAnimated(true, completion: {(done) in
-            self.activityIndicator?.stopAnimating()
             self.updateViews()
         })
     }
@@ -507,4 +516,22 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
 
         presentViewController(alertController, animated: true, completion: nil)
     }
+}
+
+extension UITextView {
+    func boundingHeight(inView view: UIView, withPadding padding: CGFloat = 0) -> CGFloat {
+        let string = self.text
+        let boundingSize = CGSize(width: view.frame.width - 40, height: CGFloat.max)
+        let textRect = string?.boundingRectWithSize(boundingSize, options: [.UsesLineFragmentOrigin], attributes: [NSFontAttributeName: self.font!], context: nil)
+
+        return (textRect?.height ?? self.font!.pointSize) + padding
+    }
+
+    func boundingHeight(boundingSize boundingSize: CGSize, withPadding padding: CGFloat = 0) -> CGFloat {
+        let string = self.text
+        let textRect = string?.boundingRectWithSize(boundingSize, options: [.UsesLineFragmentOrigin], attributes: [NSFontAttributeName: self.font!], context: nil)
+
+        return (textRect?.height ?? self.font!.pointSize) + padding
+    }
+
 }
