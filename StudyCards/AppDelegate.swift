@@ -49,6 +49,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                         self.isCameraAvailable = true
                     }
                 }
+            case .Authorized:
+                self.isCameraAvailable = true
             default:
                 break
             }
@@ -65,6 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                     break
                 }
             })
+        case .Authorized:
+            self.isPhotoLibAvailable = true
         default:
             break
         }

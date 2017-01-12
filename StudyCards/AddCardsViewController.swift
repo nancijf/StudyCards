@@ -12,6 +12,7 @@ import Photos
 
 let imageExtra: CGFloat = 70.0
 let topInsetForLandscape: CGFloat = 60.0
+let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 let boundingRightLeftInset: CGFloat = 50.0
 
 protocol AddCardsViewControllerDelegate: class {
@@ -56,7 +57,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         imageView.frame = CGRect.zero
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
-        imageView.backgroundColor = UIColor.lightGrayColor()
 
         return imageView
     }()
@@ -66,7 +66,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.textContainer.maximumNumberOfLines = 100
         textView.textContainer.lineBreakMode = .ByWordWrapping
-        textView.backgroundColor = UIColor.yellowColor()
 
         return textView
     }()
@@ -481,35 +480,15 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
     }
     
     func showPhotoMenu() {
-        var canUseCamera: Bool = false
-        var canUsePhotoLibrary: Bool = false
-        
-        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
-            let cameraStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
-            switch cameraStatus {
-            case .Authorized:
-                canUseCamera = true
-            default:
-                break
-            }
-        }
-        
-        let plStatus = PHPhotoLibrary.authorizationStatus()
-        switch plStatus {
-        case .Authorized:
-            canUsePhotoLibrary = true
-        default:
-            break
-        }
         
         let alertController = UIAlertController(title: "Add Photo", message: "Import Photo", preferredStyle: .Alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         alertController.addAction(cancelAction)
-        if canUseCamera {
+        if appDelegate.isCameraAvailable {
             let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: { _ in self.takePhotoWithCamera() })
             alertController.addAction(takePhotoAction)
         }
-        if canUsePhotoLibrary {
+        if appDelegate.isPhotoLibAvailable {
             let chooseFromLibraryAction = UIAlertAction(title: "Choose From Library", style: .Default, handler: { _ in self.choosePhotoFromLibrary() })
             alertController.addAction(chooseFromLibraryAction)
         }
