@@ -203,14 +203,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                         }
                     })
                 } else {
-//                    let controller = storyBoard.instantiateViewControllerWithIdentifier("CardListTableViewController") as? CardListTableViewController
-//                    controller?.deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
-//                    self.navigationController?.pushViewController(controller!, animated: true)
 
                     let controller = segue.destinationViewController as! CardListTableViewController
                     controller.deck = deck
-//                    controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-//                    controller.navigationItem.leftItemsSupplementBackButton = true
                 }
             }
         } else if segue.identifier == "AddNewDeck" {
@@ -282,14 +277,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             cell.detailTextLabel?.text = deck?.desc
         } 
     }
-    
-//    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
-//        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-//        let controller = storyBoard.instantiateViewControllerWithIdentifier("CardListTableViewController") as? CardListTableViewController
-//        controller?.deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
-//        self.navigationController?.pushViewController(controller!, animated: true)
-//    }
-    
+        
     // MARK: - Fetched results controller
     
     lazy var fetchedResultsController: NSFetchedResultsController = {

@@ -22,24 +22,32 @@ class CardListTableViewController: UITableViewController {
     var mode: CardListControllerMode?
     var tempCardTitle: String?
     var isShuffleOn: Bool = true
+    var isInEditMode: Bool = false
     let defaults = NSUserDefaults.standardUserDefaults()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        cards = deck?.cards?.array as? [Card]
         if let title = tempCardTitle {
             self.navigationItem.title = title
         } else {
             self.navigationItem.title = deck?.title
         }
-        self.tableView.estimatedRowHeight = 40
+        self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableViewAutomaticDimension
         if mode == .StructData {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(importTapped))
+        } else {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(editTapped))
         }
         
         isShuffleOn = defaults.boolForKey("shakeToShuffle") ?? true
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        cards = deck?.cards?.array as? [Card]
+        tableView.reloadData()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -65,6 +73,12 @@ class CardListTableViewController: UITableViewController {
                 tableView.reloadData()
             }
         }
+    }
+    
+    func editTapped(button: UIBarButtonItem) {
+        isInEditMode = !isInEditMode
+        button.title = isInEditMode ? "Done" : "Edit"
+        button.tintColor = isInEditMode ? UIColor.redColor() : UIColor.blueColor()
     }
     
     func importTapped(sender: UIBarButtonItem) {
@@ -106,21 +120,45 @@ class CardListTableViewController: UITableViewController {
         return cell
     }
     
+//    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//        code
+//    }
+    
+//    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//        <#code#>
+//    }
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let storyBoard = UIStoryboard(name: kStoryBoardID, bundle: nil)
-        if let navController = storyBoard.instantiateViewControllerWithIdentifier("DetailNavController") as? UINavigationController, controller = navController.topViewController as? CardPageViewController {
-            if mode == .StructData {
-                controller.tempCards = self.tempCards
-                controller.usingCardStruct = true
-                controller.tempCardTitle = tempCardTitle
-            } else {
-                controller.deck = self.deck
-                controller.usingCardStruct = false
+        if isInEditMode {
+            let card = self.deck?.cards?.objectAtIndex(indexPath.row) as? Card
+            if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {
+                addCardsViewController.deck = deck
+                addCardsViewController.card = card
+                addCardsViewController.mode = .EditCard
+                if splitViewController?.viewControllers.count > 1 {
+                    let navController = UINavigationController(rootViewController: addCardsViewController)
+                    addCardsViewController.navigationItem.title = "Edit Card"
+                    showDetailViewController(navController, sender: self)
+                } else {
+                    self.navigationController?.pushViewController(addCardsViewController, animated: true)
+                }
             }
-            controller.currentIndex = indexPath.row
-            controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-            controller.navigationItem.leftItemsSupplementBackButton = true
-            self.splitViewController?.showDetailViewController(navController, sender: self.splitViewController?.viewControllers.first)
+        } else {
+            let storyBoard = UIStoryboard(name: kStoryBoardID, bundle: nil)
+            if let navController = storyBoard.instantiateViewControllerWithIdentifier("DetailNavController") as? UINavigationController, controller = navController.topViewController as? CardPageViewController {
+                if mode == .StructData {
+                    controller.tempCards = self.tempCards
+                    controller.usingCardStruct = true
+                    controller.tempCardTitle = tempCardTitle
+                } else {
+                    controller.deck = self.deck
+                    controller.usingCardStruct = false
+                }
+                controller.currentIndex = indexPath.row
+                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+                controller.navigationItem.leftItemsSupplementBackButton = true
+                self.splitViewController?.showDetailViewController(navController, sender: self.splitViewController?.viewControllers.first)
+            }
         }
     }
 }

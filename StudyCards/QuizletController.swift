@@ -30,7 +30,6 @@ class QuizletController: NSObject {
     
     func retrieveSets(setID: Int, onSuccess: SuccessBlock2) {
         let urlPath = baseURL + getSet + String(setID) + "?\(clientID)" + "&whitespace=1"
-//        print(urlPath)
         guard let endpoint = NSURL(string: urlPath) else {
             print("Error creating endpoint")
             return
@@ -79,7 +78,6 @@ class QuizletController: NSObject {
 
     func searchQuizlet(searchText: String, onSuccess: SuccessBlock) {
         let urlPath = baseURL + searchSets + searchText + "&\(clientID)"
-        print(urlPath)
         guard let endpoint = NSURL(string: urlPath) else {
             print("Error creating endpoint")
             return
