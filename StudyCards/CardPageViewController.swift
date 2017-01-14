@@ -49,7 +49,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             let hideCorrect = defaults.boolForKey("locked")
 
             for (idx, card) in cards.enumerate() {
-//                print("Building card \(idx)")
                 if hideCorrect && card.iscorrect {
                     continue
                 } else if let controller = cardViewControllerWith(card) {
@@ -109,6 +108,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     func saveTapped(sender: UIBarButtonItem) {
         ImportCards.saveCards(tempCards, tempCardTitle: tempCardTitle, viewController: self)
+        print("dismissviewcontroler")
     }
     
     func cardViewControllerWith(card: Card) -> DetailViewController? {

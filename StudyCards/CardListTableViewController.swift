@@ -33,8 +33,6 @@ class CardListTableViewController: UITableViewController {
         } else {
             self.navigationItem.title = deck?.title
         }
-        self.tableView.estimatedRowHeight = 44
-        self.tableView.rowHeight = UITableViewAutomaticDimension
         if mode == .StructData {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(importTapped))
         } else {
@@ -104,29 +102,64 @@ class CardListTableViewController: UITableViewController {
             return cardCount
         }
     }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        var text: String?
+        var hasImage: Bool = false
+        
+        if mode == .StructData {
+            let card = self.tempCards?[indexPath.row]
+            text = card?.question
+            hasImage = card?.imageURL != nil
+        }
+        else {
+            let card = self.cards?[indexPath.row]
+            text = card?.question
+            hasImage = card?.imageURL != nil
+        }
+        let boundingWidth = hasImage ? tableView.frame.width - 200.0 : tableView.frame.width - 75.0
+        let boundingSize = CGSize(width: boundingWidth, height: CGFloat.max)
+        let rect = text?.boundingRectWithSize(boundingSize, options: [.UsesLineFragmentOrigin], attributes: [NSFontAttributeName: UIFont.systemFontOfSize(10.0)], context: nil)
+        
+        return hasImage ? max(100.0, rect?.height ?? 100.0) : (rect?.height ?? 44.0) + 25.0
+    }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+        let cardCell = cell as! CardListTableViewCell
+        cardCell.imageViewWidthConstraint?.active = false
+        var imageURL: String?
+        var questionText: String?
         if mode == .StructData {
-            let card = self.tempCards?[indexPath.row]
-            cell.textLabel?.text = card?.question
-            cell.detailTextLabel?.text = String((indexPath.row + 1))
+            imageURL = self.tempCards?[indexPath.row].imageURL
+            questionText = self.tempCards?[indexPath.row].question
         } else {
-            let card = self.cards?[indexPath.row]
-            cell.textLabel?.text = card?.question
-            cell.detailTextLabel?.text = String((indexPath.row + 1))
+            imageURL = self.cards?[indexPath.row].imageURL
+            questionText = self.cards?[indexPath.row].question
         }
-
+        cardCell.questionLabel.text = questionText?.characters.count > 0 ? questionText : "(No Question Text)"
+        if let urlString = imageURL?.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())?.createFilePath(), let url = NSURL(string: urlString) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), {
+                if let data = NSData(contentsOfURL: url), image = UIImage(data: data) {
+                    if self.mode == .StructData {
+                        self.tempCards?[indexPath.row].image = image
+                    }
+                    let scale: CGFloat = 300.0 / image.size.height
+                    let scaledImage = image.resize(byPercent: scale)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        cardCell.imageViewWidthConstraint?.active = true
+                        cardCell.cardImageView.image = scaledImage
+                        cardCell.setNeedsUpdateConstraints()
+                        cardCell.updateConstraintsIfNeeded()
+                    })
+                }
+            })
+        }
+        cardCell.setNeedsUpdateConstraints()
+        cardCell.updateConstraintsIfNeeded()
+        
         return cell
     }
-    
-//    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        code
-//    }
-    
-//    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        <#code#>
-//    }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if isInEditMode {
@@ -162,3 +195,36 @@ class CardListTableViewController: UITableViewController {
         }
     }
 }
+
+extension UIImage {
+    
+    func resize(byPercent percent: CGFloat) -> UIImage? {
+        let size = CGSizeApplyAffineTransform(self.size, CGAffineTransformMakeScale(percent, percent))
+        let hasAlpha = false
+        let scale: CGFloat = 0.0
+        
+        UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
+        self.drawInRect(CGRect(origin: CGPointZero, size: size))
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return scaledImage
+    }
+}
+
+extension String {
+    
+    func createFilePath() -> String {
+        guard !self.containsString("://") else {
+            return self
+        }
+        
+        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        let documentDirectory: String = paths[0]
+        let fullPath = "file://" + documentDirectory + "/" + self
+        
+        return fullPath
+    }
+    
+}
+

@@ -129,10 +129,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             answerTextView.placeholderLabel.hidden = true
             
             if let imageURL = card?.imageURL {
-                var imagePath = imageURL
-                if !imageURL.containsString("://") {
-                    imagePath = "file://" + createFilePath(withFileName: imageURL)
-                }
+                let imagePath = imageURL.createFilePath()
                 if let data = NSData(contentsOfURL: NSURL(string: imagePath)!) {
                     imageAdded = true
                     photoImageView.image = UIImage(data: data)
@@ -333,14 +330,6 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         wasCardSaved = false
     }
     
-    func createFilePath(withFileName fileName: String) -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
-        let docs: String = paths[0]
-        let fullPath = docs + "/" + fileName
-        
-        return fullPath
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
