@@ -29,30 +29,27 @@ class ImportCards {
         }
         let alert = UIAlertController(title: "Alert", message: "This deck has been saved.", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { done in
-            if viewController?.isKindOfClass(CardListTableViewController.self) ?? false {
-                viewController?.navigationController?.popToRootViewControllerAnimated(true)
-            } else if viewController?.isKindOfClass(CardPageViewController.self) ?? false {
-                let split = viewController?.splitViewController
-                if let navController = split?.viewControllers[0] as? UINavigationController {
-                    navController.popToRootViewControllerAnimated(true)
-                }
-            }
+            self.popCurrentVC(viewController)
         }))
 
         viewController?.presentViewController(alert, animated: true, completion: { () -> Void in
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue()) {
                 alert.dismissViewControllerAnimated(true, completion: nil)
-                if viewController?.isKindOfClass(CardListTableViewController.self) ?? false {
-                    viewController?.navigationController?.popToRootViewControllerAnimated(true)
-                } else if viewController?.isKindOfClass(CardPageViewController.self) ?? false {
-                    let split = viewController?.splitViewController
-                    if let navController = split?.viewControllers[0] as? UINavigationController {
-                        navController.popToRootViewControllerAnimated(true)
-                    }
-                }
+                self.popCurrentVC(viewController)
             }
         })
+    }
+    
+    class func popCurrentVC(viewController: UIViewController?) {
+        if viewController?.isKindOfClass(CardListTableViewController.self) ?? false {
+            viewController?.navigationController?.popToRootViewControllerAnimated(true)
+        } else if viewController?.isKindOfClass(CardPageViewController.self) ?? false {
+            let split = viewController?.splitViewController
+            if let navController = split?.viewControllers[0] as? UINavigationController {
+                navController.popToRootViewControllerAnimated(true)
+            }
+        }
     }
     
     class func saveImage(image: UIImage?) -> String? {
