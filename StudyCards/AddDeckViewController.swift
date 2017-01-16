@@ -60,9 +60,9 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
 
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-    }
+//    override func viewWillAppear(animated: Bool) {
+//        super.viewWillAppear(animated)
+//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -175,12 +175,15 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         switch indexPath.section {
             case TableViewSections.Title.rawValue:
                 cell.descTextView.hidden = true
+                cell.cardImageView.hidden = true
                 cell.titleTextField.text = tempTitle ?? ""
             case TableViewSections.Description.rawValue:
                 cell.titleTextField.hidden = true
+                cell.cardImageView.hidden = true
                 cell.descTextView.text = tempDesc ?? ""
             case TableViewSections.Category.rawValue:
                 cell.descTextView.hidden = true
+                cell.cardImageView.hidden = true
                 cell.titleTextField.enabled = false
                 if let category = tempCategories![indexPath.item] as? Category {
                     cell.titleTextField.text = category.name
@@ -190,6 +193,20 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                 cell.titleTextField.enabled = false
                 if deck?.cards?.count > 0 {
                     if let card = deck?.cards?[indexPath.item] as? Card {
+                        if card.imageURL != nil {
+                            let imageURL = card.imageURL
+                            if let urlString = imageURL?.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())?.createFilePath(), let url = NSURL(string: urlString) {
+                                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), {
+                                    if let data = NSData(contentsOfURL: url), image = UIImage(data: data) {
+                                        dispatch_async(dispatch_get_main_queue(), {
+                                            cell.cardImageView.image = image
+                                        })
+                                    }
+                                })
+                            }
+                        } else {
+                            cell.cardImageView.hidden = true
+                        }
                         let row = String(indexPath.row + 1)
                         if card.question == "" {
                             cell.titleTextField.text = "\(row). (No question)"
@@ -225,7 +242,8 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
             case TableViewSections.Category.rawValue:
                 return 40.0
             case TableViewSections.Cards.rawValue:
-                return 40.0
+                let card = deck?.cards?[indexPath.row] as? Card
+                return card?.imageURL != nil ? 100.0 : 44.0
             default:
                 return 44.0
         }

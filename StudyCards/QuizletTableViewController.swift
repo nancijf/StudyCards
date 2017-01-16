@@ -27,7 +27,6 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         qzSearchController.delegate = self
         definesPresentationContext = false
         tableView.tableHeaderView = qzSearchController.searchBar
-        
     }
     
     override func viewWillAppear(animated: Bool) {

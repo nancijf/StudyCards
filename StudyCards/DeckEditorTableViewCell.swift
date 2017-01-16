@@ -12,6 +12,7 @@ class DeckEditorTableViewCell: UITableViewCell, UITextFieldDelegate, UITextViewD
 
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var descTextView: UITextView!
+    @IBOutlet weak var cardImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -32,6 +33,8 @@ class DeckEditorTableViewCell: UITableViewCell, UITextFieldDelegate, UITextViewD
         self.titleTextField.hidden = false
         self.descTextView.hidden = false
         self.titleTextField.enabled = true
+        self.cardImageView.hidden = false
+        self.cardImageView.image = nil
     }
 
 }
