@@ -119,7 +119,7 @@ class CardListTableViewController: UITableViewController {
         }
         let boundingWidth = hasImage ? tableView.frame.width - 200.0 : tableView.frame.width - 75.0
         let boundingSize = CGSize(width: boundingWidth, height: CGFloat.max)
-        let rect = text?.boundingRectWithSize(boundingSize, options: [.UsesLineFragmentOrigin], attributes: [NSFontAttributeName: UIFont.systemFontOfSize(10.0)], context: nil)
+        let rect = text?.boundingRectWithSize(boundingSize, options: [.UsesLineFragmentOrigin], attributes: [NSFontAttributeName: UIFont.systemFontOfSize(17.0)], context: nil)
         
         return hasImage ? max(100.0, rect?.height ?? 100.0) : (rect?.height ?? 44.0) + 25.0
     }

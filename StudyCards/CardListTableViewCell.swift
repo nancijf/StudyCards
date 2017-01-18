@@ -17,7 +17,7 @@ class CardListTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .Left
-        label.font = UIFont.systemFontOfSize(10.0)
+        label.font = UIFont.systemFontOfSize(17.0)
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = self.contentView.frame.width
         
