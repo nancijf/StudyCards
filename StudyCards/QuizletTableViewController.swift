@@ -14,6 +14,7 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     var quizletData = [QSetObject]()
     var qlCardData = [CardStruct]()
     let qzSearchController = UISearchController(searchResultsController: nil)
+    var timer: NSTimer? = nil
     
     let cellIdentifier = "qlCellIdentifier"
     
@@ -70,7 +71,12 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        if let searchText = searchController.searchBar.text where searchText.characters.count > 1 {
+        timer?.invalidate()
+        timer = NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: #selector(searchQZ), userInfo: nil, repeats: false)
+    }
+
+    func searchQZ() {
+        if let searchText = qzSearchController.searchBar.text where searchText.characters.count > 1 {
             if let escapedText = searchText.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
                 quizletController.searchQuizlet(escapedText, onSuccess: { (quizletData) in
                     dispatch_async(dispatch_get_main_queue(), {

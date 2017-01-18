@@ -60,10 +60,6 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
 
     }
     
-//    override func viewWillAppear(animated: Bool) {
-//        super.viewWillAppear(animated)
-//    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -124,7 +120,6 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
             alert.addAction(saveAction)
             alert.addAction(cancelAction)
             presentViewController(alert, animated: true, completion: nil)
-
         } else {
             self.navigationController?.popViewControllerAnimated(true)
         }
