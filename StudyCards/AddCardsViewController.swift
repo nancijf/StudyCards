@@ -415,6 +415,9 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     func addTapped(sender: UIBarButtonItem) {
         if !wasCardSaved && doesCardContainText {
             saveCard()
+            if self.splitViewController?.viewControllers.count > 1 {
+                self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
+            }
         }
         mode = .AddCard
         card = nil

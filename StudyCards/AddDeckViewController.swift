@@ -98,6 +98,11 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                 }
             }
         }
+        if self.splitViewController?.viewControllers.count > 1 {
+            let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
+            let navController = UINavigationController(rootViewController: detailViewController!)
+            self.showDetailViewController(navController, sender: self)
+        }
         self.navigationController?.popViewControllerAnimated(true)
     }
     
@@ -115,13 +120,25 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                 self.saveData()
             })
             let cancelAction = UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
+                if self.splitViewController?.viewControllers.count > 1 {
+                    let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
+                    let navController = UINavigationController(rootViewController: detailViewController!)
+                    self.showDetailViewController(navController, sender: self)
+                }
                 self.navigationController?.popViewControllerAnimated(true)
+
             })
             alert.addAction(saveAction)
             alert.addAction(cancelAction)
             presentViewController(alert, animated: true, completion: nil)
         } else {
+            if self.splitViewController?.viewControllers.count > 1 {
+                let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
+                let navController = UINavigationController(rootViewController: detailViewController!)
+                self.showDetailViewController(navController, sender: self)
+            }
             self.navigationController?.popViewControllerAnimated(true)
+            
         }
     }
     

@@ -17,6 +17,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     var controllerArray = [DetailViewController]()
     var deck: Deck?
     var isQuestionShowing: Bool = true
+    var isUsingDefaultCard = false
     var cards: [Card]?
     var currentIndex: Int = 0
     var tempCards: [CardStruct]?
@@ -57,6 +58,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
                 }
             }
         } else {
+            isUsingDefaultCard = true
             let tempCard = CardStruct(question: "Tap a Deck to view Cards", answer: nil, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: 0, imageURL: nil, deck: nil)
             for _ in 0...2 {
                 if let controller = cardViewControllerWithStruct(tempCard) {
@@ -78,7 +80,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
             self.navigationItem.title = title
             let saveButton = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(saveTapped))
             self.navigationItem.rightBarButtonItem = saveButton
-        } else {
+        } else if !isUsingDefaultCard {
             self.navigationItem.title = deck?.title
             testScore = UIBarButtonItem(title: "Score", style: .Plain, target: self, action: #selector(showScore))
             self.navigationItem.rightBarButtonItem = testScore

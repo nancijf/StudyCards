@@ -14,7 +14,7 @@ enum CardListControllerMode: Int {
     case StructData
 }
 
-class CardListTableViewController: UITableViewController {
+class CardListTableViewController: UITableViewController, AddCardsViewControllerDelegate {
     
     var deck: Deck?
     var cards: [Card]?
@@ -52,6 +52,16 @@ class CardListTableViewController: UITableViewController {
         super.viewDidAppear(animated)
         self.navigationController?.hidesBarsOnTap = false
         self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    override func willMoveToParentViewController(parent: UIViewController?) {
+        super.willMoveToParentViewController(parent)
+        print("moving to MasterVC")
+        if splitViewController?.viewControllers.count > 1 && isInEditMode {
+            let detailViewController = storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
+            let navController = UINavigationController(rootViewController: detailViewController!)
+            showDetailViewController(navController, sender: self)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -168,6 +178,7 @@ class CardListTableViewController: UITableViewController {
                 addCardsViewController.deck = deck
                 addCardsViewController.card = card
                 addCardsViewController.mode = .EditCard
+                addCardsViewController.delegate = self
                 if splitViewController?.viewControllers.count > 1 {
                     let navController = UINavigationController(rootViewController: addCardsViewController)
                     addCardsViewController.navigationItem.title = "Edit Card"
@@ -193,6 +204,11 @@ class CardListTableViewController: UITableViewController {
                 self.splitViewController?.showDetailViewController(navController, sender: self.splitViewController?.viewControllers.first)
             }
         }
+    }
+    
+    func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?) {
+        cards = deck?.cards?.array as? [Card]
+        tableView.reloadData()
     }
 }
 
