@@ -17,7 +17,7 @@ enum DeckViewControllerMode: Int {
     case EditDeck
 }
 
-class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFieldDelegate, CategoryTableViewControllerDelegate, AddCardsViewControllerDelegate {
+class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFieldDelegate, CategoryTableViewControllerDelegate, AddCardsViewControllerDelegate, UISplitViewControllerDelegate {
     
     var tempCategories: NSOrderedSet?
     var deck: Deck?
@@ -26,6 +26,7 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     var tempDesc: String?
     var didMakeChanges: Bool = false
     var deckEditorCell: DeckEditorTableViewCell?
+    var detailViewController: CardPageViewController? = nil
     
     
     enum TableViewSections: Int {
@@ -57,12 +58,47 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         navigationItem.setHidesBackButton(true, animated: true)
         navigationItem.rightBarButtonItem = saveButton
         navigationItem.leftBarButtonItem = backButton
+//        splitViewController?.delegate = self
+        
+//        if let split = self.splitViewController {
+//            let controllers = split.viewControllers
+//            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
+//            splitViewController?.preferredDisplayMode = .AllVisible
+//        }
 
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+//    func primaryViewControllerForCollapsingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
+//        print("collapsing controllers")
+//        let controllers = splitViewController.viewControllers
+//        self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
+//        
+//        let navController = UINavigationController(rootViewController: detailViewController!)
+//        return navController
+//    }
+//    
+//    func primaryViewControllerForExpandingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
+//        print("expanding controllers")
+//        let controllers = splitViewController.viewControllers
+//        let navController = controllers.first as! UINavigationController
+//        if splitViewController.viewControllers.count == 1 {
+//            if let _ = deck?.cards?.count, card = self.deck?.cards?.objectAtIndex(0) as? Card {
+//                if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {
+//                    addCardsViewController.deck = deck
+//                    addCardsViewController.card = card
+//                    addCardsViewController.mode = .EditCard
+//                    addCardsViewController.delegate = self
+//                    addCardsViewController.navigationItem.title = "Edit Card"
+//                    navController.pushViewController(addCardsViewController, animated: false)
+//                }
+//            }
+//        }
+//        return navController
+//    }
     
     func textFieldDidEndEditing(textField: UITextField) {
         tempTitle = textField.text
@@ -355,7 +391,13 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                     }
 
                     categoryViewController.delegate = self
-                    self.navigationController?.pushViewController(categoryViewController, animated: true)
+//                    self.navigationController?.pushViewController(categoryViewController, animated: true)
+                    if splitViewController?.viewControllers.count > 1 {
+                        let navController = UINavigationController(rootViewController: categoryViewController)
+                        showDetailViewController(navController, sender: self)
+                    } else {
+                        self.navigationController?.pushViewController(categoryViewController, animated: true)
+                    }
                 }
             case AddButtonType.Card.rawValue:
                 if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {

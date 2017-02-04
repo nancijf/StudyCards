@@ -15,6 +15,8 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     var qlCardData = [CardStruct]()
     let qzSearchController = UISearchController(searchResultsController: nil)
     var timer: NSTimer? = nil
+    var tempTitle: String?
+    var rowIndex: Int = 0
     
     let cellIdentifier = "qlCellIdentifier"
     
@@ -34,7 +36,6 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         super.viewWillAppear(animated)
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
-
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -54,6 +55,22 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if let setNum = quizletData[rowIndex].id {
+            quizletController.retrieveSets(setNum, onSuccess: { (qlCardData) in
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.qlCardData = qlCardData
+                    let navcontroller = segue.destinationViewController as! UINavigationController
+                    let controller = navcontroller.topViewController as! CardListTableViewController
+                    controller.mode = .StructData
+                    controller.tempCards = qlCardData
+                    controller.tempCardTitle = self.tempTitle
+                })
+            })
+        }
     }
     
     func didPresentSearchController(searchController: UISearchController) {
@@ -112,17 +129,22 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
+        tempTitle = cell?.textLabel?.text
+        rowIndex = indexPath.row
         let idNum = quizletData[indexPath.row].id
         if let setNum = idNum {
             quizletController.retrieveSets(setNum, onSuccess: { (qlCardData) in
                 dispatch_async(dispatch_get_main_queue(), {
                     self.qlCardData = qlCardData
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let controller = storyboard.instantiateViewControllerWithIdentifier("CardListTableViewController") as? CardListTableViewController
-                    controller?.mode = .StructData
-                    controller?.tempCards = qlCardData
-                    controller?.tempCardTitle = cell?.textLabel?.text
-                    self.navigationController?.pushViewController(controller!, animated: true)
+                    if let controller = storyboard.instantiateViewControllerWithIdentifier("NavCardList") as? UINavigationController, cardController = controller.topViewController as? CardListTableViewController {
+                        cardController.mode = .StructData
+                        cardController.tempCards = qlCardData
+                        cardController.tempCardTitle = cell?.textLabel?.text
+                        self.splitViewController?.showDetailViewController(controller, sender: self)
+                    }
+                    
+//                    self.navigationController?.pushViewController(controller!, animated: true)
                 })
             })
         }

@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import Photos
+import Foundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
@@ -81,8 +82,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // pass managedObjectContext to StudyCardsDataStack CoreData abstraction layer
         StudyCardsDataStack.sharedInstance.managedObjectContext = self.managedObjectContext
-        
-        
 
         return true
     }
@@ -119,6 +118,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
         return false
     }
+        
     // MARK: - Core Data stack
 
     lazy var applicationDocumentsDirectory: NSURL = {

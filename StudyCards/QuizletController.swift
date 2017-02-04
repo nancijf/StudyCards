@@ -8,7 +8,6 @@
 
 import Foundation
 import UIKit
-
 class QuizletController: NSObject {
     
     typealias SuccessBlock = (qlData: [QSetObject]) -> ()

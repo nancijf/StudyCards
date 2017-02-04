@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating, UISearchControllerDelegate {
+class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating, UISearchControllerDelegate, UISplitViewControllerDelegate {
 
     var detailViewController: CardPageViewController? = nil
     let searchController = UISearchController(searchResultsController: nil)
@@ -76,6 +76,21 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func viewWillDisappear(animated: Bool) {
         searchController.active = false
     }
+    
+//    func primaryViewControllerForCollapsingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
+//        print("collapsing controllers")
+//        let navController = UINavigationController(rootViewController: detailViewController!)
+//        return navController
+//    }
+    
+//    func primaryViewControllerForExpandingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
+//        print("expanding MasterViewController")
+//        let controllers = splitViewController.viewControllers
+//        self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
+//        let navController = controllers.first as! UINavigationController
+//        return navController
+//    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -203,8 +218,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                         }
                     })
                 } else {
-
-                    let controller = segue.destinationViewController as! CardListTableViewController
+                    let navController = segue.destinationViewController as! UINavigationController
+                    let controller = navController.topViewController as! CardListTableViewController
                     controller.deck = deck
                 }
             }
@@ -234,7 +249,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
             let sectionInfo = self.fetchedResultsController.sections![section]
             return sectionInfo.numberOfObjects
     }

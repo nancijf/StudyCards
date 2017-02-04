@@ -23,6 +23,7 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
     var tempCardTitle: String?
     var isShuffleOn: Bool = true
     var isInEditMode: Bool = false
+    var detailViewController: CardPageViewController?
     let defaults = NSUserDefaults.standardUserDefaults()
 
     override func viewDidLoad() {
@@ -56,7 +57,6 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
     
     override func willMoveToParentViewController(parent: UIViewController?) {
         super.willMoveToParentViewController(parent)
-        print("moving to MasterVC")
         if splitViewController?.viewControllers.count > 1 && isInEditMode {
             let detailViewController = storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
             let navController = UINavigationController(rootViewController: detailViewController!)
@@ -82,7 +82,7 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
             }
         }
     }
-    
+
     func editTapped(button: UIBarButtonItem) {
         isInEditMode = !isInEditMode
         button.title = isInEditMode ? "Done" : "Edit"

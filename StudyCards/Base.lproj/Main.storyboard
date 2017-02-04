@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="H1p-Uh-vWS">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -363,7 +363,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="laC-6S-YBZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1502" y="127"/>
+            <point key="canvasLocation" x="3380" y="126.38680659670166"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="Nki-YV-4Qg">
@@ -413,7 +413,7 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
-                                    <segue destination="GGs-8Q-jyY" kind="show" identifier="ShowCardList" id="fKN-Gr-QsH"/>
+                                    <segue destination="bni-2F-cD6" kind="showDetail" identifier="ShowCardList" id="l20-a9-TDK"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -426,8 +426,8 @@
                     <tabBarItem key="tabBarItem" title="Deck List" image="decklist" id="N14-3h-uZA"/>
                     <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8"/>
                     <connections>
-                        <segue destination="83o-js-ZpY" kind="show" identifier="EditDeck" id="Og1-Gt-bXN"/>
-                        <segue destination="83o-js-ZpY" kind="show" identifier="AddNewDeck" id="der-Ya-gDB"/>
+                        <segue destination="83o-js-ZpY" kind="showDetail" identifier="AddNewDeck" id="74I-1u-WbE"/>
+                        <segue destination="83o-js-ZpY" kind="showDetail" identifier="EditDeck" id="Y9Z-sd-XHz"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
@@ -457,10 +457,11 @@
                             <outlet property="delegate" destination="GGs-8Q-jyY" id="uNv-zZ-v43"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="pxa-a5-kcV"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zeW-P4-Vim" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="690" y="128"/>
+            <point key="canvasLocation" x="2350" y="204"/>
         </scene>
         <!--Deck Editor-->
         <scene sceneID="BWH-Uu-0v4">
@@ -540,7 +541,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gZ1-Gj-K9M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2245.5999999999999" y="-630.13493253373315"/>
+            <point key="canvasLocation" x="2351" y="-630"/>
         </scene>
         <!--Settings-->
         <scene sceneID="WtK-bI-W9i">
@@ -802,7 +803,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IiJ-3T-jKg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3916" y="-1327.2863568215894"/>
+            <point key="canvasLocation" x="3774" y="-1327"/>
         </scene>
         <!--Category Table View Controller-->
         <scene sceneID="JvN-bu-gTK">
@@ -830,7 +831,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fe5-3i-LBG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2977" y="-630"/>
+            <point key="canvasLocation" x="3062" y="-630"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="r7l-gg-dq7">
@@ -890,6 +891,24 @@
             </objects>
             <point key="canvasLocation" x="2976.8000000000002" y="-1327.2863568215894"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="4sy-z7-xFA">
+            <objects>
+                <navigationController storyboardIdentifier="NavCardList" automaticallyAdjustsScrollViewInsets="NO" id="bni-2F-cD6" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="LB9-LM-bSK">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="GGs-8Q-jyY" kind="relationship" relationship="rootViewController" id="Wn5-Bu-gBU"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tem-8h-w9A" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1502" y="204"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Quizleticon" width="30" height="30"/>
@@ -897,6 +916,6 @@
         <image name="settingsicon" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="der-Ya-gDB"/>
+        <segue reference="74I-1u-WbE"/>
     </inferredMetricsTieBreakers>
 </document>
