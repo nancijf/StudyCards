@@ -53,19 +53,15 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         tempDesc = deck?.desc
         tempTitle = deck?.title
         
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(saveData))
         let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonPressed))
         navigationItem.setHidesBackButton(true, animated: true)
         navigationItem.rightBarButtonItem = saveButton
         navigationItem.leftBarButtonItem = backButton
-//        splitViewController?.delegate = self
-        
-//        if let split = self.splitViewController {
-//            let controllers = split.viewControllers
-//            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
-//            splitViewController?.preferredDisplayMode = .AllVisible
-//        }
-
     }
     
     override func didReceiveMemoryWarning() {
@@ -139,7 +135,7 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
             let navController = UINavigationController(rootViewController: detailViewController!)
             self.showDetailViewController(navController, sender: self)
         }
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.navigationController?.popViewControllerAnimated(true)
     }
     
     func backButtonPressed(sender: UIBarButtonItem) {
@@ -161,7 +157,7 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                     let navController = UINavigationController(rootViewController: detailViewController!)
                     self.showDetailViewController(navController, sender: self)
                 }
-                self.navigationController?.popViewControllerAnimated(true)
+                self.navigationController?.navigationController?.popViewControllerAnimated(true)
 
             })
             alert.addAction(saveAction)
@@ -173,7 +169,7 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                 let navController = UINavigationController(rootViewController: detailViewController!)
                 self.showDetailViewController(navController, sender: self)
             }
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.navigationController?.popViewControllerAnimated(true)
             
         }
     }
@@ -371,13 +367,7 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                 addCardsViewController.card = card
                 addCardsViewController.mode = .EditCard
                 addCardsViewController.delegate = self
-                if splitViewController?.viewControllers.count > 1 {
-                    let navController = UINavigationController(rootViewController: addCardsViewController)
-                    addCardsViewController.navigationItem.title = "Add Card"
-                    showDetailViewController(navController, sender: self)
-                } else {
-                    self.navigationController?.pushViewController(addCardsViewController, animated: true)
-                }
+                self.navigationController?.pushViewController(addCardsViewController, animated: true)
             }
         }
     }
@@ -391,26 +381,14 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                     }
 
                     categoryViewController.delegate = self
-//                    self.navigationController?.pushViewController(categoryViewController, animated: true)
-                    if splitViewController?.viewControllers.count > 1 {
-                        let navController = UINavigationController(rootViewController: categoryViewController)
-                        showDetailViewController(navController, sender: self)
-                    } else {
-                        self.navigationController?.pushViewController(categoryViewController, animated: true)
-                    }
+                    self.navigationController?.pushViewController(categoryViewController, animated: true)
                 }
             case AddButtonType.Card.rawValue:
                 if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {
                     addCardsViewController.deck = deck as Deck?
                     addCardsViewController.mode = .AddCard
                     addCardsViewController.delegate = self
-                    if splitViewController?.viewControllers.count > 1 {
-                        let navController = UINavigationController(rootViewController: addCardsViewController)
-                        addCardsViewController.navigationItem.title = "Add Card"
-                        showDetailViewController(navController, sender: self)
-                    } else {
-                        self.navigationController?.pushViewController(addCardsViewController, animated: true)
-                    }
+                    self.navigationController?.pushViewController(addCardsViewController, animated: true)
                 }
             default:
                 return

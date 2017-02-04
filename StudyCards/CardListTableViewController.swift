@@ -179,13 +179,7 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
                 addCardsViewController.card = card
                 addCardsViewController.mode = .EditCard
                 addCardsViewController.delegate = self
-                if splitViewController?.viewControllers.count > 1 {
-                    let navController = UINavigationController(rootViewController: addCardsViewController)
-                    addCardsViewController.navigationItem.title = "Edit Card"
-                    showDetailViewController(navController, sender: self)
-                } else {
-                    self.navigationController?.pushViewController(addCardsViewController, animated: true)
-                }
+                self.navigationController?.pushViewController(addCardsViewController, animated: true)
             }
         } else {
             let storyBoard = UIStoryboard(name: kStoryBoardID, bundle: nil)

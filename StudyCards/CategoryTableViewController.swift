@@ -47,26 +47,6 @@ class CategoryTableViewController: UITableViewController, NSFetchedResultsContro
         // Dispose of any resources that can be recreated.
     }
     
-//    override func willMoveToParentViewController(parent: UIViewController?) {
-//        print("moving to parent VC")
-//        if didMakeChanges {
-//            let alert = UIAlertController(title: "Caution", message: "Changes were made to your selected categories. Do you want to save them?", preferredStyle: .Alert)
-//            let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in
-//                self.navigationController?.popViewControllerAnimated(true)
-//            }
-//            let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-//                self.delegate?.categoryTableViewControllerDidFinishSelectingCategory(self, selectedCategories: self.selectedCategories)
-//                self.navigationController?.popViewControllerAnimated(true)
-//            })
-//            
-//            alert.addAction(saveAction)
-//            alert.addAction(cancelAction)
-//            presentViewController(alert, animated: true, completion: nil)
-//        } else {
-//            self.navigationController?.popViewControllerAnimated(true)
-//        }
-//    }
-    
     func backButtonTapped(sender: UIBarButtonItem) {
         if didMakeChanges {
             let alert = UIAlertController(title: "Caution", message: "Changes were made to your selected categories. Do you want to save them?", preferredStyle: .Alert)

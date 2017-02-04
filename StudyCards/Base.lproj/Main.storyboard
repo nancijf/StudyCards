@@ -426,8 +426,8 @@
                     <tabBarItem key="tabBarItem" title="Deck List" image="decklist" id="N14-3h-uZA"/>
                     <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8"/>
                     <connections>
-                        <segue destination="83o-js-ZpY" kind="showDetail" identifier="AddNewDeck" id="74I-1u-WbE"/>
-                        <segue destination="83o-js-ZpY" kind="showDetail" identifier="EditDeck" id="Y9Z-sd-XHz"/>
+                        <segue destination="bTf-bl-0ef" kind="showDetail" identifier="AddNewDeck" id="74I-1u-WbE"/>
+                        <segue destination="bTf-bl-0ef" kind="showDetail" identifier="EditDeck" id="Y9Z-sd-XHz"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rux-fX-hf1" sceneMemberID="firstResponder"/>
@@ -537,11 +537,12 @@
                         </connections>
                     </tableView>
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="nAJ-9N-3Y1"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gZ1-Gj-K9M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2351" y="-630"/>
+            <point key="canvasLocation" x="3288.8000000000002" y="-630.13493253373315"/>
         </scene>
         <!--Settings-->
         <scene sceneID="WtK-bI-W9i">
@@ -831,7 +832,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fe5-3i-LBG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3062" y="-630"/>
+            <point key="canvasLocation" x="4000.8000000000002" y="-630.13493253373315"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="r7l-gg-dq7">
@@ -909,6 +910,24 @@
             </objects>
             <point key="canvasLocation" x="1502" y="204"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="lJ1-0H-3Ni">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bTf-bl-0ef" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="dgH-LY-jAI">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="83o-js-ZpY" kind="relationship" relationship="rootViewController" id="dgm-CB-1a7"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="h4a-bV-0AT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2349.5999999999999" y="-630.13493253373315"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Quizleticon" width="30" height="30"/>
@@ -916,6 +935,6 @@
         <image name="settingsicon" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="74I-1u-WbE"/>
+        <segue reference="Y9Z-sd-XHz"/>
     </inferredMetricsTieBreakers>
 </document>

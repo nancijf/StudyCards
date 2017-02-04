@@ -257,35 +257,17 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 saveCard()
             }
             self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
-            if splitViewController?.viewControllers.count > 1 {
-                let detailViewController = storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
-                let navController = UINavigationController(rootViewController: detailViewController!)
-                showDetailViewController(navController, sender: self)
-            } else {
-                self.navigationController?.popViewControllerAnimated(true)
-            }
+            self.navigationController?.popViewControllerAnimated(true)
         } else {
             if !wasCardSaved && doesCardContainText {
                 let alert = UIAlertController(title: "Caution", message: "Changes were made to your card. Do you want to save it?", preferredStyle: .Alert)
                 let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in
-                    if self.splitViewController?.viewControllers.count > 1 {
-                        let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
-                        let navController = UINavigationController(rootViewController: detailViewController!)
-                        self.showDetailViewController(navController, sender: self)
-                    } else {
-                        self.navigationController?.popViewControllerAnimated(true)
-                    }
+                    self.navigationController?.popViewControllerAnimated(true)
                 }
                 let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
                     self.saveCard()
                     self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
-                    if self.splitViewController?.viewControllers.count > 1 {
-                        let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
-                        let navController = UINavigationController(rootViewController: detailViewController!)
-                        self.showDetailViewController(navController, sender: self)
-                    } else {
-                        self.navigationController?.popViewControllerAnimated(true)
-                    }
+                    self.navigationController?.popViewControllerAnimated(true)
                 })
                 
                 alert.addAction(saveAction)
@@ -293,13 +275,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
                 presentViewController(alert, animated: true, completion: nil)
             } else {
                 self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
-                if splitViewController?.viewControllers.count > 1 {
-                    let detailViewController = storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
-                    let navController = UINavigationController(rootViewController: detailViewController!)
-                    showDetailViewController(navController, sender: self)
-                } else {
-                    self.navigationController?.popViewControllerAnimated(true)
-                }
+                self.navigationController?.popViewControllerAnimated(true)
             }
         }
     }

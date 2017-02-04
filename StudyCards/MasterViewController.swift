@@ -224,10 +224,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 }
             }
         } else if segue.identifier == "AddNewDeck" {
-            let controller = segue.destinationViewController as! AddDeckViewController
+            let navController = segue.destinationViewController as! UINavigationController
+            let controller = navController.topViewController as! AddDeckViewController
             controller.mode = .AddDeck
         } else if segue.identifier == "EditDeck" {
-            let controller = segue.destinationViewController as! AddDeckViewController
+            let navController = segue.destinationViewController as! UINavigationController
+            let controller = navController.topViewController as! AddDeckViewController
             controller.mode = .EditDeck
             controller.deck = sender as? Deck
         }
