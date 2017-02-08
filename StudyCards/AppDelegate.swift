@@ -111,8 +111,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
         guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
-        guard let topAsDetailController = secondaryAsNavController.topViewController as? CardPageViewController else { return false }
-        if topAsDetailController.deck == nil {
+        guard let topDetail1 = secondaryAsNavController.topViewController as? CardPageViewController else { return false }
+//        guard let topDetail2 = secondaryAsNavController.topViewController as? CardListTableViewController else { return false }
+        if topDetail1.deck == nil && topDetail1.tempCards == nil {
             // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
             return true
         }

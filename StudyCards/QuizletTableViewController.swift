@@ -8,15 +8,13 @@
 
 import UIKit
 
-class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating {
+class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating, UISplitViewControllerDelegate {
     
     let quizletController = QuizletController()
     var quizletData = [QSetObject]()
     var qlCardData = [CardStruct]()
     let qzSearchController = UISearchController(searchResultsController: nil)
     var timer: NSTimer? = nil
-    var tempTitle: String?
-    var rowIndex: Int = 0
     
     let cellIdentifier = "qlCellIdentifier"
     
@@ -28,12 +26,16 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         qzSearchController.searchBar.sizeToFit()
         qzSearchController.searchBar.placeholder = "Search Quizlet"
         qzSearchController.delegate = self
-        definesPresentationContext = false
-        tableView.tableHeaderView = qzSearchController.searchBar
+        qzSearchController.hidesNavigationBarDuringPresentation = false
+        self.definesPresentationContext = true
+        self.tableView.tableHeaderView = qzSearchController.searchBar
+        
+//        splitViewController?.preferredDisplayMode = .AllVisible
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
     }
@@ -45,12 +47,16 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
             self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
         }
 
-        qzSearchController.searchBar.becomeFirstResponder()
+        qzSearchController.active = true
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         qzSearchController.active = false
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
     }
 
     override func didReceiveMemoryWarning() {
@@ -58,33 +64,26 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
-        if let setNum = quizletData[rowIndex].id {
-            quizletController.retrieveSets(setNum, onSuccess: { (qlCardData) in
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.qlCardData = qlCardData
-                    let navcontroller = segue.destinationViewController as! UINavigationController
-                    let controller = navcontroller.topViewController as! CardListTableViewController
-                    controller.mode = .StructData
-                    controller.tempCards = qlCardData
-                    controller.tempCardTitle = self.tempTitle
-                })
-            })
+        if let indexPath = self.tableView.indexPathForSelectedRow {
+            let navcontroller = segue.destinationViewController as! UINavigationController
+            let controller = navcontroller.topViewController as! CardListTableViewController
+            controller.mode = .StructData
+            controller.setNum = quizletData[indexPath.row].id
+            controller.tempCardTitle = self.tableView.cellForRowAtIndexPath(indexPath)?.textLabel?.text
         }
     }
     
-    func didPresentSearchController(searchController: UISearchController) {
-        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
-            self.tableView.contentInset = UIEdgeInsetsMake(44, 0, tabBarHeight, 0)
-        }
-
-    }
+//    func didPresentSearchController(searchController: UISearchController) {
+//        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
+//            self.tableView.contentInset = UIEdgeInsetsMake(44, 0, tabBarHeight, 0)
+//        }
+//    }
     
     func didDismissSearchController(searchController: UISearchController) {
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
         }
-        searchController.searchBar.resignFirstResponder()
+        qzSearchController.active = false
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
@@ -95,10 +94,10 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     func searchQZ() {
         if let searchText = qzSearchController.searchBar.text where searchText.characters.count > 1 {
             if let escapedText = searchText.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
-                quizletController.searchQuizlet(escapedText, onSuccess: { (quizletData) in
+                quizletController.searchQuizlet(escapedText, onSuccess: { [weak self] (quizletData) in
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.quizletData = quizletData
-                        self.tableView.reloadData()
+                        self?.quizletData = quizletData
+                        self?.tableView.reloadData()
                     })
                 })
             }
@@ -129,25 +128,15 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cell = tableView.cellForRowAtIndexPath(indexPath)
-        tempTitle = cell?.textLabel?.text
-        rowIndex = indexPath.row
-        let idNum = quizletData[indexPath.row].id
-        if let setNum = idNum {
-            quizletController.retrieveSets(setNum, onSuccess: { (qlCardData) in
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.qlCardData = qlCardData
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    if let controller = storyboard.instantiateViewControllerWithIdentifier("NavCardList") as? UINavigationController, cardController = controller.topViewController as? CardListTableViewController {
-                        cardController.mode = .StructData
-                        cardController.tempCards = qlCardData
-                        cardController.tempCardTitle = cell?.textLabel?.text
-                        self.splitViewController?.showDetailViewController(controller, sender: self)
-                    }
-                    
-//                    self.navigationController?.pushViewController(controller!, animated: true)
-                })
-            })
-        }
     }
 
+}
+
+class TabBarController: UITabBarController {
+    override func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
+        let vc = viewControllers![selectedIndex] as! MasterViewController
+        if vc.searchController.active {
+            vc.searchController.active = false
+        }
+    }
 }

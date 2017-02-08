@@ -25,13 +25,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.estimatedRowHeight = 44.0; // set to whatever your "average" cell height is
         
-        if let split = self.splitViewController {
-            let controllers = split.viewControllers
-            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
-            splitViewController?.preferredDisplayMode = .AllVisible
-            self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem()
-            self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addDeck))
-        }
+        splitViewController?.preferredDisplayMode = .AllVisible
+        self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem()
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addDeck))
         
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
@@ -54,8 +50,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
         super.viewWillAppear(animated)
+        self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
 
         self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem()
         self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addDeck))

@@ -25,6 +25,8 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
     var isInEditMode: Bool = false
     var detailViewController: CardPageViewController?
     let defaults = NSUserDefaults.standardUserDefaults()
+    let quizletController = QuizletController()
+    var setNum: Int?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +38,15 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
         }
         if mode == .StructData {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(importTapped))
+            if let setNum = setNum {
+                quizletController.retrieveSets(setNum, onSuccess: { [weak self] (qlCardData) in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self?.tempCards = qlCardData
+                        self?.tableView.reloadData()
+                    })
+                    self?.tableView.reloadData()
+                })
+            }
         } else {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(editTapped))
         }
@@ -55,15 +66,6 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
-    override func willMoveToParentViewController(parent: UIViewController?) {
-        super.willMoveToParentViewController(parent)
-        if splitViewController?.viewControllers.count > 1 && isInEditMode {
-            let detailViewController = storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
-            let navController = UINavigationController(rootViewController: detailViewController!)
-            showDetailViewController(navController, sender: self)
-        }
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -182,8 +184,7 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
                 self.navigationController?.pushViewController(addCardsViewController, animated: true)
             }
         } else {
-            let storyBoard = UIStoryboard(name: kStoryBoardID, bundle: nil)
-            if let navController = storyBoard.instantiateViewControllerWithIdentifier("DetailNavController") as? UINavigationController, controller = navController.topViewController as? CardPageViewController {
+            if let storyBoard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let controller = storyBoard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController {
                 if mode == .StructData {
                     controller.tempCards = self.tempCards
                     controller.usingCardStruct = true
@@ -195,7 +196,7 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
                 controller.currentIndex = indexPath.row
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true
-                self.splitViewController?.showDetailViewController(navController, sender: self.splitViewController?.viewControllers.first)
+                self.navigationController?.pushViewController(controller, animated: true)
             }
         }
     }
