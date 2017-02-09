@@ -73,21 +73,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         searchController.active = false
     }
     
-//    func primaryViewControllerForCollapsingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
-//        print("collapsing controllers")
-//        let navController = UINavigationController(rootViewController: detailViewController!)
-//        return navController
-//    }
-    
-//    func primaryViewControllerForExpandingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
-//        print("expanding MasterViewController")
-//        let controllers = splitViewController.viewControllers
-//        self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
-//        let navController = controllers.first as! UINavigationController
-//        return navController
-//    }
-
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

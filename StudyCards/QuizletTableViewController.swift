@@ -23,14 +23,9 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
 
         qzSearchController.searchResultsUpdater = self
         qzSearchController.dimsBackgroundDuringPresentation = false
-        qzSearchController.searchBar.sizeToFit()
         qzSearchController.searchBar.placeholder = "Search Quizlet"
         qzSearchController.delegate = self
         qzSearchController.hidesNavigationBarDuringPresentation = false
-        self.definesPresentationContext = true
-        self.tableView.tableHeaderView = qzSearchController.searchBar
-        
-//        splitViewController?.preferredDisplayMode = .AllVisible
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -38,13 +33,19 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
+        qzSearchController.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(qzSearchController.view)
+        qzSearchController.view.topAnchor.constraintEqualToAnchor(self.view.topAnchor).active = true
+        qzSearchController.view.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).active = true
+        qzSearchController.view.rightAnchor.constraintEqualToAnchor(self.view.rightAnchor).active = true
+        qzSearchController.view.heightAnchor.constraintEqualToConstant(44).active = true
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
-            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
+            self.tableView.contentInset = UIEdgeInsetsMake(44, 0, tabBarHeight, 0)
         }
 
         qzSearchController.active = true
@@ -55,10 +56,12 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         qzSearchController.active = false
     }
     
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
+    override func viewDidLayoutSubviews() {
+        var searchBarFrame = qzSearchController.searchBar.frame
+        searchBarFrame.size.width = view.frame.size.width
+        qzSearchController.searchBar.frame = searchBarFrame
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -73,11 +76,11 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         }
     }
     
-//    func didPresentSearchController(searchController: UISearchController) {
-//        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
-//            self.tableView.contentInset = UIEdgeInsetsMake(44, 0, tabBarHeight, 0)
-//        }
-//    }
+    func didPresentSearchController(searchController: UISearchController) {
+        if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
+            self.tableView.contentInset = UIEdgeInsetsMake(44, 0, tabBarHeight, 0)
+        }
+    }
     
     func didDismissSearchController(searchController: UISearchController) {
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
@@ -114,6 +117,7 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         return quizletData.count
     }
     
+
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
 
@@ -124,19 +128,5 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         }
 
         return cell
-    }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = tableView.cellForRowAtIndexPath(indexPath)
-    }
-
-}
-
-class TabBarController: UITabBarController {
-    override func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
-        let vc = viewControllers![selectedIndex] as! MasterViewController
-        if vc.searchController.active {
-            vc.searchController.active = false
-        }
     }
 }
