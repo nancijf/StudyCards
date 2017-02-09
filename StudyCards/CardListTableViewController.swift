@@ -27,6 +27,8 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
     let defaults = NSUserDefaults.standardUserDefaults()
     let quizletController = QuizletController()
     var setNum: Int?
+    
+    let indicator:UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,14 +39,23 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
             self.navigationItem.title = deck?.title
         }
         if mode == .StructData {
+            
+            indicator.color = UIColor.darkGrayColor()
+            indicator.frame = CGRectMake(0.0, 0.0, 30.0, 30.0)
+            indicator.center = self.view.center
+            self.view.addSubview(indicator)
+            indicator.bringSubviewToFront(self.view)
+            indicator.startAnimating()
+            
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(importTapped))
             if let setNum = setNum {
                 quizletController.retrieveSets(setNum, onSuccess: { [weak self] (qlCardData) in
                     dispatch_async(dispatch_get_main_queue(), {
                         self?.tempCards = qlCardData
+                        self?.indicator.stopAnimating()
+                        self?.indicator.hidesWhenStopped = true
                         self?.tableView.reloadData()
                     })
-                    self?.tableView.reloadData()
                 })
             }
         } else {
