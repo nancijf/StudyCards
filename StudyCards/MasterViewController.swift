@@ -46,6 +46,12 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     override func setEditing(editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
+        
+        if !tableView.editing && self.splitViewController?.viewControllers.count > 1 {
+            let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
+            let navController = UINavigationController(rootViewController: detailViewController!)
+            self.showDetailViewController(navController, sender: self)
+        }
         self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = !editing
     }
     

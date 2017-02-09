@@ -28,7 +28,6 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     var deckEditorCell: DeckEditorTableViewCell?
     var detailViewController: CardPageViewController? = nil
     
-    
     enum TableViewSections: Int {
         case Title = 0
         case Description
@@ -43,6 +42,7 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         if mode == .AddDeck {
             self.navigationItem.title = "Add Deck"
         } else {
@@ -52,49 +52,24 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         tempCategories = deck?.categories
         tempDesc = deck?.desc
         tempTitle = deck?.title
-        
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(saveData))
-        let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonPressed))
-        navigationItem.setHidesBackButton(true, animated: true)
         navigationItem.rightBarButtonItem = saveButton
-        navigationItem.leftBarButtonItem = backButton
+        if let splitView = self.splitViewController {
+            if splitView.collapsed {
+                navigationItem.setHidesBackButton(true, animated: true)
+                let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonPressed))
+                navigationItem.leftBarButtonItem = backButton
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-//    func primaryViewControllerForCollapsingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
-//        print("collapsing controllers")
-//        let controllers = splitViewController.viewControllers
-//        self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? CardPageViewController
-//        
-//        let navController = UINavigationController(rootViewController: detailViewController!)
-//        return navController
-//    }
-//    
-//    func primaryViewControllerForExpandingSplitViewController(splitViewController: UISplitViewController) -> UIViewController? {
-//        print("expanding controllers")
-//        let controllers = splitViewController.viewControllers
-//        let navController = controllers.first as! UINavigationController
-//        if splitViewController.viewControllers.count == 1 {
-//            if let _ = deck?.cards?.count, card = self.deck?.cards?.objectAtIndex(0) as? Card {
-//                if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {
-//                    addCardsViewController.deck = deck
-//                    addCardsViewController.card = card
-//                    addCardsViewController.mode = .EditCard
-//                    addCardsViewController.delegate = self
-//                    addCardsViewController.navigationItem.title = "Edit Card"
-//                    navController.pushViewController(addCardsViewController, animated: false)
-//                }
-//            }
-//        }
-//        return navController
-//    }
     
     func textFieldDidEndEditing(textField: UITextField) {
         tempTitle = textField.text
