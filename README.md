@@ -16,7 +16,7 @@ StudyCards is a useful aid to use while studying for all your classes or any sub
 -	Test your knowledge by reviewing the cards and check correct for all questions answered correctly
 -	Setting page let’s you hide the questions you answered correctly so you can focus on what you need to review
 
-## What's new in version 1.1
+## What's new in version 1.1:
 - Improved navigation throughout the app to make it easier to use
 - Fixed issues with the split view on the iPhone+ when rotating between landscape and portrait
 - Updated Card Listings table view to include the image if available
