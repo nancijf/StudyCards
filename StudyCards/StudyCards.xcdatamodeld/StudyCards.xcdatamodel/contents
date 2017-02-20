@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="Card" representedClassName=".Card" syncable="YES">
+        <attribute name="answer" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cardviewed" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="hidden" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="iscorrect" optional="YES" attributeType="Boolean" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="ordinal" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="question" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wronganswers" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="deck" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Deck" inverseName="cards" inverseEntity="Deck" syncable="YES"/>
+    </entity>
+    <entity name="Category" representedClassName=".Category" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="decks" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Deck" inverseName="categories" inverseEntity="Deck" syncable="YES"/>
+    </entity>
+    <entity name="Deck" representedClassName=".Deck" syncable="YES">
+        <attribute name="correctanswers" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="testscore" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="cards" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Card" inverseName="deck" inverseEntity="Card" syncable="YES"/>
+        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Category" inverseName="decks" inverseEntity="Category" syncable="YES"/>
+    </entity>
+    <entity name="Image" representedClassName=".Image" syncable="YES">
+        <attribute name="height" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="imagepath" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="width" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="xpos" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="ypos" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Card" positionX="450" positionY="63" width="128" height="180"/>
+        <element name="Category" positionX="97" positionY="312" width="128" height="73"/>
+        <element name="Deck" positionX="99" positionY="108" width="128" height="135"/>
+        <element name="Image" positionX="448" positionY="333" width="128" height="135"/>
+    </elements>
+</model>

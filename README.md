@@ -27,10 +27,8 @@ StudyCards is a useful aid to use while studying for all your classes or any sub
   
 ## Frameworks and APIs:
 - Core Data
-- Quizlet API 2.0 https://quizlet.com/api/2.0/docs -- This API requires a free developer key you can get by registering for a Quizlet account then signing up for an API 2.0 developer key. 
+- [Quizlet API 2.0] (https://quizlet.com/api/2.0/docs) -- This API requires a free developer key you can get by registering for a Quizlet account then signing up for an API 2.0 developer key. 
 
 Other notes:
   - Written in Swift 2.3
   - Runs on iPhone and iPad, iOS 9.3+
- 
-  
