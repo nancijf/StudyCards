@@ -2,9 +2,6 @@
 
 Updated: version 1.1
 
-Devices:
-  Runs on iPhone and iPad, iOS 9.3+
-
 StudyCards is a useful aid to use while studying for all your classes or any subject you want to learn. Based on the concept of flash cards, you can create decks of cards with the question on one side and the answer on the other side. After you have all of the cards for your deck, you can test your knowledge and see the results.  
 
 ## Features:
@@ -27,7 +24,13 @@ StudyCards is a useful aid to use while studying for all your classes or any sub
 - Updated card image layout to take advantage of larger screen sizes
 - Added loading indicator when importing cards from other sources
 
-Devices:
+  
+## Frameworks and APIs:
+- Core Data
+- Quizlet API 2.0 https://quizlet.com/api/2.0/docs -- This API requires a free developer key you can get by registering for a Quizlet account then signing up for an API 2.0 developer key. 
+
+Other notes:
+  - Written in Swift 2.3
   - Runs on iPhone and iPad, iOS 9.3+
-  Written in Swift 2.3
+ 
   
