@@ -33,7 +33,7 @@ class QuizletController: NSObject {
             print("Error creating endpoint")
             return
         }
-        let request = NSMutableURLRequest(url:endpoint)
+        let request = URLRequest(url:endpoint)
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
         
@@ -65,7 +65,7 @@ class QuizletController: NSObject {
                             }
                         }
                     }
-                    onSuccess(qlCardData: self.tempCards)
+                    onSuccess(self.tempCards)
                 }
             } catch let error as JSONError {
                 print(error.rawValue)
@@ -81,7 +81,7 @@ class QuizletController: NSObject {
             print("Error creating endpoint")
             return
         }
-        let request = NSMutableURLRequest(url:endpoint)
+        let request = URLRequest(url:endpoint)
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
         
@@ -99,13 +99,13 @@ class QuizletController: NSObject {
                         if let setDict = qSet as? [String: AnyObject] {
                             let qSetObj = QSetObject()
                             qSetObj.title = setDict["title"] as? String
-                            qSetObj.id = Int(String(setDict["id"]!))
+                            qSetObj.id = Int(String(describing: setDict["id"]!))
                             qSetObj.totalQuestions = setDict["term_count"] as? Int
-                            qSetObj.subjects = [String(setDict["subjects"])]
+                            qSetObj.subjects = [String(describing: setDict["subjects"])]
                             setData.append(qSetObj)
                         }
                     }
-                    onSuccess(qlData: setData)
+                    onSuccess(setData)
                 }
             } catch let error as JSONError {
                 print(error.rawValue)
