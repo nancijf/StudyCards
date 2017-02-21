@@ -19,7 +19,7 @@ class DeckEditorTableViewCell: UITableViewCell, UITextFieldDelegate, UITextViewD
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -30,10 +30,10 @@ class DeckEditorTableViewCell: UITableViewCell, UITextFieldDelegate, UITextViewD
         
         self.titleTextField.text = ""
         self.descTextView.text = ""
-        self.titleTextField.hidden = false
-        self.descTextView.hidden = false
-        self.titleTextField.enabled = true
-        self.cardImageView.hidden = false
+        self.titleTextField.isHidden = false
+        self.descTextView.isHidden = false
+        self.titleTextField.isEnabled = true
+        self.cardImageView.isHidden = false
         self.cardImageView.image = nil
     }
 

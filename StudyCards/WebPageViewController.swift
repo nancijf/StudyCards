@@ -13,8 +13,8 @@ class WebPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        qzWebView.loadRequest(NSURLRequest(URL: NSURL(string: "https://quizlet.com/")!))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(doneAction(_:)))
+        qzWebView.loadRequest(URLRequest(url: URL(string: "https://quizlet.com/")!))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneAction(_:)))
     }
 
     override func didReceiveMemoryWarning() {
@@ -22,8 +22,8 @@ class WebPageViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func doneAction(sender: UIBarButtonItem) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    func doneAction(_ sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     @IBOutlet weak var qzWebView: UIWebView!

@@ -10,7 +10,7 @@ import UIKit
 
 class SettingsViewController: UITableViewController {
     
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
 
     @IBOutlet weak var fontSizeStepper: UIStepper!
     @IBOutlet weak var fontSizeLabel: UILabel!
@@ -26,12 +26,12 @@ class SettingsViewController: UITableViewController {
         fontSizeStepper.autorepeat = true
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         var fontValue = 17
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            fontValue = defaults.integerForKey("fontsize") ?? 20
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            fontValue = defaults.integer(forKey: "fontsize") ?? 20
         } else {
-            fontValue = defaults.integerForKey("fontsize") ?? 17
+            fontValue = defaults.integer(forKey: "fontsize") ?? 17
         }
         fontSizeLabel.text = String(fontValue)
         fontSizeStepper.value = Double(fontValue)
@@ -39,10 +39,10 @@ class SettingsViewController: UITableViewController {
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
         
-        let useLines = defaults.boolForKey("cardlines") ?? false
-        let isLocked = defaults.boolForKey("locked") ?? false
-        let isAutoSave = defaults.boolForKey("autosave") ?? false
-        let isShuffleOn = defaults.boolForKey("shakeToShuffle") ?? false
+        let useLines = defaults.bool(forKey: "cardlines") ?? false
+        let isLocked = defaults.bool(forKey: "locked") ?? false
+        let isAutoSave = defaults.bool(forKey: "autosave") ?? false
+        let isShuffleOn = defaults.bool(forKey: "shakeToShuffle") ?? false
 
         cardLines.setOn(useLines, animated: true)
         autoSave.setOn(isAutoSave, animated: true)
@@ -55,25 +55,25 @@ class SettingsViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func lockControl(sender: UISwitch) {
-        defaults.setValue(lockOrientation.on, forKey: "locked")
+    @IBAction func lockControl(_ sender: UISwitch) {
+        defaults.setValue(lockOrientation.isOn, forKey: "locked")
     }
     
-    @IBAction func autoSaveControl(sender: UISwitch) {
-        defaults.setValue(autoSave.on, forKey: "autosave")
+    @IBAction func autoSaveControl(_ sender: UISwitch) {
+        defaults.setValue(autoSave.isOn, forKey: "autosave")
     }
     
-    @IBAction func cardLinesOnOff(sender: UISwitch) {
-        defaults.setValue(cardLines.on, forKey: "cardlines")
+    @IBAction func cardLinesOnOff(_ sender: UISwitch) {
+        defaults.setValue(cardLines.isOn, forKey: "cardlines")
     }
     
-    @IBAction func shuffleOnOff(sender: UISwitch) {
-        defaults.setValue(shakeToShuffle.on, forKey: "shakeToShuffle")
+    @IBAction func shuffleOnOff(_ sender: UISwitch) {
+        defaults.setValue(shakeToShuffle.isOn, forKey: "shakeToShuffle")
     }
     
-    @IBAction func stepperValueChanged(sender: UIStepper) {
+    @IBAction func stepperValueChanged(_ sender: UIStepper) {
         fontSizeLabel.text = Int(fontSizeStepper.value).description
-        fontSizeLabel.font = fontSizeLabel.font.fontWithSize(CGFloat(fontSizeStepper.value))
-        defaults.setFloat(Float(fontSizeStepper.value), forKey: "fontsize")
+        fontSizeLabel.font = fontSizeLabel.font.withSize(CGFloat(fontSizeStepper.value))
+        defaults.set(Float(fontSizeStepper.value), forKey: "fontsize")
     }
 }

@@ -9,19 +9,43 @@
 import UIKit
 import Foundation
 import Photos
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 let imageExtra: CGFloat = 70.0
 let topInsetForLandscape: CGFloat = 60.0
-let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+let appDelegate = UIApplication.shared.delegate as! AppDelegate
 let boundingRightLeftInset: CGFloat = 50.0
 
 protocol AddCardsViewControllerDelegate: class {
-    func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?)
+    func addCardsViewControllerDidFinishAddingCards(_ viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?)
 }
 
 enum AddCardViewControllerMode: Int {
-    case AddCard = 0
-    case EditCard
+    case addCard = 0
+    case editCard
 }
 
 class AddCardsViewController: UIViewController, UITextViewDelegate {
@@ -41,7 +65,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     var ordinal: Int32 = 0
     var mode: AddCardViewControllerMode?
     var autoSave: Bool = false
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     var textHeightAnchor: NSLayoutConstraint?
     var textBottomAnchor: NSLayoutConstraint?
@@ -56,7 +80,7 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         let imageView = UIImageView()
         imageView.frame = CGRect.zero
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = UIViewContentMode.ScaleAspectFit
+        imageView.contentMode = UIViewContentMode.scaleAspectFit
 
         return imageView
     }()
@@ -65,22 +89,22 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         textView.frame = CGRect.zero
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.textContainer.maximumNumberOfLines = 100
-        textView.textContainer.lineBreakMode = .ByWordWrapping
+        textView.textContainer.lineBreakMode = .byWordWrapping
 
         return textView
     }()
     lazy var deleteImageButton: UIButton = {
         let imageButton = UIButton()
-        imageButton.addTarget(self, action: #selector(AddCardsViewController.deleteImage(_:)), forControlEvents: .TouchUpInside)
-        imageButton.setTitle("X", forState: .Normal)
-        imageButton.setTitleColor(UIColor.redColor(), forState: .Normal)
-        imageButton.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        imageButton.titleLabel?.font = UIFont.boldSystemFontOfSize(50)
+        imageButton.addTarget(self, action: #selector(AddCardsViewController.deleteImage(_:)), for: .touchUpInside)
+        imageButton.setTitle("X", for: UIControlState())
+        imageButton.setTitleColor(UIColor.red, for: UIControlState())
+        imageButton.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        imageButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 50)
         
         return imageButton
     }()
     var fontSize: CGFloat {
-        let fontSize = defaults.floatForKey("fontsize") ?? 17.0
+        let fontSize = defaults.float(forKey: "fontsize") ?? 17.0
         return CGFloat(fontSize)
     }
     
@@ -95,45 +119,45 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         
         self.navigationItem.title = deck?.title
-        let addBarButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addTapped))
+        let addBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
         self.navigationItem.rightBarButtonItem = addBarButton
         
-        autoSave = defaults.boolForKey("autosave") ?? false
+        autoSave = defaults.bool(forKey: "autosave") ?? false
         
         createViews()
         
-        answerTextView.font = UIFont.systemFontOfSize(fontSize)
-        qTextView.font = UIFont.systemFontOfSize(fontSize)
+        answerTextView.font = UIFont.systemFont(ofSize: fontSize)
+        qTextView.font = UIFont.systemFont(ofSize: fontSize)
 
         answerTextView.placeholderText = "Enter answer here..."
         answerTextView.delegate = self
-        answerTextView.hidden = true
+        answerTextView.isHidden = true
 
         qTextView.placeholderText = "Enter question here..."
         qTextView.delegate = self
-        qTextView.hidden = false
+        qTextView.isHidden = false
         
-        switchButton.setTitle("Switch to Answer", forState: .Normal)
+        switchButton.setTitle("Switch to Answer", for: UIControlState())
         
         subscribeToKeyboardNotifications()
         
         navigationItem.hidesBackButton = true
-        let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonTapped))
+        let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(backButtonTapped))
         navigationItem.leftBarButtonItem = backButton
         
-        if mode == .EditCard {
+        if mode == .editCard {
             qTextView.text = card?.question ?? ""
-            qTextView.placeholderLabel.hidden = (qTextView.text == "") ? false : true
+            qTextView.placeholderLabel.isHidden = (qTextView.text == "") ? false : true
             
             answerTextView.text = card?.answer
-            answerTextView.placeholderLabel.hidden = true
+            answerTextView.placeholderLabel.isHidden = true
             
             if let imageURL = card?.imageURL {
                 let imagePath = imageURL.createFilePath()
-                if let data = NSData(contentsOfURL: NSURL(string: imagePath)!) {
+                if let data = try? Data(contentsOf: URL(string: imagePath)!) {
                     imageAdded = true
                     photoImageView.image = UIImage(data: data)
-                    photoImageView.userInteractionEnabled = true
+                    photoImageView.isUserInteractionEnabled = true
                     deleteImageButton.frame.size = photoImageView.bounds.size
                     photoImageView.addSubview(deleteImageButton)
                     updateViews()
@@ -148,13 +172,13 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     func updateViews() {
-        let topInset = self.traitCollection.verticalSizeClass == .Compact ? topInsetForLandscape : self.topInset
+        let topInset = self.traitCollection.verticalSizeClass == .compact ? topInsetForLandscape : self.topInset
         textTopAnchor?.constant = topInset
         
         if photoImageView.image != nil {
@@ -162,15 +186,15 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
             let imageH = view.frame.size.height - (topInset + textViewHeight + imageExtra)
 
             textHeightAnchor?.constant = textViewHeight
-            textHeightAnchor?.active = true
+            textHeightAnchor?.isActive = true
             imageHeightConstraint?.constant = imageH
-            imageHeightConstraint?.active = true
-            textHeightAnchor?.active = true
-            textBottomAnchor?.active = false
+            imageHeightConstraint?.isActive = true
+            textHeightAnchor?.isActive = true
+            textBottomAnchor?.isActive = false
         } else {
-            imageHeightConstraint?.active = false
-            textBottomAnchor?.active = true
-            textHeightAnchor?.active = false
+            imageHeightConstraint?.isActive = false
+            textBottomAnchor?.isActive = true
+            textHeightAnchor?.isActive = false
         }
 
         view.setNeedsUpdateConstraints()
@@ -181,37 +205,37 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         
         view.addSubview(qTextView)
         view.addSubview(photoImageView)
-        let topInset = self.traitCollection.verticalSizeClass == .Compact ? topInsetForLandscape : self.topInset
-        textTopAnchor = qTextView.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: topInset)
-        textTopAnchor?.active = true
+        let topInset = self.traitCollection.verticalSizeClass == .compact ? topInsetForLandscape : self.topInset
+        textTopAnchor = qTextView.topAnchor.constraint(equalTo: view.topAnchor, constant: topInset)
+        textTopAnchor?.isActive = true
         
-        qTextView.leftAnchor.constraintEqualToAnchor(view.leftAnchor, constant: leftRightInset).active = true
-        qTextView.rightAnchor.constraintEqualToAnchor(view.rightAnchor, constant: -leftRightInset).active = true
+        qTextView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: leftRightInset).isActive = true
+        qTextView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -leftRightInset).isActive = true
         
-        textBottomAnchor = qTextView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -bottomInset)
-        textHeightAnchor = qTextView.heightAnchor.constraintEqualToConstant(qTextView.contentSize.height + (fontSize + 10))
+        textBottomAnchor = qTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -bottomInset)
+        textHeightAnchor = qTextView.heightAnchor.constraint(equalToConstant: qTextView.contentSize.height + (fontSize + 10))
         
-        imageHeightConstraint = photoImageView.heightAnchor.constraintEqualToConstant(0)
+        imageHeightConstraint = photoImageView.heightAnchor.constraint(equalToConstant: 0)
         
-        photoImageView.leftAnchor.constraintEqualToAnchor(view.leftAnchor, constant: leftRightInset).active = true
-        photoImageView.rightAnchor.constraintEqualToAnchor(view.rightAnchor, constant: -leftRightInset).active = true
-        photoImageView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -bottomInset).active = true
+        photoImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: leftRightInset).isActive = true
+        photoImageView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -leftRightInset).isActive = true
+        photoImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -bottomInset).isActive = true
         
         createKeyboardDoneButton(qTextView)
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
 
-        let boundingSize = CGSize(width: size.width - boundingRightLeftInset, height: CGFloat.max)
+        let boundingSize = CGSize(width: size.width - boundingRightLeftInset, height: CGFloat.greatestFiniteMagnitude)
         let textViewHeight = qTextView.boundingHeight(boundingSize: boundingSize, withPadding: fontSize)
-        let topInset = (size.width > size.height && self.traitCollection.userInterfaceIdiom != .Pad) ? topInsetForLandscape : self.topInset
+        let topInset = (size.width > size.height && self.traitCollection.userInterfaceIdiom != .pad) ? topInsetForLandscape : self.topInset
         let imageH = size.height - (topInset + textViewHeight + imageExtra)
         self.imageHeightConstraint?.constant = imageH
         self.textHeightAnchor?.constant = textViewHeight
         self.textTopAnchor?.constant = topInset
 
-        coordinator.animateAlongsideTransition({ (coordinator) in
+        coordinator.animate(alongsideTransition: { (coordinator) in
             self.view.setNeedsLayout()
             self.view.layoutIfNeeded()
             }, completion: nil)
@@ -219,8 +243,8 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
     }
     
     func subscribeToKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillHide), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     func doneWithKeyboard() {
@@ -231,60 +255,60 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func createKeyboardDoneButton(currentView: NFTextView) {
+    func createKeyboardDoneButton(_ currentView: NFTextView) {
         let doneButtonView = UINavigationBar()
         doneButtonView.sizeToFit()
-        doneButtonView.barTintColor = UIColor.lightGrayColor()
-        doneButtonView.tintColor = UIColor.blackColor()
+        doneButtonView.barTintColor = UIColor.lightGray
+        doneButtonView.tintColor = UIColor.black
         let navItem = UINavigationItem()
-        navItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(doneWithKeyboard))
-        doneButtonView.pushNavigationItem(navItem, animated: true)
+        navItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(doneWithKeyboard))
+        doneButtonView.pushItem(navItem, animated: true)
         currentView.inputAccessoryView = doneButtonView
         currentView.becomeFirstResponder()
     }
     
     func keyboardWillShow() {
-        toolBar.hidden = true
+        toolBar.isHidden = true
     }
     
     func keyboardWillHide() {
-        toolBar.hidden = false
+        toolBar.isHidden = false
     }
     
-    func backButtonTapped(sender: UIBarButtonItem) {
+    func backButtonTapped(_ sender: UIBarButtonItem) {
         if autoSave {
             if !wasCardSaved && doesCardContainText {
                 saveCard()
             }
             self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewController(animated: true)
         } else {
             if !wasCardSaved && doesCardContainText {
-                let alert = UIAlertController(title: "Caution", message: "Changes were made to your card. Do you want to save it?", preferredStyle: .Alert)
-                let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in
-                    self.navigationController?.popViewControllerAnimated(true)
+                let alert = UIAlertController(title: "Caution", message: "Changes were made to your card. Do you want to save it?", preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.cancel) { (action) -> Void in
+                    self.navigationController?.popViewController(animated: true)
                 }
-                let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+                let saveAction = UIAlertAction(title: "Yes", style: .default, handler: { (action) -> Void in
                     self.saveCard()
                     self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
-                    self.navigationController?.popViewControllerAnimated(true)
+                    self.navigationController?.popViewController(animated: true)
                 })
                 
                 alert.addAction(saveAction)
                 alert.addAction(cancelAction)
-                presentViewController(alert, animated: true, completion: nil)
+                present(alert, animated: true, completion: nil)
             } else {
                 self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
-                self.navigationController?.popViewControllerAnimated(true)
+                self.navigationController?.popViewController(animated: true)
             }
         }
     }
     
-    func deleteImage(sender: UIButton) {
-        let alert = UIAlertController(title: "Alert", message: "Do you want to permanently delete this image from the card?", preferredStyle: UIAlertControllerStyle.Alert)
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in}
-        let okAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
-            self.photoImageView.hidden = true
+    func deleteImage(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Alert", message: "Do you want to permanently delete this image from the card?", preferredStyle: UIAlertControllerStyle.alert)
+        let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.cancel) { (action) -> Void in}
+        let okAction = UIAlertAction(title: "Yes", style: .default, handler: { (action) -> Void in
+            self.photoImageView.isHidden = true
             self.photoImageView.image = nil
             self.imageAdded = false
             self.wasCardSaved = false
@@ -292,14 +316,14 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         })
         alert.addAction(cancelAction)
         alert.addAction(okAction)
-        presentViewController(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         if let nfTextView = textView as? NFTextView {
-            nfTextView.placeholderLabel.hidden = !nfTextView.text.isEmpty
+            nfTextView.placeholderLabel.isHidden = !nfTextView.text.isEmpty
             self.view.layoutIfNeeded()
-            if imageHeightConstraint?.active ?? false {
+            if imageHeightConstraint?.isActive ?? false {
                 updateViews()
             }
         }
@@ -311,73 +335,73 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func deleteButton(sender: UIButton) {
-        let alert = UIAlertController(title: "Alert", message: "Do you want to delete this card?", preferredStyle: UIAlertControllerStyle.Alert)
-        let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.Cancel) { (action) -> Void in }
-        let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+    @IBAction func deleteButton(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Alert", message: "Do you want to delete this card?", preferredStyle: UIAlertControllerStyle.alert)
+        let cancelAction = UIAlertAction(title: "No", style: UIAlertActionStyle.cancel) { (action) -> Void in }
+        let saveAction = UIAlertAction(title: "Yes", style: .default, handler: { (action) -> Void in
             let delCard = self.card
             StudyCardsDataStack.sharedInstance.deleteCardObject(delCard, deckObj: self.deck)
             self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewController(animated: true)
         })
         alert.addAction(saveAction)
         alert.addAction(cancelAction)
-        presentViewController(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func saveButton(sender: AnyObject) {
+    @IBAction func saveButton(_ sender: AnyObject) {
         saveCard()
-        let alert = UIAlertController(title: "Alert", message: "Your card has been saved.", preferredStyle: UIAlertControllerStyle.Alert)
-        presentViewController(alert, animated: true, completion: { () -> Void in
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue()) {
-                alert.dismissViewControllerAnimated(true, completion: nil)
+        let alert = UIAlertController(title: "Alert", message: "Your card has been saved.", preferredStyle: UIAlertControllerStyle.alert)
+        present(alert, animated: true, completion: { () -> Void in
+            let delayTime = DispatchTime.now() + Double(Int64(0.5 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                alert.dismiss(animated: true, completion: nil)
             }
         })
     }
     
-    @IBAction func addPhoto(sender: UIButton) {
+    @IBAction func addPhoto(_ sender: UIButton) {
         showPhotoMenu()
     }
     
-    @IBAction func counterView(sender: AnyObject) {
+    @IBAction func counterView(_ sender: AnyObject) {
         if (isQuestionShowing) {
 
             // hide Question - show Answer
-            UIView.transitionFromView(qTextView,
-                toView: answerTextView,
+            UIView.transition(from: qTextView,
+                to: answerTextView,
                 duration: 1.0,
-                options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
+                options: [UIViewAnimationOptions.transitionFlipFromLeft, UIViewAnimationOptions.showHideTransitionViews],
                 completion:nil)
-            switchButton.setTitle("Switch to Question", forState: .Normal)
-            photoImageView.hidden = true
-            photoButton.hidden = true
-            answerTextView.placeholderLabel.hidden = (answerTextView.text == "") ? false : true
+            switchButton.setTitle("Switch to Question", for: UIControlState())
+            photoImageView.isHidden = true
+            photoButton.isHidden = true
+            answerTextView.placeholderLabel.isHidden = (answerTextView.text == "") ? false : true
             createKeyboardDoneButton(answerTextView)
 
         } else {
 
             // hide Answer - show Question
-            UIView.transitionFromView(answerTextView,
-                toView: qTextView,
+            UIView.transition(from: answerTextView,
+                to: qTextView,
                 duration: 1.0,
-                options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
+                options: [UIViewAnimationOptions.transitionFlipFromRight, UIViewAnimationOptions.showHideTransitionViews],
                 completion: nil)
-            switchButton.setTitle("Switch to Answer", forState: .Normal)
-            photoImageView.hidden = photoImageView.image != nil ? false : true
-            photoButton.hidden = false
+            switchButton.setTitle("Switch to Answer", for: UIControlState())
+            photoImageView.isHidden = photoImageView.image != nil ? false : true
+            photoButton.isHidden = false
             createKeyboardDoneButton(qTextView)
         }
         isQuestionShowing = !isQuestionShowing
     }
     
     func saveCard() {
-        if mode == .AddCard {
+        if mode == .addCard {
             let imageURL = imageAdded ? ImportCards.saveImage(photoImageView.image) : nil
             let newCard = CardStruct(question: qTextView.text, answer: answerTextView.text, hidden: false, cardviewed: false, iscorrect: false, wronganswers: 0, ordinal: ordinal, imageURL: imageURL, deck: deck)
             card = StudyCardsDataStack.sharedInstance.addOrEditCardObject(newCard)
-            mode = .EditCard
-        } else if mode == .EditCard {
+            mode = .editCard
+        } else if mode == .editCard {
             if var updateCard = self.card?.asStruct() {
                 updateCard.imageURL = imageAdded ? ImportCards.saveImage(photoImageView.image) : nil
                 updateCard.question = qTextView.text
@@ -388,20 +412,20 @@ class AddCardsViewController: UIViewController, UITextViewDelegate {
         wasCardSaved = true
     }
     
-    func addTapped(sender: UIBarButtonItem) {
+    func addTapped(_ sender: UIBarButtonItem) {
         if !wasCardSaved && doesCardContainText {
             saveCard()
             if self.splitViewController?.viewControllers.count > 1 {
                 self.delegate?.addCardsViewControllerDidFinishAddingCards(self, addedCards: self.addedCards)
             }
         }
-        mode = .AddCard
+        mode = .addCard
         card = nil
         qTextView.text = ""
         answerTextView.text = ""
-        qTextView.placeholderLabel.hidden = false
-        answerTextView.placeholderLabel.hidden = false
-        photoImageView.hidden = true
+        qTextView.placeholderLabel.isHidden = false
+        answerTextView.placeholderLabel.isHidden = false
+        photoImageView.isHidden = true
         photoImageView.image = nil
         imageAdded = false
         if !isQuestionShowing {
@@ -415,68 +439,68 @@ extension AddCardsViewController: UIImagePickerControllerDelegate, UINavigationC
     
     func choosePhotoFromLibrary() {
         let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .PhotoLibrary
+        imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
-        imagePicker.modalPresentationStyle = .Popover
+        imagePicker.modalPresentationStyle = .popover
         imagePicker.popoverPresentationController?.sourceView = self.view
-        imagePicker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.Any
+        imagePicker.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.any
         imagePicker.popoverPresentationController?.barButtonItem = self.photoBarButtonItem
-        presentViewController(imagePicker, animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
     
     func takePhotoWithCamera() {
         let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .Camera
-        imagePicker.cameraCaptureMode = .Photo
+        imagePicker.sourceType = .camera
+        imagePicker.cameraCaptureMode = .photo
         imagePicker.delegate = self
-        presentViewController(imagePicker, animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         photoImageView.image = image
-        photoImageView.hidden = false
+        photoImageView.isHidden = false
         imageAdded = true
         wasCardSaved = false
-        picker.dismissViewControllerAnimated(true, completion: {(done) in
+        picker.dismiss(animated: true, completion: {(done) in
             self.updateViews()
         })
     }
 
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
     func showPhotoMenu() {
         
-        let alertController = UIAlertController(title: "Add Photo", message: "Import Photo", preferredStyle: .Alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        let alertController = UIAlertController(title: "Add Photo", message: "Import Photo", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
         if appDelegate.isCameraAvailable {
-            let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: { _ in self.takePhotoWithCamera() })
+            let takePhotoAction = UIAlertAction(title: "Take Photo", style: .default, handler: { _ in self.takePhotoWithCamera() })
             alertController.addAction(takePhotoAction)
         }
         if appDelegate.isPhotoLibAvailable {
-            let chooseFromLibraryAction = UIAlertAction(title: "Choose From Library", style: .Default, handler: { _ in self.choosePhotoFromLibrary() })
+            let chooseFromLibraryAction = UIAlertAction(title: "Choose From Library", style: .default, handler: { _ in self.choosePhotoFromLibrary() })
             alertController.addAction(chooseFromLibraryAction)
         }
 
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
 }
 
 extension UITextView {
     func boundingHeight(inView view: UIView, withPadding padding: CGFloat = 0) -> CGFloat {
         let string = self.text
-        let boundingSize = CGSize(width: view.frame.width - 40, height: CGFloat.max)
-        let textRect = string?.boundingRectWithSize(boundingSize, options: [.UsesLineFragmentOrigin], attributes: [NSFontAttributeName: self.font!], context: nil)
+        let boundingSize = CGSize(width: view.frame.width - 40, height: CGFloat.greatestFiniteMagnitude)
+        let textRect = string?.boundingRect(with: boundingSize, options: [.usesLineFragmentOrigin], attributes: [NSFontAttributeName: self.font!], context: nil)
 
         return (textRect?.height ?? self.font!.pointSize) + padding
     }
 
-    func boundingHeight(boundingSize boundingSize: CGSize, withPadding padding: CGFloat = 0) -> CGFloat {
+    func boundingHeight(boundingSize: CGSize, withPadding padding: CGFloat = 0) -> CGFloat {
         let string = self.text
-        let textRect = string?.boundingRectWithSize(boundingSize, options: [.UsesLineFragmentOrigin], attributes: [NSFontAttributeName: self.font!], context: nil)
+        let textRect = string?.boundingRect(with: boundingSize, options: [.usesLineFragmentOrigin], attributes: [NSFontAttributeName: self.font!], context: nil)
 
         return (textRect?.height ?? self.font!.pointSize) + padding
     }

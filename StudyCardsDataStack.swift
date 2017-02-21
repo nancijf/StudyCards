@@ -14,15 +14,15 @@ class StudyCardsDataStack {
     
     static let sharedInstance = StudyCardsDataStack()
     
-    private init() {}
+    fileprivate init() {}
     
     var managedObjectContext: NSManagedObjectContext?
     
-    func addOrEditDeckObject(deck: DeckStruct, deckObj: Deck? = nil) -> Deck? {
+    func addOrEditDeckObject(_ deck: DeckStruct, deckObj: Deck? = nil) -> Deck? {
         var deckEntity = deckObj
         
         if deckEntity == nil {
-            deckEntity = NSEntityDescription.insertNewObjectForEntityForName("Deck", inManagedObjectContext: self.managedObjectContext!) as? Deck
+            deckEntity = NSEntityDescription.insertNewObject(forEntityName: "Deck", into: self.managedObjectContext!) as? Deck
         }
         
         deckEntity?.title = deck.title
@@ -38,11 +38,11 @@ class StudyCardsDataStack {
         return deckEntity
     }
     
-    func addOrEditCategoryObject(category: CategoryStruct, categoryObj: Category? = nil) -> Category? {
+    func addOrEditCategoryObject(_ category: CategoryStruct, categoryObj: Category? = nil) -> Category? {
         var categoryEntity = categoryObj
         
         if categoryEntity == nil {
-            categoryEntity = NSEntityDescription.insertNewObjectForEntityForName("Category", inManagedObjectContext: self.managedObjectContext!) as? Category
+            categoryEntity = NSEntityDescription.insertNewObject(forEntityName: "Category", into: self.managedObjectContext!) as? Category
         }
         
         categoryEntity?.name = category.name
@@ -53,11 +53,11 @@ class StudyCardsDataStack {
         return categoryEntity
     }
     
-    func addOrEditCardObject(card: CardStruct, cardObj: Card? = nil) -> Card? {
+    func addOrEditCardObject(_ card: CardStruct, cardObj: Card? = nil) -> Card? {
         var cardEntity = cardObj
         
         if cardEntity == nil {
-            cardEntity = NSEntityDescription.insertNewObjectForEntityForName("Card", inManagedObjectContext: self.managedObjectContext!) as? Card
+            cardEntity = NSEntityDescription.insertNewObject(forEntityName: "Card", into: self.managedObjectContext!) as? Card
         }
         
         cardEntity?.question = card.question
@@ -76,11 +76,11 @@ class StudyCardsDataStack {
         return cardEntity
     }
     
-    func deleteCardObject(cardObj: Card? = nil, deckObj: Deck?) {
+    func deleteCardObject(_ cardObj: Card? = nil, deckObj: Deck?) {
         if let cardEntity = cardObj, let cards = deckObj?.cards?.mutableCopy() {
-            cards.removeObject(cardEntity)
+            (cards as AnyObject).remove(cardEntity)
             deckObj?.cards = cards as? NSOrderedSet
-            self.managedObjectContext?.deleteObject(cardEntity)
+            self.managedObjectContext?.delete(cardEntity)
             
             // Save the context.
             self.saveContext()
@@ -88,7 +88,7 @@ class StudyCardsDataStack {
         }
     }
     
-    func updateCounts(deck: Deck?, card: Card?, isCorrect: Bool) {
+    func updateCounts(_ deck: Deck?, card: Card?, isCorrect: Bool) {
         let updateCount = isCorrect ? 1 : -1
         deck?.correctanswers += updateCount
         if let totalCards = deck?.cards?.count {
@@ -100,21 +100,21 @@ class StudyCardsDataStack {
             
     }
     
-    func updateCardView(card: Card?, cardviewed: Bool) {
+    func updateCardView(_ card: Card?, cardviewed: Bool) {
         card?.cardviewed = cardviewed
         
         self.saveContext()
     }
     
-    func fetchedResultsController(entityName: String?, sortDescriptors: [NSSortDescriptor]? = nil, predicate: NSPredicate? = nil) -> NSFetchedResultsController? {
+    func fetchedResultsController(_ entityName: String?, sortDescriptors: [NSSortDescriptor]? = nil, predicate: NSPredicate? = nil) -> NSFetchedResultsController<NSFetchRequestResult>? {
         
-        var fetchedResultsController: NSFetchedResultsController?
+        var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?
         
         guard let entityName = entityName else { return nil }
         
-        let fetchRequest = NSFetchRequest()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
         // Edit the entity name as appropriate.
-        let entity = NSEntityDescription.entityForName(entityName, inManagedObjectContext: self.managedObjectContext!)
+        let entity = NSEntityDescription.entity(forEntityName: entityName, in: self.managedObjectContext!)
         fetchRequest.entity = entity
         
         // Set the batch size to a suitable number.
@@ -135,8 +135,8 @@ class StudyCardsDataStack {
     }
     
     func saveContext () {
-        if let hasChanges = managedObjectContext?.hasChanges where hasChanges {
-            managedObjectContext?.performBlockAndWait({ 
+        if let hasChanges = managedObjectContext?.hasChanges, hasChanges {
+            managedObjectContext?.performAndWait({ 
                 do {
                     try self.managedObjectContext?.save()
                 } catch {

@@ -10,10 +10,10 @@ import Foundation
 import UIKit
 class QuizletController: NSObject {
     
-    typealias SuccessBlock = (qlData: [QSetObject]) -> ()
-    typealias SuccessBlock2 = (qlCardData: [CardStruct]) -> ()
+    typealias SuccessBlock = (_ qlData: [QSetObject]) -> ()
+    typealias SuccessBlock2 = (_ qlCardData: [CardStruct]) -> ()
     
-    enum JSONError: String, ErrorType {
+    enum JSONError: String, Error {
         case NoData = "ERROR: no data"
         case ConversionFailed = "ERROR: conversion from JSON failed"
     }
@@ -27,22 +27,22 @@ class QuizletController: NSObject {
     var tempCards = [CardStruct]()
     var imageURL: String?
     
-    func retrieveSets(setID: Int, onSuccess: SuccessBlock2) {
+    func retrieveSets(_ setID: Int, onSuccess: @escaping SuccessBlock2) {
         let urlPath = baseURL + getSet + String(setID) + "?\(clientID)" + "&whitespace=1"
-        guard let endpoint = NSURL(string: urlPath) else {
+        guard let endpoint = URL(string: urlPath) else {
             print("Error creating endpoint")
             return
         }
-        let request = NSMutableURLRequest(URL:endpoint)
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
-        let session = NSURLSession(configuration: config)
+        let request = NSMutableURLRequest(url:endpoint)
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config)
         
-        session.dataTaskWithRequest(request) { (data, response, error) in
+        session.dataTask(with: request, completionHandler: { (data, response, error) in
             do {
                 guard let data = data else {
                     throw JSONError.NoData
                 }
-                guard let json = try NSJSONSerialization.JSONObjectWithData(data, options: [.AllowFragments]) as? NSDictionary else {
+                guard let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? NSDictionary else {
                     throw JSONError.ConversionFailed
                 }
 
@@ -72,25 +72,25 @@ class QuizletController: NSObject {
             } catch let error as NSError {
                 print(error.debugDescription)
             }
-        }.resume()
+        }) .resume()
     }
 
-    func searchQuizlet(searchText: String, onSuccess: SuccessBlock) {
+    func searchQuizlet(_ searchText: String, onSuccess: @escaping SuccessBlock) {
         let urlPath = baseURL + searchSets + searchText + "&\(clientID)"
-        guard let endpoint = NSURL(string: urlPath) else {
+        guard let endpoint = URL(string: urlPath) else {
             print("Error creating endpoint")
             return
         }
-        let request = NSMutableURLRequest(URL:endpoint)
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
-        let session = NSURLSession(configuration: config)
+        let request = NSMutableURLRequest(url:endpoint)
+        let config = URLSessionConfiguration.default
+        let session = URLSession(configuration: config)
         
-        session.dataTaskWithRequest(request) { (data, response, error) in
+        session.dataTask(with: request, completionHandler: { (data, response, error) in
             do {
                 guard let data = data else {
                     throw JSONError.NoData
                 }
-                guard let json = try NSJSONSerialization.JSONObjectWithData(data, options: [.AllowFragments]) as? NSDictionary else {
+                guard let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? NSDictionary else {
                     throw JSONError.ConversionFailed
                 }
                 var setData = [QSetObject]()
@@ -112,7 +112,7 @@ class QuizletController: NSObject {
             } catch let error as NSError {
                 print(error.debugDescription)
             }
-        }.resume()
+        }) .resume()
     }
 }
 

@@ -10,10 +10,10 @@ import UIKit
 
 class NFTextView: UITextView {
     
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     var fontSize: CGFloat {
-        let fontSize = defaults.floatForKey("fontsize") ?? 17.0
+        let fontSize = defaults.float(forKey: "fontsize") ?? 17.0
         return CGFloat(fontSize)
     }
 
@@ -26,10 +26,10 @@ class NFTextView: UITextView {
     
     lazy var placeholderLabel: UILabel = {
         let placeholderLabel = UILabel()
-        placeholderLabel.font = UIFont.italicSystemFontOfSize(self.fontSize)
-        placeholderLabel.frame.origin = CGPointMake(10, 10)
+        placeholderLabel.font = UIFont.italicSystemFont(ofSize: self.fontSize)
+        placeholderLabel.frame.origin = CGPoint(x: 10, y: 10)
         placeholderLabel.textColor = UIColor(white: 0, alpha: 0.3)
-        placeholderLabel.hidden = !self.text.isEmpty
+        placeholderLabel.isHidden = !self.text.isEmpty
         
         return placeholderLabel
     }()

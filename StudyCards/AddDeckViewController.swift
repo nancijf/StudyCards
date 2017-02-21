@@ -8,13 +8,37 @@
 
 import UIKit
 import CoreData
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 
 let kCellIdentifier = "DeckEditorCell"
 
 enum DeckViewControllerMode: Int {
-    case AddDeck
-    case EditDeck
+    case addDeck
+    case editDeck
 }
 
 class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFieldDelegate, CategoryTableViewControllerDelegate, AddCardsViewControllerDelegate, UISplitViewControllerDelegate {
@@ -29,21 +53,21 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     var detailViewController: CardPageViewController? = nil
     
     enum TableViewSections: Int {
-        case Title = 0
-        case Description
-        case Category
-        case Cards
+        case title = 0
+        case description
+        case category
+        case cards
     }
     
     enum AddButtonType: Int {
-        case Category = 0
-        case Card
+        case category = 0
+        case card
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if mode == .AddDeck {
+        if mode == .addDeck {
             self.navigationItem.title = "Add Deck"
         } else {
             self.navigationItem.title = "Edit Deck"
@@ -54,14 +78,14 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         tempTitle = deck?.title
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Save, target: self, action: #selector(saveData))
+        let saveButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.save, target: self, action: #selector(saveData))
         navigationItem.rightBarButtonItem = saveButton
         if let splitView = self.splitViewController {
-            if splitView.collapsed {
+            if splitView.isCollapsed {
                 navigationItem.setHidesBackButton(true, animated: true)
-                let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(backButtonPressed))
+                let backButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(backButtonPressed))
                 navigationItem.leftBarButtonItem = backButton
             }
         }
@@ -71,30 +95,30 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         super.didReceiveMemoryWarning()
     }
     
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         tempTitle = textField.text
     }
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         didMakeChanges = true
         tempTitle = textField.text
         return true
     }
     
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         didMakeChanges = true
         tempDesc = textView.text
     }
     
     func saveData() {
         self.view.endEditing(true)
-        if mode == .AddDeck {
+        if mode == .addDeck {
             let newDeck = DeckStruct(title: tempTitle, desc: tempDesc, testscore: 0.0, correctanswers: 0, categories: tempCategories, cards: nil)
             let deckObj = StudyCardsDataStack.sharedInstance.addOrEditDeckObject(newDeck)
             if let categories = tempCategories, let deckObj = deckObj {
                 updateCategories(categories, deck: deckObj)
             }
-        } else if mode == .EditDeck {
+        } else if mode == .editDeck {
             if var updateDeck = self.deck?.asStruct() {
                 updateDeck.title = tempTitle
                 updateDeck.desc = tempDesc
@@ -106,54 +130,54 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
             }
         }
         if self.splitViewController?.viewControllers.count > 1 {
-            let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
+            let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "CardPageViewController") as? CardPageViewController
             let navController = UINavigationController(rootViewController: detailViewController!)
             self.showDetailViewController(navController, sender: self)
         }
-        self.navigationController?.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.navigationController?.popViewController(animated: true)
     }
     
-    func backButtonPressed(sender: UIBarButtonItem) {
-        let titleCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Title.rawValue)) as? DeckEditorTableViewCell
+    func backButtonPressed(_ sender: UIBarButtonItem) {
+        let titleCell = self.tableView.cellForRow(at: IndexPath(item: 0, section: TableViewSections.title.rawValue)) as? DeckEditorTableViewCell
         let title = titleCell?.titleTextField.text
-        let descriptionCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: TableViewSections.Description.rawValue)) as? DeckEditorTableViewCell
+        let descriptionCell = self.tableView.cellForRow(at: IndexPath(item: 0, section: TableViewSections.description.rawValue)) as? DeckEditorTableViewCell
         let desc = descriptionCell?.descTextView.text
         
         didMakeChanges = didMakeChanges || (title != (deck?.title ?? "") || desc != (deck?.desc ?? ""))
 
         if didMakeChanges {
-            let alert = UIAlertController(title: "Caution", message: "Do you want to save your changes?", preferredStyle: UIAlertControllerStyle.Alert)
-            let saveAction = UIAlertAction(title: "Yes", style: .Default, handler: { (action) -> Void in
+            let alert = UIAlertController(title: "Caution", message: "Do you want to save your changes?", preferredStyle: UIAlertControllerStyle.alert)
+            let saveAction = UIAlertAction(title: "Yes", style: .default, handler: { (action) -> Void in
                 self.saveData()
             })
-            let cancelAction = UIAlertAction(title: "No", style: .Default, handler: { (action) -> Void in
+            let cancelAction = UIAlertAction(title: "No", style: .default, handler: { (action) -> Void in
                 if self.splitViewController?.viewControllers.count > 1 {
-                    let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
+                    let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "CardPageViewController") as? CardPageViewController
                     let navController = UINavigationController(rootViewController: detailViewController!)
                     self.showDetailViewController(navController, sender: self)
                 }
-                self.navigationController?.navigationController?.popViewControllerAnimated(true)
+                self.navigationController?.navigationController?.popViewController(animated: true)
 
             })
             alert.addAction(saveAction)
             alert.addAction(cancelAction)
-            presentViewController(alert, animated: true, completion: nil)
+            present(alert, animated: true, completion: nil)
         } else {
             if self.splitViewController?.viewControllers.count > 1 {
-                let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
+                let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "CardPageViewController") as? CardPageViewController
                 let navController = UINavigationController(rootViewController: detailViewController!)
                 self.showDetailViewController(navController, sender: self)
             }
-            self.navigationController?.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.navigationController?.popViewController(animated: true)
             
         }
     }
     
-    func updateCategories(categories: NSOrderedSet, deck: Deck) {
+    func updateCategories(_ categories: NSOrderedSet, deck: Deck) {
         for category in categories {
             if let category = category as? Category {
                 let tempDecks = category.decks?.mutableCopy() ?? NSMutableOrderedSet()
-                tempDecks.addObject(deck)
+                (tempDecks as AnyObject).add(deck)
                 category.decks = tempDecks as? NSOrderedSet
             }
         }
@@ -162,22 +186,22 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-            case TableViewSections.Title.rawValue:
+            case TableViewSections.title.rawValue:
                 return 1
-            case TableViewSections.Description.rawValue:
+            case TableViewSections.description.rawValue:
                 return 1
-            case TableViewSections.Category.rawValue:
+            case TableViewSections.category.rawValue:
                 guard let categoryCount = tempCategories?.count else {
                     return 0
                 }
                 return categoryCount
-            case TableViewSections.Cards.rawValue:
+            case TableViewSections.cards.rawValue:
                 guard let cardCount = deck?.cards?.count else {
                     return 0
                 }
@@ -187,44 +211,44 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         }
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-       let cell = tableView.dequeueReusableCellWithIdentifier(kCellIdentifier, forIndexPath: indexPath) as! DeckEditorTableViewCell
+       let cell = tableView.dequeueReusableCell(withIdentifier: kCellIdentifier, for: indexPath) as! DeckEditorTableViewCell
 
         switch indexPath.section {
-            case TableViewSections.Title.rawValue:
-                cell.descTextView.hidden = true
-                cell.cardImageView.hidden = true
+            case TableViewSections.title.rawValue:
+                cell.descTextView.isHidden = true
+                cell.cardImageView.isHidden = true
                 cell.titleTextField.text = tempTitle ?? ""
-            case TableViewSections.Description.rawValue:
-                cell.titleTextField.hidden = true
-                cell.cardImageView.hidden = true
+            case TableViewSections.description.rawValue:
+                cell.titleTextField.isHidden = true
+                cell.cardImageView.isHidden = true
                 cell.descTextView.text = tempDesc ?? ""
-            case TableViewSections.Category.rawValue:
-                cell.descTextView.hidden = true
-                cell.cardImageView.hidden = true
-                cell.titleTextField.enabled = false
+            case TableViewSections.category.rawValue:
+                cell.descTextView.isHidden = true
+                cell.cardImageView.isHidden = true
+                cell.titleTextField.isEnabled = false
                 if let category = tempCategories![indexPath.item] as? Category {
                     cell.titleTextField.text = category.name
                 }
-            case TableViewSections.Cards.rawValue:
-                cell.descTextView.hidden = true
-                cell.titleTextField.enabled = false
+            case TableViewSections.cards.rawValue:
+                cell.descTextView.isHidden = true
+                cell.titleTextField.isEnabled = false
                 if deck?.cards?.count > 0 {
                     if let card = deck?.cards?[indexPath.item] as? Card {
                         if card.imageURL != nil {
                             let imageURL = card.imageURL
-                            if let urlString = imageURL?.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())?.createFilePath(), let url = NSURL(string: urlString) {
-                                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), {
-                                    if let data = NSData(contentsOfURL: url), image = UIImage(data: data) {
-                                        dispatch_async(dispatch_get_main_queue(), {
+                            if let urlString = imageURL?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)?.createFilePath(), let url = URL(string: urlString) {
+                                DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.high).async(execute: {
+                                    if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+                                        DispatchQueue.main.async(execute: {
                                             cell.cardImageView.image = image
                                         })
                                     }
                                 })
                             }
                         } else {
-                            cell.cardImageView.hidden = true
+                            cell.cardImageView.isHidden = true
                         }
                         let row = String(indexPath.row + 1)
                         if card.question == "" {
@@ -243,24 +267,24 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         return cell
     }
     
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if mode == .AddDeck && section == TableViewSections.Cards.rawValue {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if mode == .addDeck && section == TableViewSections.cards.rawValue {
             return 0
         } else {
             return 44.0
         }
     }
      
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         switch indexPath.section {
-            case TableViewSections.Title.rawValue:
+            case TableViewSections.title.rawValue:
                 return 44.0
-            case TableViewSections.Description.rawValue:
+            case TableViewSections.description.rawValue:
                 return 88.0
-            case TableViewSections.Category.rawValue:
+            case TableViewSections.category.rawValue:
                 return 40.0
-            case TableViewSections.Cards.rawValue:
+            case TableViewSections.cards.rawValue:
                 let card = deck?.cards?[indexPath.row] as? Card
                 return card?.imageURL != nil ? 100.0 : 44.0
             default:
@@ -268,65 +292,65 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         }
     }
     
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if let headerView: UIView = UIView(frame: CGRectZero) {
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if let headerView: UIView = UIView(frame: CGRect.zero) {
             headerView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0)
             
-            let titleLabel = UILabel(frame: CGRectZero)
+            let titleLabel = UILabel(frame: CGRect.zero)
             titleLabel.translatesAutoresizingMaskIntoConstraints = false
-            titleLabel.font = UIFont.systemFontOfSize(17.0)
-            titleLabel.textColor = UIColor.darkGrayColor()
-            titleLabel.textAlignment = .Left
+            titleLabel.font = UIFont.systemFont(ofSize: 17.0)
+            titleLabel.textColor = UIColor.darkGray
+            titleLabel.textAlignment = .left
             
-            let rightAccessoryView = UIButton(type: .ContactAdd)
+            let rightAccessoryView = UIButton(type: .contactAdd)
             rightAccessoryView.translatesAutoresizingMaskIntoConstraints = false
-            rightAccessoryView.addTarget(self, action: #selector(tappedAddButton), forControlEvents: .TouchUpInside)
+            rightAccessoryView.addTarget(self, action: #selector(tappedAddButton), for: .touchUpInside)
             
             switch section {
-                case TableViewSections.Title.rawValue:
+                case TableViewSections.title.rawValue:
                     titleLabel.text = "Title"
-                    rightAccessoryView.hidden = true
-                case TableViewSections.Description.rawValue:
+                    rightAccessoryView.isHidden = true
+                case TableViewSections.description.rawValue:
                     titleLabel.text = "Description"
-                    rightAccessoryView.hidden = true
-                case TableViewSections.Category.rawValue:
+                    rightAccessoryView.isHidden = true
+                case TableViewSections.category.rawValue:
                     titleLabel.text = "Category"
-                    rightAccessoryView.hidden = false
-                    rightAccessoryView.tag = AddButtonType.Category.rawValue
-                case TableViewSections.Cards.rawValue:
-                    if mode == .EditDeck {
+                    rightAccessoryView.isHidden = false
+                    rightAccessoryView.tag = AddButtonType.category.rawValue
+                case TableViewSections.cards.rawValue:
+                    if mode == .editDeck {
                         titleLabel.text = "Cards"
-                        rightAccessoryView.hidden = false
-                        rightAccessoryView.tag = AddButtonType.Card.rawValue
+                        rightAccessoryView.isHidden = false
+                        rightAccessoryView.tag = AddButtonType.card.rawValue
                     } else {
-                        titleLabel.hidden = true
-                        rightAccessoryView.hidden = true
+                        titleLabel.isHidden = true
+                        rightAccessoryView.isHidden = true
                     }
                 default:
                     titleLabel.text = ""
-                    rightAccessoryView.hidden = true
+                    rightAccessoryView.isHidden = true
             }
             
             headerView.addSubview(titleLabel)
             headerView.addSubview(rightAccessoryView)
             titleLabel.sizeToFit()
             
-            let bottomBorder = UIView(frame: CGRectZero)
+            let bottomBorder = UIView(frame: CGRect.zero)
             bottomBorder.translatesAutoresizingMaskIntoConstraints = false
-            bottomBorder.backgroundColor = UIColor.lightGrayColor()
+            bottomBorder.backgroundColor = UIColor.lightGray
             headerView.addSubview(bottomBorder)
             
             let views = ["titleLabel": titleLabel, "rightAccessoryView": rightAccessoryView, "bottomBorder": bottomBorder]
             let metrics = ["leftRightInset": 10, "spacer": 5, "accessoryWidth": 30, "borderHeight": 1]
             
             // add constraints for title and bottom border
-            headerView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-leftRightInset-[titleLabel]-spacer-[rightAccessoryView(accessoryWidth)]-leftRightInset-|", options: [], metrics: metrics, views: views))
-            headerView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[bottomBorder]|", options: [], metrics: metrics, views: views))
-            headerView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bottomBorder(borderHeight)]|", options: [], metrics: metrics, views: views))
+            headerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-leftRightInset-[titleLabel]-spacer-[rightAccessoryView(accessoryWidth)]-leftRightInset-|", options: [], metrics: metrics, views: views))
+            headerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[bottomBorder]|", options: [], metrics: metrics, views: views))
+            headerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[bottomBorder(borderHeight)]|", options: [], metrics: metrics, views: views))
             
             // center vertically on Y axis
-            headerView.addConstraint(NSLayoutConstraint(item: rightAccessoryView, attribute: .CenterY, relatedBy: .Equal, toItem: headerView, attribute: .CenterY, multiplier: 1.0, constant: 0))
-            headerView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .CenterY, relatedBy: .Equal, toItem: headerView, attribute: .CenterY, multiplier: 1.0, constant: 0))
+            headerView.addConstraint(NSLayoutConstraint(item: rightAccessoryView, attribute: .centerY, relatedBy: .equal, toItem: headerView, attribute: .centerY, multiplier: 1.0, constant: 0))
+            headerView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .centerY, relatedBy: .equal, toItem: headerView, attribute: .centerY, multiplier: 1.0, constant: 0))
             
             return headerView
         }
@@ -334,23 +358,23 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
         return nil
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.section == TableViewSections.Cards.rawValue {
-            let card = self.deck?.cards?.objectAtIndex(indexPath.row) as? Card
-            if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == TableViewSections.cards.rawValue {
+            let card = self.deck?.cards?.object(at: indexPath.row) as? Card
+            if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewController(withIdentifier: "AddCards") as? AddCardsViewController {
                 addCardsViewController.deck = deck
                 addCardsViewController.card = card
-                addCardsViewController.mode = .EditCard
+                addCardsViewController.mode = .editCard
                 addCardsViewController.delegate = self
                 self.navigationController?.pushViewController(addCardsViewController, animated: true)
             }
         }
     }
     
-    func tappedAddButton(sender: UIBarButtonItem) {
+    func tappedAddButton(_ sender: UIBarButtonItem) {
         switch sender.tag {
-            case AddButtonType.Category.rawValue:
-                if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let categoryViewController = storyboard?.instantiateViewControllerWithIdentifier("Category") as? CategoryTableViewController {
+            case AddButtonType.category.rawValue:
+                if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let categoryViewController = storyboard?.instantiateViewController(withIdentifier: "Category") as? CategoryTableViewController {
                     if let existingCategories = tempCategories {
                         categoryViewController.selectedCategories = existingCategories.mutableCopy() as? NSMutableOrderedSet
                     }
@@ -358,10 +382,10 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
                     categoryViewController.delegate = self
                     self.navigationController?.pushViewController(categoryViewController, animated: true)
                 }
-            case AddButtonType.Card.rawValue:
-                if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {
+            case AddButtonType.card.rawValue:
+                if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewController(withIdentifier: "AddCards") as? AddCardsViewController {
                     addCardsViewController.deck = deck as Deck?
-                    addCardsViewController.mode = .AddCard
+                    addCardsViewController.mode = .addCard
                     addCardsViewController.delegate = self
                     self.navigationController?.pushViewController(addCardsViewController, animated: true)
                 }
@@ -373,17 +397,17 @@ class AddDeckViewController: UITableViewController, UITextViewDelegate, UITextFi
     
     // MARK: - CategoryTableViewControllerDelegate, AddCardsViewControllerDelegate
     
-    func categoryTableViewControllerDidFinishSelectingCategory(viewController: CategoryTableViewController, selectedCategories: NSMutableOrderedSet?) {
+    func categoryTableViewControllerDidFinishSelectingCategory(_ viewController: CategoryTableViewController, selectedCategories: NSMutableOrderedSet?) {
         if tempCategories != selectedCategories {
             tempCategories = selectedCategories
             didMakeChanges = true
         }
-        tableView.reloadSections(NSIndexSet(index: 2), withRowAnimation: .None)
+        tableView.reloadSections(IndexSet(integer: 2), with: .none)
     }
     
-    func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?) {
+    func addCardsViewControllerDidFinishAddingCards(_ viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?) {
         didMakeChanges = true
-        tableView.reloadSections(NSIndexSet(index: 3), withRowAnimation: .None)
+        tableView.reloadSections(IndexSet(integer: 3), with: .none)
     }
 
 }

@@ -19,54 +19,54 @@ class BarGraphView: UIView {
     var stackViewConstant: Int = 225
     
     lazy var greenBar: UIView = {
-        let view = UIView(frame: CGRectZero)
+        let view = UIView(frame: CGRect.zero)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.greenColor()
+        view.backgroundColor = UIColor.green
         return view
     }()
     lazy var greenLabel: UILabel = {
         let label = UILabel()
         label.text = "Correct"
-        label.textColor = UIColor.blackColor()
-        label.textAlignment = .Center
-        label.font = label.font.fontWithSize(14)
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        label.font = label.font.withSize(14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     lazy var redBar: UIView = {
-        let view = UIView(frame: CGRectZero)
+        let view = UIView(frame: CGRect.zero)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.redColor()
+        view.backgroundColor = UIColor.red
         return view
     }()
     lazy var redLabel: UILabel = {
         let label = UILabel()
         label.text = "Not Answered"
-        label.textColor = UIColor.blackColor()
-        label.textAlignment = .Center
-        label.font = label.font.fontWithSize(14)
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        label.font = label.font.withSize(14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     lazy var blueBar: UIView = {
-        let view = UIView(frame: CGRectZero)
+        let view = UIView(frame: CGRect.zero)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.blueColor()
+        view.backgroundColor = UIColor.blue
         return view
     }()
     lazy var blueLabel: UILabel = {
         let label = UILabel()
         label.text = "% Correct"
-        label.textColor = UIColor.blackColor()
-        label.textAlignment = .Center
-        label.font = label.font.fontWithSize(14)
+        label.textColor = UIColor.black
+        label.textAlignment = .center
+        label.font = label.font.withSize(14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     lazy var actionButton: UIButton = {
-        let button = UIButton(type: .RoundedRect)
+        let button = UIButton(type: .roundedRect)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Go", forState: .Normal)
+        button.setTitle("Go", for: UIControlState())
         return button
     }()
     
@@ -85,28 +85,28 @@ class BarGraphView: UIView {
         commonInit()
     }
     
-    private func commonInit() {
+    fileprivate func commonInit() {
         
 //        backgroundColor = UIColor(red: 1.0, green: 0.9912, blue: 0.9546, alpha: 1.0)
         
         let greenStackView = UIStackView(arrangedSubviews: [greenBar, greenLabel])
         greenStackView.translatesAutoresizingMaskIntoConstraints = false
-        greenStackView.axis = .Vertical
+        greenStackView.axis = .vertical
         
         let redStackView = UIStackView(arrangedSubviews: [redBar, redLabel])
         redStackView.translatesAutoresizingMaskIntoConstraints = false
-        redStackView.axis = .Vertical
+        redStackView.axis = .vertical
         
         let blueStackView = UIStackView(arrangedSubviews: [blueBar, blueLabel])
         blueStackView.translatesAutoresizingMaskIntoConstraints = false
-        blueStackView.axis = .Vertical
+        blueStackView.axis = .vertical
         
         let stackView = UIStackView(arrangedSubviews: [greenStackView, redStackView, blueStackView])
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .Horizontal
-        stackView.alignment = .LastBaseline
+        stackView.axis = .horizontal
+        stackView.alignment = .lastBaseline
         
-        stackView.distribution = .FillEqually
+        stackView.distribution = .fillEqually
         stackView.spacing = 20
         
         self.addSubview(stackView)
@@ -114,27 +114,27 @@ class BarGraphView: UIView {
         let views = ["greenBar": greenBar, "redBar": redBar, "blueBar": blueBar, "stackView": stackView, "greenLabel": greenLabel, "redLabel": redLabel, "blueLabel": blueLabel]
         let metrics = ["bottomPadding": bottomPadding, "barSpacing": 50, "barWidth": 400]
         
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-[stackView]-|", options: [], metrics: metrics, views: views))
-        self.stackViewConstraint = NSLayoutConstraint(item: stackView, attribute: .Height, relatedBy: .LessThanOrEqual, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 300)
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[stackView]-|", options: [], metrics: metrics, views: views))
+        self.stackViewConstraint = NSLayoutConstraint(item: stackView, attribute: .height, relatedBy: .lessThanOrEqual, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 300)
         self.addConstraint(stackViewConstraint!)
         
-        self.bottomConstraint = NSLayoutConstraint(item: stackView, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .Bottom, multiplier: 1, constant: 0)
+        self.bottomConstraint = NSLayoutConstraint(item: stackView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0)
         self.addConstraint(self.bottomConstraint!)
 
-        stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[greenBar(<=barWidth)]", options: [], metrics: metrics, views: views))
-        stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[redBar(==greenBar)]", options: [], metrics: metrics, views: views))
-        stackView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[blueBar(==greenBar)]", options: [], metrics: metrics, views: views))
-        self.greenBarConstraint = NSLayoutConstraint(item: greenBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 2)
+        stackView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[greenBar(<=barWidth)]", options: [], metrics: metrics, views: views))
+        stackView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[redBar(==greenBar)]", options: [], metrics: metrics, views: views))
+        stackView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[blueBar(==greenBar)]", options: [], metrics: metrics, views: views))
+        self.greenBarConstraint = NSLayoutConstraint(item: greenBar, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 2)
         stackView.addConstraint(self.greenBarConstraint!)
-        self.redBarConstraint = NSLayoutConstraint(item: redBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 2)
+        self.redBarConstraint = NSLayoutConstraint(item: redBar, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 2)
         stackView.addConstraint(self.redBarConstraint!)
-        self.blueBarConstraint = NSLayoutConstraint(item: blueBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 2)
+        self.blueBarConstraint = NSLayoutConstraint(item: blueBar, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 2)
         stackView.addConstraint(self.blueBarConstraint!)
         
         self.updateConstraintsIfNeeded()
     }
     
-    func animate(button: UIButton) {
+    func animate(_ button: UIButton) {
 
         if let testScore = self.deck?.testscore, let totalCorrect = self.deck?.correctanswers {
             if let correctAnswers = deck?.correctanswers {
@@ -149,7 +149,7 @@ class BarGraphView: UIView {
             self.redBarConstraint?.constant = 2
             self.blueBarConstraint?.constant = 2
 
-                UIView.animateWithDuration(5.0, delay: 0.2, usingSpringWithDamping: 0.5, initialSpringVelocity: 5.0, options: [.CurveEaseInOut], animations: {
+                UIView.animate(withDuration: 5.0, delay: 0.2, usingSpringWithDamping: 0.5, initialSpringVelocity: 5.0, options: UIViewAnimationOptions(), animations: {
                     self.greenBarConstraint?.constant = CGFloat(correctHeight)
                     self.redBarConstraint?.constant = CGFloat(wrongHeight)
                     self.blueBarConstraint?.constant = CGFloat(correctPercentHeight)

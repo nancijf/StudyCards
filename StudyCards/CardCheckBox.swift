@@ -13,14 +13,14 @@ class CardCheckBox: UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setImage(UIImage(named: "BoxUnchecked"), forState: UIControlState.Normal)
-        self.setImage(UIImage(named: "BoxChecked"), forState: UIControlState.Selected)
+        self.setImage(UIImage(named: "BoxUnchecked"), for: UIControlState())
+        self.setImage(UIImage(named: "BoxChecked"), for: UIControlState.selected)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.setImage(UIImage(named: "BoxUnchecked"), forState: UIControlState.Normal)
-        self.setImage(UIImage(named: "BoxChecked"), forState: UIControlState.Selected)
+        self.setImage(UIImage(named: "BoxUnchecked"), for: UIControlState())
+        self.setImage(UIImage(named: "BoxChecked"), for: UIControlState.selected)
     }
     
 }

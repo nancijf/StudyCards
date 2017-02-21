@@ -14,7 +14,7 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     var quizletData = [QSetObject]()
     var qlCardData = [CardStruct]()
     let qzSearchController = UISearchController(searchResultsController: nil)
-    var timer: NSTimer? = nil
+    var timer: Timer? = nil
     
     let cellIdentifier = "qlCellIdentifier"
     
@@ -28,32 +28,32 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         qzSearchController.hidesNavigationBarDuringPresentation = false
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.tabBarController?.navigationItem.leftBarButtonItem = nil
         self.tabBarController?.navigationItem.rightBarButtonItem = nil
         qzSearchController.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(qzSearchController.view)
-        qzSearchController.view.topAnchor.constraintEqualToAnchor(self.view.topAnchor).active = true
-        qzSearchController.view.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).active = true
-        qzSearchController.view.rightAnchor.constraintEqualToAnchor(self.view.rightAnchor).active = true
-        qzSearchController.view.heightAnchor.constraintEqualToConstant(44).active = true
+        qzSearchController.view.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        qzSearchController.view.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        qzSearchController.view.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        qzSearchController.view.heightAnchor.constraint(equalToConstant: 44).isActive = true
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(44, 0, tabBarHeight, 0)
         }
 
-        qzSearchController.active = true
+        qzSearchController.isActive = true
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        qzSearchController.active = false
+        qzSearchController.isActive = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -66,39 +66,39 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         super.didReceiveMemoryWarning()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = self.tableView.indexPathForSelectedRow {
-            let navcontroller = segue.destinationViewController as! UINavigationController
+            let navcontroller = segue.destination as! UINavigationController
             let controller = navcontroller.topViewController as! CardListTableViewController
-            controller.mode = .StructData
+            controller.mode = .structData
             controller.setNum = quizletData[indexPath.row].id
-            controller.tempCardTitle = self.tableView.cellForRowAtIndexPath(indexPath)?.textLabel?.text
+            controller.tempCardTitle = self.tableView.cellForRow(at: indexPath)?.textLabel?.text
         }
     }
     
-    func didPresentSearchController(searchController: UISearchController) {
+    func didPresentSearchController(_ searchController: UISearchController) {
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(44, 0, tabBarHeight, 0)
         }
     }
     
-    func didDismissSearchController(searchController: UISearchController) {
+    func didDismissSearchController(_ searchController: UISearchController) {
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
         }
-        qzSearchController.active = false
+        qzSearchController.isActive = false
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         timer?.invalidate()
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.2, target: self, selector: #selector(searchQZ), userInfo: nil, repeats: false)
+        timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(searchQZ), userInfo: nil, repeats: false)
     }
 
     func searchQZ() {
-        if let searchText = qzSearchController.searchBar.text where searchText.characters.count > 1 {
-            if let escapedText = searchText.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
+        if let searchText = qzSearchController.searchBar.text, searchText.characters.count > 1 {
+            if let escapedText = searchText.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) {
                 quizletController.searchQuizlet(escapedText, onSuccess: { [weak self] (quizletData) in
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         self?.quizletData = quizletData
                         self?.tableView.reloadData()
                     })
@@ -109,17 +109,17 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return quizletData.count
     }
     
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
 
         let qlData = self.quizletData[indexPath.row]
         cell.textLabel?.text = qlData.title

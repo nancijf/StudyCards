@@ -18,7 +18,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var cardStakView: UIStackView!
     
     let indexCard = IndexCard()
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     var deck: Deck?
     var isQuestionShowing: Bool = true
@@ -29,19 +29,19 @@ class DetailViewController: UIViewController {
     var isCorrect: Bool = false
     
     var fontSize: CGFloat {
-        let fontSize = defaults.floatForKey("fontsize") ?? 17.0
+        let fontSize = defaults.float(forKey: "fontsize") ?? 17.0
         return CGFloat(fontSize)
     }
     
-    @IBAction func checkmarkTapped(sender: UIButton) {
-        sender.selected = !sender.selected
+    @IBAction func checkmarkTapped(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
         if card?.iscorrect == true {
             card?.iscorrect = false
         } else {
             card?.iscorrect = true
         }
         if !isUsingCardStruct {
-            StudyCardsDataStack.sharedInstance.updateCounts(deck, card: card, isCorrect: sender.selected)
+            StudyCardsDataStack.sharedInstance.updateCounts(deck, card: card, isCorrect: sender.isSelected)
         }
     }
     
@@ -53,8 +53,8 @@ class DetailViewController: UIViewController {
                 answerLabel.text = currentCard.answer
                 cardCounter.text = String(currentCard.ordinal)
                 if let image = currentCard.imageURL {
-                    if let data = NSData(contentsOfURL: NSURL(string: image)!) {
-                        cardImage.hidden = false
+                    if let data = try? Data(contentsOf: URL(string: image)!) {
+                        cardImage.isHidden = false
                         cardImage.image = UIImage(data: data)
                         self.tempCard?.image = cardImage.image
                     }
@@ -67,15 +67,15 @@ class DetailViewController: UIViewController {
                 answerLabel.text = currentCard.answer
                 cardCounter.text = String(currentCard.ordinal)
                 if card?.iscorrect == true {
-                    checkbox.selected = true
+                    checkbox.isSelected = true
                 }
                 if let image = currentCard.imageURL {
                     var imagePath = image
-                    if !image.containsString("://") {
+                    if !image.contains("://") {
                         imagePath = "file://" + createFilePath(withFileName: image)
                     }
-                    if let data = NSData(contentsOfURL: NSURL(string: imagePath)!) {
-                        cardImage.hidden = false
+                    if let data = try? Data(contentsOf: URL(string: imagePath)!) {
+                        cardImage.isHidden = false
                         cardImage.image = UIImage(data: data)
                         cardImage.sizeToFit()
                     }
@@ -89,10 +89,10 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        answerLabel.font = UIFont.systemFontOfSize(CGFloat(fontSize))
-        questionLabel.font = UIFont.systemFontOfSize(CGFloat(fontSize))
-        answerLabel.hidden = true
-        cardImage.hidden = true
+        answerLabel.font = UIFont.systemFont(ofSize: CGFloat(fontSize))
+        questionLabel.font = UIFont.systemFont(ofSize: CGFloat(fontSize))
+        answerLabel.isHidden = true
+        cardImage.isHidden = true
         if let wasViewed = card?.cardviewed {
             if !wasViewed {
                 StudyCardsDataStack.sharedInstance.updateCardView(card, cardviewed: true)
@@ -106,34 +106,34 @@ class DetailViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         self.view.setNeedsDisplay()
     }
     
     func createFilePath(withFileName fileName: String) -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
         let docs: String = paths[0]
         let fullPath = docs + "/" + fileName
         
         return fullPath
     }
     
-    @IBAction func counterView(sender: AnyObject) {
+    @IBAction func counterView(_ sender: AnyObject) {
         if (isQuestionShowing) {
             
             // hide Question - show Answer
-            UIView.transitionFromView(cardStakView,
-                                      toView: answerLabel,
+            UIView.transition(from: cardStakView,
+                                      to: answerLabel,
                                       duration: 1.0,
-                                      options: [UIViewAnimationOptions.TransitionFlipFromLeft, UIViewAnimationOptions.ShowHideTransitionViews],
+                                      options: [UIViewAnimationOptions.transitionFlipFromLeft, UIViewAnimationOptions.showHideTransitionViews],
                                       completion:nil)
         } else {
             
             // hide Answer - show Question
-            UIView.transitionFromView(answerLabel,
-                                      toView: cardStakView,
+            UIView.transition(from: answerLabel,
+                                      to: cardStakView,
                                       duration: 1.0,
-                                      options: [UIViewAnimationOptions.TransitionFlipFromRight, UIViewAnimationOptions.ShowHideTransitionViews],
+                                      options: [UIViewAnimationOptions.transitionFlipFromRight, UIViewAnimationOptions.showHideTransitionViews],
                                       completion: nil)
         }
         isQuestionShowing = !isQuestionShowing

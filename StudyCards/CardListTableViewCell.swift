@@ -16,8 +16,8 @@ class CardListTableViewCell: UITableViewCell {
     lazy var questionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .Left
-        label.font = UIFont.systemFontOfSize(17.0)
+        label.textAlignment = .left
+        label.font = UIFont.systemFont(ofSize: 17.0)
         label.numberOfLines = 0
         label.preferredMaxLayoutWidth = self.contentView.frame.width
         
@@ -27,7 +27,7 @@ class CardListTableViewCell: UITableViewCell {
     lazy var cardImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .ScaleAspectFill
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         
         return imageView
@@ -40,19 +40,19 @@ class CardListTableViewCell: UITableViewCell {
         contentView.addSubview(questionLabel)
         contentView.addSubview(cardImageView)
         
-        questionLabel.leadingAnchor.constraintEqualToAnchor(contentView.leadingAnchor, constant: 20.0).active = true
-        questionLabel.trailingAnchor.constraintEqualToAnchor(cardImageView.leadingAnchor, constant: -10.0).active = true
-        questionLabel.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 10.0).active = true
-        questionLabel.bottomAnchor.constraintEqualToAnchor(contentView.bottomAnchor, constant: -10.0).active = true
+        questionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20.0).isActive = true
+        questionLabel.trailingAnchor.constraint(equalTo: cardImageView.leadingAnchor, constant: -10.0).isActive = true
+        questionLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10.0).isActive = true
+        questionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10.0).isActive = true
         
-        cardImageView.leadingAnchor.constraintEqualToAnchor(questionLabel.trailingAnchor, constant: 10.0).active = true
-        cardImageView.trailingAnchor.constraintEqualToAnchor(contentView.trailingAnchor, constant: -10.0).active = true
-        cardImageView.centerYAnchor.constraintEqualToAnchor(contentView.centerYAnchor, constant: 0).active = true
-        imageViewWidthConstraint = cardImageView.widthAnchor.constraintEqualToConstant(75.0)
-        cardImageView.heightAnchor.constraintEqualToConstant(75.0).active = true
+        cardImageView.leadingAnchor.constraint(equalTo: questionLabel.trailingAnchor, constant: 10.0).isActive = true
+        cardImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10.0).isActive = true
+        cardImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
+        imageViewWidthConstraint = cardImageView.widthAnchor.constraint(equalToConstant: 75.0)
+        cardImageView.heightAnchor.constraint(equalToConstant: 75.0).isActive = true
     }
     
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state

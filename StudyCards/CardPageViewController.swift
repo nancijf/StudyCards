@@ -24,7 +24,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     var usingCardStruct = false
     var tempCardTitle: String?
     var testScore: UIBarButtonItem!
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     lazy var mainStoryBoard: UIStoryboard = {
         let storyboard: UIStoryboard = UIStoryboard(name: kStoryBoardID, bundle: nil)
@@ -35,7 +35,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         controllerArray.removeAll()
         
         if usingCardStruct {
@@ -47,9 +47,9 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
                 }
             }
         } else if let cards = deck?.cards?.array as? [Card] {
-            let hideCorrect = defaults.boolForKey("locked")
+            let hideCorrect = defaults.bool(forKey: "locked")
 
-            for (idx, card) in cards.enumerate() {
+            for (idx, card) in cards.enumerated() {
                 if hideCorrect && card.iscorrect {
                     continue
                 } else if let controller = cardViewControllerWith(card) {
@@ -68,21 +68,21 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }
         
         if controllerArray.count > 0 {
-            setViewControllers([controllerArray[currentIndex]], direction: .Forward, animated: true, completion: nil)
+            setViewControllers([controllerArray[currentIndex]], direction: .forward, animated: true, completion: nil)
         }
         dataSource = self
     }
     
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let title = tempCardTitle {
             self.navigationItem.title = title
-            let saveButton = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(saveTapped))
+            let saveButton = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.plain, target: self, action: #selector(saveTapped))
             self.navigationItem.rightBarButtonItem = saveButton
         } else if !isUsingDefaultCard {
             self.navigationItem.title = deck?.title
-            testScore = UIBarButtonItem(title: "Score", style: .Plain, target: self, action: #selector(showScore))
+            testScore = UIBarButtonItem(title: "Score", style: .plain, target: self, action: #selector(showScore))
             self.navigationItem.rightBarButtonItem = testScore
         }
     }
@@ -93,7 +93,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     }
     
     func showScore() {
-        if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let testScoreViewController = storyboard?.instantiateViewControllerWithIdentifier("ShowTestScores") as? TestScoreViewController {
+        if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let testScoreViewController = storyboard?.instantiateViewController(withIdentifier: "ShowTestScores") as? TestScoreViewController {
             if let cards = deck?.cards?.array as? [Card] {
                 var totalViewed = 0
                 for card in cards {
@@ -108,13 +108,13 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }
     }
     
-    func saveTapped(sender: UIBarButtonItem) {
+    func saveTapped(_ sender: UIBarButtonItem) {
         ImportCards.saveCards(tempCards, tempCardTitle: tempCardTitle, viewController: self)
 //        print("dismissviewcontroler")
     }
     
-    func cardViewControllerWith(card: Card) -> DetailViewController? {
-        if let cardViewController = mainStoryBoard.instantiateViewControllerWithIdentifier(kViewControllerID) as? DetailViewController {
+    func cardViewControllerWith(_ card: Card) -> DetailViewController? {
+        if let cardViewController = mainStoryBoard.instantiateViewController(withIdentifier: kViewControllerID) as? DetailViewController {
             cardViewController.card = card
             cardViewController.deck = deck
             cardViewController.isUsingCardStruct = false
@@ -124,8 +124,8 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         return nil
     }
     
-    func cardViewControllerWithStruct(tempCard: CardStruct) -> DetailViewController? {
-        if let cardViewController = mainStoryBoard.instantiateViewControllerWithIdentifier(kViewControllerID) as? DetailViewController {
+    func cardViewControllerWithStruct(_ tempCard: CardStruct) -> DetailViewController? {
+        if let cardViewController = mainStoryBoard.instantiateViewController(withIdentifier: kViewControllerID) as? DetailViewController {
             cardViewController.tempCard = tempCard
             cardViewController.isUsingCardStruct = true
             cardViewController.tempCardTitle = tempCardTitle
@@ -136,9 +136,9 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     // MARK: pageViewController Delegate calls
     
-    func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         
-        guard let viewControllerIndex = controllerArray.indexOf(viewController as! DetailViewController) else {
+        guard let viewControllerIndex = controllerArray.index(of: viewController as! DetailViewController) else {
             return nil
         }
         if controllerArray.count == 1 {
@@ -154,9 +154,9 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         }
     }
     
-    func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         
-        guard let viewControllerIndex = controllerArray.indexOf(viewController as! DetailViewController) else {
+        guard let viewControllerIndex = controllerArray.index(of: viewController as! DetailViewController) else {
             return nil
         }
         

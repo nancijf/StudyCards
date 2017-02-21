@@ -11,8 +11,8 @@ import UIKit
 
 class ImportCards {
     
-    class func saveCards(tempCards: [CardStruct]?, tempCardTitle: String?, viewController: UIViewController? = nil) {
-        guard let tempCards = tempCards, tempCardTitle = tempCardTitle else {
+    class func saveCards(_ tempCards: [CardStruct]?, tempCardTitle: String?, viewController: UIViewController? = nil) {
+        guard let tempCards = tempCards, let tempCardTitle = tempCardTitle else {
             return
         }
         let newDeck = DeckStruct(title: tempCardTitle, desc: nil, testscore: 0.0, correctanswers: 0, categories: nil, cards: nil)
@@ -27,39 +27,39 @@ class ImportCards {
             tempCard.deck = deckEntity
             StudyCardsDataStack.sharedInstance.addOrEditCardObject(tempCard)
         }
-        let alert = UIAlertController(title: "Alert", message: "This deck has been saved.", preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { done in
+        let alert = UIAlertController(title: "Alert", message: "This deck has been saved.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { done in
             self.popCurrentVC(viewController)
         }))
 
-        viewController?.presentViewController(alert, animated: true, completion: { () -> Void in
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue()) {
-                alert.dismissViewControllerAnimated(true, completion: nil)
+        viewController?.present(alert, animated: true, completion: { () -> Void in
+            let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                alert.dismiss(animated: true, completion: nil)
                 self.popCurrentVC(viewController)
             }
         })
     }
     
-    class func popCurrentVC(viewController: UIViewController?) {
-        if viewController?.isKindOfClass(CardListTableViewController.self) ?? false {
-            viewController?.navigationController?.popToRootViewControllerAnimated(true)
-        } else if viewController?.isKindOfClass(CardPageViewController.self) ?? false {
+    class func popCurrentVC(_ viewController: UIViewController?) {
+        if viewController?.isKind(of: CardListTableViewController.self) ?? false {
+            viewController?.navigationController?.popToRootViewController(animated: true)
+        } else if viewController?.isKind(of: CardPageViewController.self) ?? false {
             let split = viewController?.splitViewController
             if let navController = split?.viewControllers[0] as? UINavigationController {
-                navController.popToRootViewControllerAnimated(true)
+                navController.popToRootViewController(animated: true)
             }
         }
     }
     
-    class func saveImage(image: UIImage?) -> String? {
-        guard let image = image, data = UIImageJPEGRepresentation(image, 1.0) else {
+    class func saveImage(_ image: UIImage?) -> String? {
+        guard let image = image, let data = UIImageJPEGRepresentation(image, 1.0) else {
             return ""
         }
         
         let fileName = createUniqueFileName()
         let fullPath = createFilePath(withFileName: fileName)
-        let _ = data.writeToFile(fullPath, atomically: true)
+        let _ = (try? data.write(to: URL(fileURLWithPath: fullPath), options: [.atomic])) != nil
         
         return fileName
     }
@@ -72,7 +72,7 @@ class ImportCards {
     }
     
     class func createFilePath(withFileName fileName: String) -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
         let docs: String = paths[0]
         let fullPath = docs + "/" + fileName
         

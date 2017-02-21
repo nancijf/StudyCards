@@ -30,7 +30,7 @@ class TestScoreViewController: UIViewController {
         barGraphView.totalViewed = totalViewed
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         
         self.barGraphView.animate(self.barGraphView.actionButton)
@@ -42,10 +42,10 @@ class TestScoreViewController: UIViewController {
 
     }
     
-    override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
-        if traitCollection.verticalSizeClass == .Compact {
+        if traitCollection.verticalSizeClass == .compact {
             barGraphView.stackViewConstraint?.constant = 225
             barGraphView.maxHeight = 210
 //            barGraphView.stackViewConstant = 225

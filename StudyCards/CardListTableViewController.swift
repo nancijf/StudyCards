@@ -8,10 +8,34 @@
 
 import UIKit
 import GameplayKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 enum CardListControllerMode: Int {
-    case ObjectData
-    case StructData
+    case objectData
+    case structData
 }
 
 class CardListTableViewController: UITableViewController, AddCardsViewControllerDelegate {
@@ -24,11 +48,11 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
     var isShuffleOn: Bool = true
     var isInEditMode: Bool = false
     var detailViewController: CardPageViewController?
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     let quizletController = QuizletController()
     var setNum: Int?
     
-    let indicator:UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+    let indicator:UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,19 +62,19 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
         } else {
             self.navigationItem.title = deck?.title
         }
-        if mode == .StructData {
+        if mode == .structData {
             
-            indicator.color = UIColor.darkGrayColor()
-            indicator.frame = CGRectMake(0.0, 0.0, 30.0, 30.0)
+            indicator.color = UIColor.darkGray
+            indicator.frame = CGRect(x: 0.0, y: 0.0, width: 30.0, height: 30.0)
             indicator.center = self.view.center
             self.view.addSubview(indicator)
-            indicator.bringSubviewToFront(self.view)
+            indicator.bringSubview(toFront: self.view)
             indicator.startAnimating()
             
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(importTapped))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Import", style: UIBarButtonItemStyle.plain, target: self, action: #selector(importTapped))
             if let setNum = setNum {
                 quizletController.retrieveSets(setNum, onSuccess: { [weak self] (qlCardData) in
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         self?.tempCards = qlCardData
                         self?.indicator.stopAnimating()
                         self?.indicator.hidesWhenStopped = true
@@ -59,19 +83,19 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
                 })
             }
         } else {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(editTapped))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: UIBarButtonItemStyle.plain, target: self, action: #selector(editTapped))
         }
         
-        isShuffleOn = defaults.boolForKey("shakeToShuffle") ?? true
+        isShuffleOn = defaults.bool(forKey: "shakeToShuffle") ?? true
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cards = deck?.cards?.array as? [Card]
         tableView.reloadData()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationController?.hidesBarsOnTap = false
         self.navigationController?.setNavigationBarHidden(false, animated: true)
@@ -82,38 +106,38 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
         // Dispose of any resources that can be recreated.
     }
     
-    override func canBecomeFirstResponder() -> Bool {
+    override var canBecomeFirstResponder : Bool {
         return true
     }
     
-    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
         if isShuffleOn {
-            if motion == .MotionShake && mode != .StructData {
-                let shuffled = GKRandomSource.sharedRandom().arrayByShufflingObjectsInArray(cards!)
+            if motion == .motionShake && mode != .structData {
+                let shuffled = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: cards!)
                 cards = shuffled as? [Card]
                 tableView.reloadData()
             }
         }
     }
 
-    func editTapped(button: UIBarButtonItem) {
+    func editTapped(_ button: UIBarButtonItem) {
         isInEditMode = !isInEditMode
         button.title = isInEditMode ? "Done" : "Edit"
-        button.tintColor = isInEditMode ? UIColor.redColor() : UIColor.blueColor()
+        button.tintColor = isInEditMode ? UIColor.red : UIColor.blue
     }
     
-    func importTapped(sender: UIBarButtonItem) {
+    func importTapped(_ sender: UIBarButtonItem) {
         ImportCards.saveCards(tempCards, tempCardTitle: tempCardTitle, viewController: self)
     }
     
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if mode == .StructData {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if mode == .structData {
             guard let cardCount = tempCards?.count else {
                 return 0
             }
@@ -126,11 +150,11 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
         }
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var text: String?
         var hasImage: Bool = false
         
-        if mode == .StructData {
+        if mode == .structData {
             let card = self.tempCards?[indexPath.row]
             text = card?.question
             hasImage = card?.imageURL != nil
@@ -141,19 +165,19 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
             hasImage = card?.imageURL != nil
         }
         let boundingWidth = hasImage ? tableView.frame.width - 200.0 : tableView.frame.width - 75.0
-        let boundingSize = CGSize(width: boundingWidth, height: CGFloat.max)
-        let rect = text?.boundingRectWithSize(boundingSize, options: [.UsesLineFragmentOrigin], attributes: [NSFontAttributeName: UIFont.systemFontOfSize(17.0)], context: nil)
+        let boundingSize = CGSize(width: boundingWidth, height: CGFloat.greatestFiniteMagnitude)
+        let rect = text?.boundingRect(with: boundingSize, options: [.usesLineFragmentOrigin], attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 17.0)], context: nil)
         
         return hasImage ? max(100.0, rect?.height ?? 100.0) : (rect?.height ?? 44.0) + 25.0
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
         let cardCell = cell as! CardListTableViewCell
-        cardCell.imageViewWidthConstraint?.active = false
+        cardCell.imageViewWidthConstraint?.isActive = false
         var imageURL: String?
         var questionText: String?
-        if mode == .StructData {
+        if mode == .structData {
             imageURL = self.tempCards?[indexPath.row].imageURL
             questionText = self.tempCards?[indexPath.row].question
         } else {
@@ -161,16 +185,16 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
             questionText = self.cards?[indexPath.row].question
         }
         cardCell.questionLabel.text = questionText?.characters.count > 0 ? questionText : "(No Question Text)"
-        if let urlString = imageURL?.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())?.createFilePath(), let url = NSURL(string: urlString) {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), {
-                if let data = NSData(contentsOfURL: url), image = UIImage(data: data) {
-                    if self.mode == .StructData {
+        if let urlString = imageURL?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)?.createFilePath(), let url = URL(string: urlString) {
+            DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.high).async(execute: {
+                if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+                    if self.mode == .structData {
                         self.tempCards?[indexPath.row].image = image
                     }
                     let scale: CGFloat = 300.0 / image.size.height
                     let scaledImage = image.resize(byPercent: scale)
-                    dispatch_async(dispatch_get_main_queue(), {
-                        cardCell.imageViewWidthConstraint?.active = true
+                    DispatchQueue.main.async(execute: {
+                        cardCell.imageViewWidthConstraint?.isActive = true
                         cardCell.cardImageView.image = scaledImage
                         cardCell.setNeedsUpdateConstraints()
                         cardCell.updateConstraintsIfNeeded()
@@ -184,19 +208,19 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isInEditMode {
-            let card = self.deck?.cards?.objectAtIndex(indexPath.row) as? Card
-            if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewControllerWithIdentifier("AddCards") as? AddCardsViewController {
+            let card = self.deck?.cards?.object(at: indexPath.row) as? Card
+            if let storyboard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let addCardsViewController = storyboard?.instantiateViewController(withIdentifier: "AddCards") as? AddCardsViewController {
                 addCardsViewController.deck = deck
                 addCardsViewController.card = card
-                addCardsViewController.mode = .EditCard
+                addCardsViewController.mode = .editCard
                 addCardsViewController.delegate = self
                 self.navigationController?.pushViewController(addCardsViewController, animated: true)
             }
         } else {
-            if let storyBoard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let controller = storyBoard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController {
-                if mode == .StructData {
+            if let storyBoard: UIStoryboard? = UIStoryboard(name: "Main", bundle: nil), let controller = storyBoard?.instantiateViewController(withIdentifier: "CardPageViewController") as? CardPageViewController {
+                if mode == .structData {
                     controller.tempCards = self.tempCards
                     controller.usingCardStruct = true
                     controller.tempCardTitle = tempCardTitle
@@ -205,14 +229,14 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
                     controller.usingCardStruct = false
                 }
                 controller.currentIndex = indexPath.row
-                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
                 self.navigationController?.pushViewController(controller, animated: true)
             }
         }
     }
     
-    func addCardsViewControllerDidFinishAddingCards(viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?) {
+    func addCardsViewControllerDidFinishAddingCards(_ viewController: AddCardsViewController, addedCards: NSMutableOrderedSet?) {
         cards = deck?.cards?.array as? [Card]
         tableView.reloadData()
     }
@@ -221,12 +245,12 @@ class CardListTableViewController: UITableViewController, AddCardsViewController
 extension UIImage {
     
     func resize(byPercent percent: CGFloat) -> UIImage? {
-        let size = CGSizeApplyAffineTransform(self.size, CGAffineTransformMakeScale(percent, percent))
+        let size = self.size.applying(CGAffineTransform(scaleX: percent, y: percent))
         let hasAlpha = false
         let scale: CGFloat = 0.0
         
         UIGraphicsBeginImageContextWithOptions(size, !hasAlpha, scale)
-        self.drawInRect(CGRect(origin: CGPointZero, size: size))
+        self.draw(in: CGRect(origin: CGPoint.zero, size: size))
         let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
@@ -237,11 +261,11 @@ extension UIImage {
 extension String {
     
     func createFilePath() -> String {
-        guard !self.containsString("://") else {
+        guard !self.contains("://") else {
             return self
         }
         
-        let paths = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
         let documentDirectory: String = paths[0]
         let fullPath = "file://" + documentDirectory + "/" + self
         

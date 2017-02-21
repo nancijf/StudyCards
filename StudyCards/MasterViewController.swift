@@ -8,6 +8,30 @@
 
 import UIKit
 import CoreData
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate, UISearchResultsUpdating, UISearchControllerDelegate, UISplitViewControllerDelegate {
 
@@ -18,16 +42,16 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         self.fetchedResultsController.delegate = self
         
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.estimatedRowHeight = 44.0; // set to whatever your "average" cell height is
         
-        splitViewController?.preferredDisplayMode = .AllVisible
-        self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem()
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addDeck))
+        splitViewController?.preferredDisplayMode = .allVisible
+        self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addDeck))
         
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
@@ -44,53 +68,53 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
     
-    override func setEditing(editing: Bool, animated: Bool) {
+    override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         
-        if !tableView.editing && self.splitViewController?.viewControllers.count > 1 {
-            let detailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("CardPageViewController") as? CardPageViewController
+        if !tableView.isEditing && self.splitViewController?.viewControllers.count > 1 {
+            let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "CardPageViewController") as? CardPageViewController
             let navController = UINavigationController(rootViewController: detailViewController!)
             self.showDetailViewController(navController, sender: self)
         }
-        self.tabBarController?.navigationItem.rightBarButtonItem?.enabled = !editing
+        self.tabBarController?.navigationItem.rightBarButtonItem?.isEnabled = !editing
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.clearsSelectionOnViewWillAppear = self.splitViewController!.collapsed
+        self.clearsSelectionOnViewWillAppear = self.splitViewController!.isCollapsed
 
-        self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem()
-        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addDeck))
+        self.tabBarController?.navigationItem.leftBarButtonItem = self.editButtonItem
+        self.tabBarController?.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addDeck))
         UITabBar.appearance().barTintColor = UIColor ( red: 0.7843, green: 0.7843, blue: 0.7843, alpha: 1.0 )
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationController?.hidesBarsOnTap = false
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         
-        self.tableView.contentOffset = CGPointMake(0, CGRectGetHeight(searchController.searchBar.frame))
+        self.tableView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.height)
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        searchController.active = false
+    override func viewWillDisappear(_ animated: Bool) {
+        searchController.isActive = false
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func addDeck(sender: UIBarButtonItem) {
-        self.performSegueWithIdentifier("AddNewDeck", sender: nil)
+    func addDeck(_ sender: UIBarButtonItem) {
+        self.performSegue(withIdentifier: "AddNewDeck", sender: nil)
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
         let scope = searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex]
-        if let searchText = searchController.searchBar.text where searchText.characters.count > 1 {
+        if let searchText = searchController.searchBar.text, searchText.characters.count > 1 {
             if scope == "Category" {
                 searchPredicate = NSPredicate(format: "SUBQUERY(categories, $category, $category.name contains[c] %@).@count > 0", searchText)
             } else {
@@ -107,13 +131,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
     
-    func didPresentSearchController(searchController: UISearchController) {
+    func didPresentSearchController(_ searchController: UISearchController) {
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(88, 0, tabBarHeight, 0)
         }
     }
 
-    func didDismissSearchController(searchController: UISearchController) {
+    func didDismissSearchController(_ searchController: UISearchController) {
         self.fetchedResultsController.fetchRequest.predicate = nil
         
         do {
@@ -126,15 +150,15 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
         }
-        self.tableView.contentOffset = CGPointMake(0, CGRectGetHeight(searchController.searchBar.frame))
+        self.tableView.contentOffset = CGPoint(x: 0, y: searchController.searchBar.frame.height)
     }
 
-    func getJSONData(file: String) {
-        if let filePath = NSBundle.mainBundle().pathForResource(file, ofType: "json") {
+    func getJSONData(_ file: String) {
+        if let filePath = Bundle.main.path(forResource: file, ofType: "json") {
             do {
-                let data = try NSData(contentsOfFile: filePath, options: NSDataReadingOptions.DataReadingMappedIfSafe)
+                let data = try Data(contentsOf: URL(fileURLWithPath: filePath), options: NSData.ReadingOptions.mappedIfSafe)
                 do {
-                    let jsonString = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
+                    let jsonString = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
                     if let dictionary = jsonString as? [String: AnyObject] {
                         if let deckTitle = dictionary["deck"]?["title"] as? String {
                             let newCategories = NSMutableOrderedSet()
@@ -146,11 +170,11 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                                     guard let categoryObject = resultsController?.fetchedObjects?.first as? Category else {
                                         let categoryToAdd = CategoryStruct(name: category, decks: nil)
                                         if let categoryObject = StudyCardsDataStack.sharedInstance.addOrEditCategoryObject(categoryToAdd) {
-                                            newCategories.addObject(categoryObject)                                        
+                                            newCategories.add(categoryObject)                                        
                                         }
                                         continue
                                     }
-                                    newCategories.addObject(categoryObject)
+                                    newCategories.add(categoryObject)
                                 }
                             }
                             let newDeck = DeckStruct(title: deckTitle, desc: nil, testscore: 0.0, correctanswers: 0, categories: newCategories, cards: nil)
@@ -167,7 +191,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                                     for category in categories {
                                         if let category = category as? Category {
                                             let tempDecks = category.decks?.mutableCopy() ?? NSMutableOrderedSet()
-                                            tempDecks.addObject(deckObj)
+                                            (tempDecks as AnyObject).add(deckObj)
                                             category.decks = tempDecks as? NSOrderedSet
                                         }
                                     }
@@ -189,42 +213,42 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     // MARK: - Segues
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowCardList" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
+                let deck = self.fetchedResultsController.object(at: indexPath) as? Deck
                 
                 if deck?.cards?.count == 0 {
-                    let alert = UIAlertController(title: "Alert", message: "There are no cards in this deck to display.", preferredStyle: .Alert)
-                    let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+                    let alert = UIAlertController(title: "Alert", message: "There are no cards in this deck to display.", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
                     alert.addAction(okAction)
-                    presentViewController(alert, animated: true, completion: { () -> Void in
-                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-                        dispatch_after(delayTime, dispatch_get_main_queue()) {
-                            alert.dismissViewControllerAnimated(true, completion: nil)
+                    present(alert, animated: true, completion: { () -> Void in
+                        let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+                        DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                            alert.dismiss(animated: true, completion: nil)
                         }
                     })
                 } else {
-                    let navController = segue.destinationViewController as! UINavigationController
+                    let navController = segue.destination as! UINavigationController
                     let controller = navController.topViewController as! CardListTableViewController
                     controller.deck = deck
                 }
             }
         } else if segue.identifier == "AddNewDeck" {
-            let navController = segue.destinationViewController as! UINavigationController
+            let navController = segue.destination as! UINavigationController
             let controller = navController.topViewController as! AddDeckViewController
-            controller.mode = .AddDeck
+            controller.mode = .addDeck
         } else if segue.identifier == "EditDeck" {
-            let navController = segue.destinationViewController as! UINavigationController
+            let navController = segue.destination as! UINavigationController
             let controller = navController.topViewController as! AddDeckViewController
-            controller.mode = .EditDeck
+            controller.mode = .editDeck
             controller.deck = sender as? Deck
         }
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegue(withIdentifier identifier: String?, sender: Any?) -> Bool {
         if identifier == "ShowCardList" {
-            if tableView.editing {
+            if tableView.isEditing {
                 return false
             }
         }
@@ -233,30 +257,30 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     // MARK: - Table View
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
             return self.fetchedResultsController.sections?.count ?? 0
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             let sectionInfo = self.fetchedResultsController.sections![section]
             return sectionInfo.numberOfObjects
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         self.configureCell(cell, atIndexPath: indexPath)
         return cell
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
 
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
             let context = self.fetchedResultsController.managedObjectContext
-            context.deleteObject(self.fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject)
+            context.delete(self.fetchedResultsController.object(at: indexPath) as! NSManagedObject)
                 
             do {
                 try context.save()
@@ -266,15 +290,15 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
-        if tableView.editing {
-            self.performSegueWithIdentifier("EditDeck", sender: deck)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let deck = self.fetchedResultsController.object(at: indexPath) as? Deck
+        if tableView.isEditing {
+            self.performSegue(withIdentifier: "EditDeck", sender: deck)
         }
     }
 
-    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-        let deck = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Deck
+    func configureCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath) {
+        let deck = self.fetchedResultsController.object(at: indexPath) as? Deck
         if let currentTitle = deck?.title, let cardCount: NSString = NSString(format: "%d", (deck?.cards?.count)!) {
             cell.textLabel?.text = currentTitle + " (\(cardCount) Cards)"
             cell.detailTextLabel?.text = deck?.desc
@@ -283,7 +307,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
     // MARK: - Fetched results controller
     
-    lazy var fetchedResultsController: NSFetchedResultsController = {
+    lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
         let sortDescriptors: [NSSortDescriptor] = [NSSortDescriptor(key: "title", ascending: true)]
         guard let frc = StudyCardsDataStack.sharedInstance.fetchedResultsController("Deck", sortDescriptors: sortDescriptors, predicate: nil) else {
             abort()
@@ -300,36 +324,36 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     // MARK: - NSFetchedResultsControllerDelegate calls
 
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.beginUpdates()
     }
 
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
-            case .Insert:
-                self.tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-            case .Delete:
-                self.tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+            case .insert:
+                self.tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+            case .delete:
+                self.tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
             default:
                 return
         }
     }
 
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
-            case .Insert:
-                tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-            case .Delete:
-                tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-            case .Update:
-                tableView.reloadRowsAtIndexPaths([indexPath!], withRowAnimation: .Automatic)
-            case .Move:
-                tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-                tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+            case .insert:
+                tableView.insertRows(at: [newIndexPath!], with: .fade)
+            case .delete:
+                tableView.deleteRows(at: [indexPath!], with: .fade)
+            case .update:
+                tableView.reloadRows(at: [indexPath!], with: .automatic)
+            case .move:
+                tableView.deleteRows(at: [indexPath!], with: .fade)
+                tableView.insertRows(at: [newIndexPath!], with: .fade)
         }
     }
 
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.endUpdates()
     }
 

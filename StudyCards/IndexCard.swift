@@ -13,7 +13,7 @@ import UIKit
 @IBDesignable
 class IndexCard: UIView {
     let topSpacing: CGFloat = 80.0
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
     
     @IBInspectable var lineWidth: CGFloat = 1.0
     @IBInspectable var topLineWidth: CGFloat = 2.0
@@ -35,36 +35,36 @@ class IndexCard: UIView {
         self.backgroundColor = self.cardBackgroundColor
     }
 
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         
-        let cardLines = defaults.boolForKey("cardlines") ?? true
+        let cardLines = defaults.bool(forKey: "cardlines") ?? true
         if !cardLines {
             topLineWidth = 0.0
             withLines = false
         }
         
         // top red line
-        CGContextBeginPath(context!)
-        CGContextSetStrokeColorWithColor(context!, topLineColor.CGColor)
-        CGContextSetLineWidth(context!, topLineWidth)
-        CGContextMoveToPoint(context!, 0.0, topSpacing)
-        CGContextAddLineToPoint(context!, rect.width, topSpacing)
-        CGContextStrokePath(context!)
+        context!.beginPath()
+        context!.setStrokeColor(topLineColor.cgColor)
+        context!.setLineWidth(topLineWidth)
+        context!.move(to: CGPoint(x: 0.0, y: topSpacing))
+        context!.addLine(to: CGPoint(x: rect.width, y: topSpacing))
+        context!.strokePath()
         
         // add blue lines if we want them
         if withLines {
             let deltaY: CGFloat = lineSpacing;
             let numberOfLines: Int = Int((rect.height - topSpacing) / deltaY)
-            CGContextBeginPath(context!)
-            CGContextSetStrokeColorWithColor(context!, lineColor.CGColor)
-            CGContextSetLineWidth(context!, lineWidth)
+            context!.beginPath()
+            context!.setStrokeColor(lineColor.cgColor)
+            context!.setLineWidth(lineWidth)
             for i in 1...numberOfLines {
                 let Y = CGFloat(i) * deltaY;
-                CGContextMoveToPoint(context!, 0.0, topSpacing + Y)
-                CGContextAddLineToPoint(context!, rect.width, topSpacing + Y)
+                context!.move(to: CGPoint(x: 0.0, y: topSpacing + Y))
+                context!.addLine(to: CGPoint(x: rect.width, y: topSpacing + Y))
             }
-            CGContextStrokePath(context!)
+            context!.strokePath()
         }
         
         UIGraphicsEndImageContext()
