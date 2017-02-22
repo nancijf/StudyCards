@@ -110,7 +110,6 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
     
     func saveTapped(_ sender: UIBarButtonItem) {
         ImportCards.saveCards(tempCards, tempCardTitle: tempCardTitle, viewController: self)
-//        print("dismissviewcontroler")
     }
     
     func cardViewControllerWith(_ card: Card) -> DetailViewController? {

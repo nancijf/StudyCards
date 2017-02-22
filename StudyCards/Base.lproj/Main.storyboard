@@ -141,7 +141,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="710" y="872"/>
+            <point key="canvasLocation" x="2498" y="872"/>
         </scene>
         <!--Test Score View Controller-->
         <scene sceneID="uhd-nE-k8Y">
@@ -201,7 +201,7 @@
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="R1O-a9-I7g"/>
                     <connections>
-                        <segue destination="EKU-6p-fwJ" kind="showDetail" id="35t-aj-Tgi"/>
+                        <segue destination="EKU-6p-fwJ" kind="showDetail" identifier="TestScore" id="35t-aj-Tgi"/>
                     </connections>
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n4H-XM-58j" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -937,6 +937,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Y9Z-sd-XHz"/>
-        <segue reference="4gf-3D-8B2"/>
+        <segue reference="l20-a9-TDK"/>
     </inferredMetricsTieBreakers>
 </document>
