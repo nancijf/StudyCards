@@ -18,6 +18,13 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
     
     let cellIdentifier = "qlCellIdentifier"
     
+    lazy var addCancelButton: UIBarButtonItem = {
+        let addCancelButton = UIBarButtonItem(title: "Dismiss Search", style: .plain, target: self, action: #selector(cancelSearch) )
+        addCancelButton.isEnabled = true
+        
+        return addCancelButton
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -25,7 +32,17 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         qzSearchController.dimsBackgroundDuringPresentation = false
         qzSearchController.searchBar.placeholder = "Search Quizlet"
         qzSearchController.delegate = self
+        qzSearchController.searchBar.delegate = self
         qzSearchController.hidesNavigationBarDuringPresentation = false
+        qzSearchController.searchBar.showsCancelButton = false
+        
+        let viewWidth = self.view.frame.width
+        let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: viewWidth, height: 44))
+        let navItem = UINavigationItem()
+        navItem.rightBarButtonItem = addCancelButton
+        navBar.pushItem(navItem, animated: false)
+        qzSearchController.searchBar.inputAccessoryView = navBar
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,6 +93,10 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
         }
     }
     
+    func cancelSearch() {
+        qzSearchController.isActive = false
+    }
+    
     func didPresentSearchController(_ searchController: UISearchController) {
         if let tabBarHeight = self.tabBarController?.tabBar.frame.size.height {
             self.tableView.contentInset = UIEdgeInsetsMake(44, 0, tabBarHeight, 0)
@@ -87,6 +108,11 @@ class QuizletTableViewController: UITableViewController, UISearchBarDelegate, UI
             self.tableView.contentInset = UIEdgeInsetsMake(0, 0, tabBarHeight, 0)
         }
         qzSearchController.isActive = false
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print("cancel clicked")
+        self.dismiss(animated: false, completion: nil)
     }
     
     func updateSearchResults(for searchController: UISearchController) {
