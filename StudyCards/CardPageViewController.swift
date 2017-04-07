@@ -127,6 +127,7 @@ class CardPageViewController: UIPageViewController, UIPageViewControllerDataSour
         if let cardViewController = mainStoryBoard.instantiateViewController(withIdentifier: kViewControllerID) as? DetailViewController {
             cardViewController.tempCard = tempCard
             cardViewController.isUsingCardStruct = true
+            cardViewController.isUsingDefaultCard = isUsingDefaultCard
             cardViewController.tempCardTitle = tempCardTitle
             return cardViewController
         }

@@ -27,6 +27,7 @@ class DetailViewController: UIViewController {
     var tempCard: CardStruct?
     var tempCardTitle: String?
     var isCorrect: Bool = false
+    var isUsingDefaultCard: Bool = false
     
     var fontSize: CGFloat {
         let fontSize = defaults.float(forKey: "fontsize") ?? 17.0
@@ -49,6 +50,7 @@ class DetailViewController: UIViewController {
         if isUsingCardStruct {
             if let currentCard = self.tempCard {
                 questionLabel.text = currentCard.question
+                questionLabel.textColor = isUsingDefaultCard ? UIColor.lightGray : UIColor.black
                 questionLabel.sizeToFit()
                 answerLabel.text = currentCard.answer
                 cardCounter.text = String(currentCard.ordinal)
@@ -57,6 +59,14 @@ class DetailViewController: UIViewController {
                         cardImage.isHidden = false
                         cardImage.image = UIImage(data: data)
                         self.tempCard?.image = cardImage.image
+                    }
+                } else if isUsingDefaultCard {
+                    cardImage.isHidden = false
+                    cardImage.image = UIImage(named: "SDImageGray")
+                    if isUsingDefaultCard && UIDevice.current.userInterfaceIdiom == .pad {
+                        cardImage.contentMode = .center
+                    } else {
+                        cardImage.contentMode = .scaleAspectFit
                     }
                 }
             }
@@ -77,7 +87,8 @@ class DetailViewController: UIViewController {
                     if let data = try? Data(contentsOf: URL(string: imagePath)!) {
                         cardImage.isHidden = false
                         cardImage.image = UIImage(data: data)
-                        cardImage.sizeToFit()
+
+
                     }
                 }
             }

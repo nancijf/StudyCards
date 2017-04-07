@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             defaults.set(false, forKey: "autosave")
         }
         if defaults.value(forKey: "cardlines") == nil {
-            defaults.set(true, forKey: "cardlines")
+            defaults.set(false, forKey: "cardlines")
         }
         if defaults.value(forKey: "fontsize") == nil {
             if UIDevice.current.userInterfaceIdiom == .pad {
